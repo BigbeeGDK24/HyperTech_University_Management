@@ -9,7 +9,31 @@ package model;
  * @author hasot
  */
 public class CartDTO {
-    String ID;
-    String cart;
-    String truong;
+    String cartId;
+    String userId;
+
+    public CartDTO() {
+    }
+
+    public CartDTO(String cartId, String userId) {
+        this.cartId = cartId;
+        this.userId = userId;
+    }
+
+    public String getCartId() {
+        return cartId;
+    }
+
+    public void setCartId(String cartId) {
+        this.cartId = cartId;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+      
 }
