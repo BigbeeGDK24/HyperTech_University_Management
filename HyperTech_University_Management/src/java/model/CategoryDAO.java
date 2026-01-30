@@ -4,7 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
-import utils.DbUtils;
+import utils.DbUtil;
 
 public class CategoryDAO {
 
@@ -17,7 +17,7 @@ public class CategoryDAO {
     public ArrayList<CategoryDTO> searchByColum(String column, String value) {
         ArrayList<CategoryDTO> result = new ArrayList<>();
         try {
-            Connection conn = DbUtils.getConnection();
+            Connection conn = DbUtil.getConnection();
             String sql = "SELECT * FROM categories WHERE " + column + " = ?";
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, value);
@@ -44,7 +44,7 @@ public class CategoryDAO {
     public ArrayList<CategoryDTO> filterByColum(String column, String value) {
         ArrayList<CategoryDTO> result = new ArrayList<>();
         try {
-            Connection conn = DbUtils.getConnection();
+            Connection conn = DbUtil.getConnection();
             String sql = "SELECT * FROM categories WHERE " + column + " LIKE ?";
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, "%" + value + "%");
@@ -86,7 +86,7 @@ public class CategoryDAO {
     // ===============================
     public boolean insert(CategoryDTO c) {
         try {
-            Connection conn = DbUtils.getConnection();
+            Connection conn = DbUtil.getConnection();
             String sql = "INSERT INTO categories(name, description) VALUES(?,?)";
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, c.getName());
@@ -105,7 +105,7 @@ public class CategoryDAO {
     // ===============================
     public boolean update(CategoryDTO c) {
         try {
-            Connection conn = DbUtils.getConnection();
+            Connection conn = DbUtil.getConnection();
             String sql = "UPDATE categories SET name=?, description=? WHERE id=?";
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, c.getName());
@@ -125,7 +125,7 @@ public class CategoryDAO {
     // ===============================
     public boolean delete(String id) {
         try {
-            Connection conn = DbUtils.getConnection();
+            Connection conn = DbUtil.getConnection();
             String sql = "DELETE FROM categories WHERE id=?";
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, id);

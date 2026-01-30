@@ -4,7 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
-import utils.DbUtils;
+import utils.DbUtil;
 
 public class OrderItemDAO {
 
@@ -17,7 +17,7 @@ public class OrderItemDAO {
     public ArrayList<OrderItemDTO> searchByColum(String column, String value) {
         ArrayList<OrderItemDTO> result = new ArrayList<>();
         try {
-            Connection conn = DbUtils.getConnection();
+            Connection conn = DbUtil.getConnection();
             String sql = "SELECT * FROM order_items WHERE " + column + " = ?";
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, value);
@@ -47,7 +47,7 @@ public class OrderItemDAO {
     public ArrayList<OrderItemDTO> filterByColum(String column, String value) {
         ArrayList<OrderItemDTO> result = new ArrayList<>();
         try {
-            Connection conn = DbUtils.getConnection();
+            Connection conn = DbUtil.getConnection();
             String sql = "SELECT * FROM order_items WHERE " + column + " LIKE ?";
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, "%" + value + "%");
@@ -92,7 +92,7 @@ public class OrderItemDAO {
     // ===============================
     public boolean insert(OrderItemDTO item) {
         try {
-            Connection conn = DbUtils.getConnection();
+            Connection conn = DbUtil.getConnection();
             String sql = "INSERT INTO order_items(order_id, product_id, price, quantity) "
                     + "VALUES(?,?,?,?)";
             PreparedStatement ps = conn.prepareStatement(sql);

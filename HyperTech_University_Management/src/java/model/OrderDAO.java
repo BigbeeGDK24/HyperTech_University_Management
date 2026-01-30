@@ -4,7 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
-import utils.DbUtils;
+import utils.DbUtil;
 
 public class OrderDAO {
 
@@ -17,7 +17,7 @@ public class OrderDAO {
     public ArrayList<OrderDTO> searchByColum(String column, String value) {
         ArrayList<OrderDTO> result = new ArrayList<>();
         try {
-            Connection conn = DbUtils.getConnection();
+            Connection conn = DbUtil.getConnection();
             String sql = "SELECT * FROM orders WHERE " + column + " = ?";
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, value);
@@ -45,7 +45,7 @@ public class OrderDAO {
     public ArrayList<OrderDTO> filterByColum(String column, String value) {
         ArrayList<OrderDTO> result = new ArrayList<>();
         try {
-            Connection conn = DbUtils.getConnection();
+            Connection conn = DbUtil.getConnection();
             String sql = "SELECT * FROM orders WHERE " + column + " LIKE ?";
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, "%" + value + "%");
@@ -88,7 +88,7 @@ public class OrderDAO {
     // ===============================
     public boolean updateStatus(int id, String status) {
         try {
-            Connection conn = DbUtils.getConnection();
+            Connection conn = DbUtil.getConnection();
             String sql = "UPDATE orders SET status=? WHERE id=?";
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, status);
