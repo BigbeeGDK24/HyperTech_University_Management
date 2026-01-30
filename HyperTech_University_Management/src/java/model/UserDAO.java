@@ -9,5 +9,5 @@ package model;
  * @author truon
  */
 public class UserDAO {
-    
+    String truong;
 }
