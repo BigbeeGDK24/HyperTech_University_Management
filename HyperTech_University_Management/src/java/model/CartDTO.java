@@ -11,4 +11,5 @@ package model;
 public class CartDTO {
     String ID;
     String cart;
+    String truong;
 }
