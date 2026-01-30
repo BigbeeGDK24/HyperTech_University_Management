@@ -10,10 +10,10 @@ package model;
  */
 public class CartItemDTO {
 
-    String cartItemId;
-    String cartId;
-    String productId;
-    int quality;
+    private String cartItemId;
+    private String cartId;
+    private String productId;
+    private int quality;
 
     public CartItemDTO() {
     }
