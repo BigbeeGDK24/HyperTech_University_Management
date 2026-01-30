@@ -9,8 +9,8 @@ package model;
  * @author hasot
  */
 public class CartDTO {
-    String cartId;
-    String userId;
+    private String cartId;
+    private String userId;
 
     public CartDTO() {
     }
