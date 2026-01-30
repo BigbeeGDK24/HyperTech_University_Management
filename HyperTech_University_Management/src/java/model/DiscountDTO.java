@@ -6,9 +6,8 @@ package model;
 
 /**
  *
- * @author ASUS
+ * @author hasot
  */
-public class OrderDAO {
-    
+public class DiscountDTO {
     
 }
