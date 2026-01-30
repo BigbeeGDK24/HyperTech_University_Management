@@ -25,7 +25,7 @@ public class PaymentDAO {
             ArrayList<PaymentDTO> result = new ArrayList<>();
             try {
                 Connection conn = DbUtil.getConnection();
-                String sql = "SELECT * FROM payment WHERE " + column + "=?";
+                String sql = "SELECT * FROM paymentWHERE " + column + "=?";
                 PreparedStatement ps = conn.prepareStatement(sql);
                 ps.setString(1, value);
                 ResultSet rs = ps.executeQuery();
