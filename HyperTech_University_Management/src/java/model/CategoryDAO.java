@@ -98,7 +98,7 @@ public class CategoryDAO {
             System.out.println(e.getMessage());
         }
         return false;
-    }
+    }// insert
 
     // ===============================
     // UPDATE CATEGORY
