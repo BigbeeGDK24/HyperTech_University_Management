@@ -9,5 +9,5 @@ package model;
  * @author hasot
  */
 public class DiscountDTO {
-    
+    String id;
 }
