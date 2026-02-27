@@ -4,21 +4,23 @@
  */
 package model;
 
+import java.sql.Date;
 import java.time.format.DateTimeFormatter;
+
 
 /**
  *
  * @author hasot
  */
 public class PaymentDTO {
-    private int id;
-    private int orderId;
-    private String userId;
-    private String paymentMethod;
-    private float amount;
-    private String status;
-    private String transactionCode;
-    private DateTimeFormatter paid_at;
+        private int id;
+        private int orderId;
+        private String userId;
+        private String paymentMethod;
+        private float amount;
+        private String status;
+        private String transactionCode;
+        private Date paid_at;
 
     public PaymentDTO() {
     }
