@@ -1,5 +1,5 @@
 
-package utils;
+package util;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -7,7 +7,7 @@ import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class DbUtils {
+public class DbUtil {
 //    Do not change this code
     private static final String DB_NAME = "banhang_db";
     private static final String DB_USER_NAME = "sa";
@@ -25,9 +25,9 @@ public class DbUtils {
         try {
             System.out.println(getConnection());
         } catch (ClassNotFoundException ex) {
-            Logger.getLogger(DbUtils.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DbUtil.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SQLException ex) {
-            Logger.getLogger(DbUtils.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DbUtil.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 }

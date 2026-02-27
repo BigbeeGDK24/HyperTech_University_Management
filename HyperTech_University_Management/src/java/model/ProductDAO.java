@@ -8,7 +8,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
-import utils.DbUtils;
+import util.DbUtil;
 
 /**
  *
@@ -20,7 +20,7 @@ public class ProductDAO {
         ArrayList<ProductDTO> products = new ArrayList<>();
 
         try {
-            Connection con = DbUtils.getConnection();
+            Connection con = DbUtil.getConnection();
             String sql = "SELECT * FROM products WHERE " + column + "=?";
             PreparedStatement ps = con.prepareStatement(sql);
             ps.setString(1, value);
@@ -45,7 +45,19 @@ public class ProductDAO {
 
         return products;
     }
+    
+    private ProductDTO extractProduct(ResultSet rs) throws Exception {
+    String id = rs.getString("id");
+    String name = rs.getString("name");
+    String description = rs.getString("description");
+    double price = rs.getDouble("price");
+    int quantity = rs.getInt("quantity");
+    String category = rs.getString("category");
+    boolean status = rs.getBoolean("status");
 
+    return new ProductDTO(id, category, name, description, price, quantity, status);
+}
+    
     public ArrayList<ProductDTO> filterByColumn(String column, String value) {
         ArrayList<ProductDTO> products = new ArrayList<>();
 

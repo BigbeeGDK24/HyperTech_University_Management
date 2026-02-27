@@ -11,7 +11,7 @@ import java.sql.ResultSet;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import utils.DbUtils;
+import util.DbUtil;
 
 /**
  *
@@ -24,7 +24,7 @@ public class PaymentDAO {
         public ArrayList<PaymentDTO> searchByColum(String column, String value) {
             ArrayList<PaymentDTO> result = new ArrayList<>();
             try {
-                Connection conn = DbUtils.getConnection();
+                Connection conn = DbUtil.getConnection();
                 String sql = "SELECT * FROM paymentWHERE " + column + "=?";
                 PreparedStatement ps = conn.prepareStatement(sql);
                 ps.setString(1, value);
@@ -49,7 +49,7 @@ public class PaymentDAO {
         public ArrayList<PaymentDTO> filterByColum(String column, String value) {
             ArrayList<PaymentDTO> result = new ArrayList<>();
             try {
-                Connection conn = DbUtils.getConnection();
+                Connection conn = DbUtil.getConnection();
                 String sql = "SELECT * FROM payment WHERE " + column + " LIKE ?";
                 PreparedStatement ps = conn.prepareStatement(sql);
                 ps.setString(1, "%" + value + "%");

@@ -29,6 +29,10 @@ public class ProductDTO {
         this.created_ad = created_ad;
     }
 
+    ProductDTO(String id, String category, String name, String description, double price, int quantity, boolean status) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
     public String getId() {
         return id;
     }
