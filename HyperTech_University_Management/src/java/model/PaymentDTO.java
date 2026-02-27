@@ -11,20 +11,19 @@ import java.time.format.DateTimeFormatter;
  * @author hasot
  */
 public class PaymentDTO {
-    private String id;
-    private String orderId;
+    private int id;
+    private int orderId;
     private String userId;
     private String paymentMethod;
-    private String amount;
+    private float amount;
     private String status;
     private String transactionCode;
     private DateTimeFormatter paid_at;
-    private DateTimeFormatter created_at;
 
     public PaymentDTO() {
     }
 
-    public PaymentDTO(String id, String orderId, String userId, String paymentMethod, String amount, String status, String transactionCode, DateTimeFormatter paid_at, DateTimeFormatter created_at) {
+    public PaymentDTO(int id, int orderId, String userId, String paymentMethod, float amount, String status, String transactionCode, DateTimeFormatter paid_at) {
         this.id = id;
         this.orderId = orderId;
         this.userId = userId;
@@ -33,22 +32,21 @@ public class PaymentDTO {
         this.status = status;
         this.transactionCode = transactionCode;
         this.paid_at = paid_at;
-        this.created_at = created_at;
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 
-    public String getOrderId() {
+    public int getOrderId() {
         return orderId;
     }
 
-    public void setOrderId(String orderId) {
+    public void setOrderId(int orderId) {
         this.orderId = orderId;
     }
 
@@ -68,11 +66,11 @@ public class PaymentDTO {
         this.paymentMethod = paymentMethod;
     }
 
-    public String getAmount() {
+    public float getAmount() {
         return amount;
     }
 
-    public void setAmount(String amount) {
+    public void setAmount(float amount) {
         this.amount = amount;
     }
 
@@ -100,12 +98,6 @@ public class PaymentDTO {
         this.paid_at = paid_at;
     }
 
-    public DateTimeFormatter getCreated_at() {
-        return created_at;
-    }
-
-    public void setCreated_at(DateTimeFormatter created_at) {
-        this.created_at = created_at;
-    }
+    
     
 }

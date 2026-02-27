@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package model;
 
 import java.sql.Connection;
@@ -10,70 +6,69 @@ import java.sql.ResultSet;
 import org.mindrot.jbcrypt.BCrypt;
 import util.DbUtil;
 
-/**
- *
- * @author truon
- */
 public class UserDAO {
 
-    public UserDAO() {
-
-    }
-
+    // ================= SEARCH =================
     public UserDTO searchByUsername(String Username) {
         UserDTO user = null;
-        try {
-            Connection con = DbUtil.getConnection();
-            String sql = "SELECT * FROM users WHERE Username=?";
-            System.out.println(sql);
+        String sql = "SELECT * FROM users WHERE Username=?";
 
-            PreparedStatement letter = con.prepareStatement(sql);
-            letter.setString(1, Username);
-            ResultSet rs = letter.executeQuery();
+        try (Connection con = DbUtil.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
 
-            while (rs.next()) {
-                String username = rs.getString("Username");
+            ps.setString(1, Username);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
                 String name = rs.getString("name");
                 String email = rs.getString("email");
                 String password = rs.getString("password");
                 String phone = rs.getString("phone");
                 String address = rs.getString("address");
-                String created_at = rs.getString("created_at");
-                user = new UserDTO(username, name, email, password, phone, address, created_at);
+
+                user = new UserDTO(Username, name, email, password, phone, address);
             }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
         return user;
     }
 
+    // ================= LOGIN =================
     public UserDTO login(String Username, String Password) {
         UserDTO user = searchByUsername(Username);
+
         if (user != null && BCrypt.checkpw(Password, user.getPassword())) {
             return user;
         }
         return null;
     }
-    
-    public boolean addU(UserDTO u){ 
-        int result = 0;
-        try {
 
-            Connection conn = DbUtil.getConnection();
-            String sql = "INSERT into user values(?,?,?,?,?,?,?)";
-            PreparedStatement ps = conn.prepareStatement(sql);
+    // ================= ADD (REGISTER) =================
+    public boolean add(UserDTO u) {
+        String sql = "INSERT INTO users (Username, name, email, password, phone, address) "
+                   + "VALUES (?, ?, ?, ?, ?, ?)";
+
+        try (Connection conn = DbUtil.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            // Hash mật khẩu trước khi lưu
+            String hashedPassword = BCrypt.hashpw(u.getPassword(), BCrypt.gensalt());
+
             ps.setString(1, u.getUsername());
             ps.setString(2, u.getName());
             ps.setString(3, u.getEmail());
-            ps.setString(4, u.getPassword());
+            ps.setString(4, hashedPassword);
             ps.setString(5, u.getPhone());
             ps.setString(6, u.getAddress());
-            ps.setString(7, u.getCreated_at());
-           
-            result = ps.executeUpdate();
+
+            return ps.executeUpdate() > 0;
+
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            e.printStackTrace();
         }
-        return result>0;
+
+        return false;
     }
 }
