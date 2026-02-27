@@ -5,7 +5,9 @@
 package model;
 
 import java.sql.Date;
-import java.time.format.DateTimeFormatter;
+
+
+
 
 
 /**
@@ -13,19 +15,21 @@ import java.time.format.DateTimeFormatter;
  * @author hasot
  */
 public class PaymentDTO {
-        private int id;
-        private int orderId;
-        private String userId;
-        private String paymentMethod;
-        private float amount;
-        private String status;
-        private String transactionCode;
-        private Date paid_at;
+
+    private int id;
+    private int orderId;
+    private String userId;
+    private String paymentMethod;
+    private float amount;
+    private String status;
+    private String transactionCode;
+    private Date paid_at;
+
 
     public PaymentDTO() {
     }
 
-    public PaymentDTO(int id, int orderId, String userId, String paymentMethod, float amount, String status, String transactionCode, DateTimeFormatter paid_at) {
+    public PaymentDTO(int id, int orderId, String userId, String paymentMethod, float amount, String status, String transactionCode, Date paid_at) {
         this.id = id;
         this.orderId = orderId;
         this.userId = userId;
@@ -92,11 +96,11 @@ public class PaymentDTO {
         this.transactionCode = transactionCode;
     }
 
-    public DateTimeFormatter getPaid_at() {
+    public Date getPaid_at() {
         return paid_at;
     }
 
-    public void setPaid_at(DateTimeFormatter paid_at) {
+    public void setPaid_at(Date paid_at) {
         this.paid_at = paid_at;
     }
 

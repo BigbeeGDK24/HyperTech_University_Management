@@ -102,7 +102,7 @@ public class ProductDAO {
                    + "category_id = ?, "
                    + "name = ?, "
                    + "price = ?, "
-                   + "stock = ?, "
++ "stock = ?, "
                    + "description = ?, "
                    + "image = ? "
                    + "WHERE id = ?";

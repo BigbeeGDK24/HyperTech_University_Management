@@ -70,7 +70,6 @@ public class UserController extends HttpServlet {
                 String password = request.getParameter("password");
                 String phone = request.getParameter("phone");
                 String address = request.getParameter("address");
-                String created_at = request.getParameter("created_at");
 
                 // NOTE: tránh NullPointer khi trim()
                 if (username == null || username.trim().isEmpty()) {
@@ -92,10 +91,10 @@ public class UserController extends HttpServlet {
                     error += "Username da ton tai <br/>";
                 }
 
-                UserDTO u = new UserDTO(username, name, email, password, phone, address, created_at);
+                UserDTO u = new UserDTO(username, name, email, password, phone, address);
 
                 if (error.isEmpty()) {
-                    if (udao.addU(u)) {
+                    if (udao.add(u)) {
                         CartDAO cartDAO = new CartDAO();
                         cartDAO.createCart(username); 
                         msg = "Tao user thanh cong, moi ban dang nhap";
