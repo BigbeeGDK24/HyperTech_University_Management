@@ -10,42 +10,42 @@ package model;
  */
 public class CartItemDTO {
 
-    private String cartItemId;
-    private String cartId;
-    private String productId;
+    private int cartItemId;
+    private int cartId;
+    private int productId;
     private int quality;
 
     public CartItemDTO() {
     }
 
-    public CartItemDTO(String cartItemId, String cartId, String productId, int quality) {
+    public CartItemDTO(int cartItemId, int cartId, int productId, int quality) {
         this.cartItemId = cartItemId;
         this.cartId = cartId;
         this.productId = productId;
         this.quality = quality;
     }
 
-    public String getCartItemId() {
+    public int getCartItemId() {
         return cartItemId;
     }
 
-    public void setCartItemId(String cartItemId) {
+    public void setCartItemId(int cartItemId) {
         this.cartItemId = cartItemId;
     }
 
-    public String getCartId() {
+    public int getCartId() {
         return cartId;
     }
 
-    public void setCartId(String cartId) {
+    public void setCartId(int cartId) {
         this.cartId = cartId;
     }
 
-    public String getProductId() {
+    public int getProductId() {
         return productId;
     }
 
-    public void setProductId(String productId) {
+    public void setProductId(int productId) {
         this.productId = productId;
     }
 
@@ -56,6 +56,4 @@ public class CartItemDTO {
     public void setQuality(int quality) {
         this.quality = quality;
     }
-
-    
 }

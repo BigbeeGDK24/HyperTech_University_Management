@@ -9,22 +9,22 @@ package model;
  * @author hasot
  */
 public class CartDTO {
-    private String cartId;
+    private int cartId;
     private String userId;
 
     public CartDTO() {
     }
 
-    public CartDTO(String cartId, String userId) {
+    public CartDTO(int cartId, String userId) {
         this.cartId = cartId;
         this.userId = userId;
     }
 
-    public String getCartId() {
+    public int getCartId() {
         return cartId;
     }
 
-    public void setCartId(String cartId) {
+    public void setCartId(int cartId) {
         this.cartId = cartId;
     }
 
@@ -35,5 +35,6 @@ public class CartDTO {
     public void setUserId(String userId) {
         this.userId = userId;
     }
-      
+
+     
 }

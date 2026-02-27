@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import model.CartDAO;
 import model.UserDAO;
 import model.UserDTO;
 
@@ -95,6 +96,8 @@ public class UserController extends HttpServlet {
 
                 if (error.isEmpty()) {
                     if (udao.addU(u)) {
+                        CartDAO cartDAO = new CartDAO();
+                        cartDAO.createCart(username); 
                         msg = "Tao user thanh cong, moi ban dang nhap";
                         url = "login.jsp";
                     } else {
@@ -108,9 +111,10 @@ public class UserController extends HttpServlet {
                 request.setAttribute("error", error);
                 request.setAttribute("msg", msg);
                 request.setAttribute("u", u);
-            } else if ("logout".equals(action)) {
+            }// logout 
+            else if ("logout".equals(action)) {
                 session.invalidate();   // hủy session
-                response.sendRedirect("login.jsp");//rêtrtert
+                response.sendRedirect("login.jsp");
                 return; // QUAN TRỌNG: dừng luôn, không chạy tiếp
             }
         } catch (Exception e) {

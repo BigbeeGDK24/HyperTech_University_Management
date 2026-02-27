@@ -27,7 +27,7 @@ public class OrderItemDAO {
                 int id = rs.getInt("id");
                 int orderID = rs.getInt("order_id");
                 int productID = rs.getInt("product_id");
-                double price = rs.getDouble("price");
+                float price = rs.getFloat("price");
                 int quantity = rs.getInt("quantity");
 
                 OrderItemDTO item = new OrderItemDTO(
@@ -58,7 +58,7 @@ public class OrderItemDAO {
                 int id = rs.getInt("id");
                 int orderID = rs.getInt("order_id");
                 int productID = rs.getInt("product_id");
-                double price = rs.getDouble("price");
+                float price = rs.getFloat("price");
                 int quantity = rs.getInt("quantity");
 
                 OrderItemDTO item = new OrderItemDTO(

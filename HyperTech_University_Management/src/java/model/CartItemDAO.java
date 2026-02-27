@@ -29,7 +29,7 @@ public class CartItemDAO {
                 String productId = rs.getString("productId");
                 int quality = rs.getInt("quality");
 
-                CartItemDTO u = new CartItemDTO(CartItemId, cartId, productId, quality);
+                CartItemDTO u = new CartItemDTO(quality, quality, quality, quality);
                 result.add(u);
             }
         } catch (Exception e) {
@@ -52,7 +52,7 @@ public class CartItemDAO {
                 String productId = rs.getString("productId");
                 int quality = rs.getInt("quality");
 
-                CartItemDTO u = new CartItemDTO(CartItemId, cartId, productId, quality);
+                CartItemDTO u = new CartItemDTO(quality, quality, quality, quality);
                 result.add(u);
             }
         } catch (Exception e) {
