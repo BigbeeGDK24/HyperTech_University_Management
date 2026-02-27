@@ -18,7 +18,7 @@ import model.UserDTO;
  *
  * @author hasot
  */
-public class userController extends HttpServlet {
+public class UserController extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
