@@ -19,7 +19,7 @@ public class DiscountDTO {
     private String created_at;
 
     public DiscountDTO() {
-    }
+    }  
 
     public DiscountDTO(String id, String name, double discount_percent, DateTimeFormatter start_date, DateTimeFormatter end_date, String created_at) {
         this.id = id;
