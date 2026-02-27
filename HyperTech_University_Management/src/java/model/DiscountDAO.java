@@ -10,7 +10,7 @@ import java.sql.ResultSet;
 import java.sql.Timestamp;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import util.DbUtil;
+import utils.DbUtils;
 
 /**
  *
@@ -23,7 +23,7 @@ public class DiscountDAO {
     public ArrayList<DiscountDTO> searchByColum(String column, String value) {
         ArrayList<DiscountDTO> result = new ArrayList<>();
         try {
-            Connection conn = DbUtil.getConnection();
+            Connection conn = DbUtils.getConnection();
             String sql = "SELECT * FROM discounts WHERE " + column + "=?";
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, value);
@@ -47,7 +47,7 @@ public class DiscountDAO {
     public ArrayList<DiscountDTO> filterByColum(String column, String value) {
         ArrayList<DiscountDTO> result = new ArrayList<>();
         try {
-            Connection conn = DbUtil.getConnection();
+            Connection conn = DbUtils.getConnection();
             String sql = "SELECT * FROM discounts WHERE " + column + " LIKE ?";
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, "%" + value + "%");

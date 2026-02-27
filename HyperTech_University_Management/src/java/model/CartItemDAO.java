@@ -8,7 +8,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
-import util.DbUtil;
+import utils.DbUtils;
 
 /**
  *
@@ -18,7 +18,7 @@ public class CartItemDAO {
     public ArrayList<CartItemDTO> searchByColum(String column, String value) {
         ArrayList<CartItemDTO> result = new ArrayList<>();
         try {
-            Connection conn = DbUtil.getConnection();
+            Connection conn = DbUtils.getConnection();
             String sql = "SELECT * FROM CartItem WHERE " + column + "=?";
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, value);
@@ -40,7 +40,7 @@ public class CartItemDAO {
     public ArrayList<CartItemDTO> filterByColum(String column, String value) {
         ArrayList<CartItemDTO> result = new ArrayList<>();
         try {
-            Connection conn = DbUtil.getConnection();
+            Connection conn = DbUtils.getConnection();
             String sql = "SELECT * FROM cartItem WHERE " + column + " LIKE ?";
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, "%" + value + "%");
