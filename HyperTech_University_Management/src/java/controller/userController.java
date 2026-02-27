@@ -20,9 +20,6 @@ import model.UserDTO;
  */
 public class userController extends HttpServlet {
 
-
-
-
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -37,25 +34,95 @@ public class userController extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         request.setCharacterEncoding("UTF-8");
         response.setCharacterEncoding("UTF-8");
-        String url = "";
+        String url = "login.jsp"; // NOTE: luôn gán default để tránh url rỗng
+        String error = "";
+        String msg = "";
+        
         HttpSession session = request.getSession();
-        if (session.getAttribute("user") == null) {
-            String txtUsername = request.getParameter("txtUsername");
-            String txtPassword = request.getParameter("txtPassword");
+        String action = request.getParameter("action"); 
+        
+        try {
 
-            UserDAO udao = new UserDAO();
-            UserDTO user = udao.login(txtUsername, txtPassword);
-            System.out.println(user);
+            /* ===================== LOGIN ===================== */
+            if ("login".equals(action)) {
 
-        } else {
-            url = "welcome.jsp";
+                String username = request.getParameter("txtUsername");
+                String password = request.getParameter("txtPassword");
+
+                UserDAO udao = new UserDAO();
+                UserDTO user = udao.login(username, password);
+
+                if (user != null) {
+                    session.setAttribute("user", user);
+                    // NOTE: trước đó bạn quên set session
+                    url = "welcome.jsp";
+                } else {
+                    request.setAttribute("error", "Sai tai khoan hoac mat khau");
+                    url = "login.jsp";
+                }
+            } /* ===================== REGISTER ===================== */ 
+            else if ("register".equals(action)) {
+
+                String username = request.getParameter("Username");
+                String name = request.getParameter("name");
+                String email = request.getParameter("email");
+                String password = request.getParameter("password");
+                String phone = request.getParameter("phone");
+                String address = request.getParameter("address");
+                String created_at = request.getParameter("created_at");
+
+                // NOTE: tránh NullPointer khi trim()
+                if (username == null || username.trim().isEmpty()) {
+                    error += "Chua nhap Username <br/>";
+                } else {
+                    username = username.trim();
+                }
+
+                if (name == null || name.trim().isEmpty()) {
+                    error += "Chua nhap Name <br/>";
+                } else {
+                    name = name.trim();
+                }
+
+                UserDAO udao = new UserDAO();
+
+                // Kiểm tra username tồn tại
+                if (username != null && udao.searchByUsername(username) != null) {
+                    error += "Username da ton tai <br/>";
+                }
+
+                UserDTO u = new UserDTO(username, name, email, password, phone, address, created_at);
+
+                if (error.isEmpty()) {
+                    if (udao.addU(u)) {
+                        msg = "Tao user thanh cong, moi ban dang nhap";
+                        url = "login.jsp";
+                    } else {
+                        error += "Khong the tao user!";
+                        url = "register.jsp";
+                    }
+                } else {
+                    url = "register.jsp";
+                }
+
+                request.setAttribute("error", error);
+                request.setAttribute("msg", msg);
+                request.setAttribute("u", u);
+            } else if ("logout".equals(action)) {
+                session.invalidate();   // hủy session
+                response.sendRedirect("login.jsp");
+                return; // QUAN TRỌNG: dừng luôn, không chạy tiếp
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+
         }
-        // Chuyen trang
+
         RequestDispatcher rd = request.getRequestDispatcher(url);
         rd.forward(request, response);
     }
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
+// <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.
      *
@@ -95,5 +162,3 @@ public class userController extends HttpServlet {
     }// </editor-fold>
 
 }
-
-
