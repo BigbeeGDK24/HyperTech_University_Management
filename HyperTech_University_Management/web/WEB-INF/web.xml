@@ -1,13 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app version="2.5" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
-    <servlet>
-        <servlet-name>SignInController</servlet-name>
-        <servlet-class>controller.SignInController</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>signInController</servlet-name>
-        <servlet-class>controller.signInController</servlet-class>
-    </servlet>
+
     <servlet>
         <servlet-name>AdminController</servlet-name>
         <servlet-class>controller.AdminController</servlet-class>
@@ -32,10 +25,6 @@
     <servlet>
         <servlet-name>OrderController</servlet-name>
         <servlet-class>controller.OrderController</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>OrderItemController</servlet-name>
-        <servlet-class>controller.OrderItemController</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>PaymentController</servlet-name>
@@ -68,10 +57,6 @@
     <servlet-mapping>
         <servlet-name>OrderController</servlet-name>
         <url-pattern>/OrderController</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>OrderItemController</servlet-name>
-        <url-pattern>/OrderItemController</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>PaymentController</servlet-name>
