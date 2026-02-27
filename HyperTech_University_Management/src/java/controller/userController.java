@@ -110,7 +110,7 @@ public class UserController extends HttpServlet {
                 request.setAttribute("u", u);
             } else if ("logout".equals(action)) {
                 session.invalidate();   // hủy session
-                response.sendRedirect("login.jsp");
+                response.sendRedirect("login.jsp");//rêtrtert
                 return; // QUAN TRỌNG: dừng luôn, không chạy tiếp
             }
         } catch (Exception e) {
