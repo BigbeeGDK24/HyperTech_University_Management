@@ -30,15 +30,15 @@ public class PaymentDAO {
                 ps.setString(1, value);
                 ResultSet rs = ps.executeQuery();
                 while (rs.next()) {
-                    String id = rs.getString("id");
-                    String orderId = rs.getString("orderId");
+                     int id = rs.getInt("id");
+                    int orderId = rs.getInt("orderId");
                     String userId = rs.getString("userId");
                     String paymentMethod = rs.getString("paymentMethod");
-                    String amount = rs.getString("amount");
+                    float amount = rs.getFloat("amount");
                     String status = rs.getString("status");
                     String transactionCode = rs.getString("transactionCode");
-                    LocalDateTime paidAt = rs.getTimestamp("paid_at").toLocalDateTime();
-                    PaymentDTO u = new PaymentDTO(id, orderId, userId, paymentMethod, amount, status, transactionCode, DateTimeFormatter.ISO_DATE, DateTimeFormatter.ISO_DATE);
+                    Date paidAt = rs.getDate("paid_at");
+                    PaymentDTO u = new PaymentDTO(id, orderId, userId, paymentMethod, amount, status, transactionCode, paidAt);
                     result.add(u);
                 }
             } catch (Exception e) {
@@ -56,15 +56,15 @@ public class PaymentDAO {
                 System.out.println(ps.toString());
                 ResultSet rs = ps.executeQuery();
                 while (rs.next()) {
-                    String id = rs.getString("id");
-                    String orderId = rs.getString("orderId");
+                    int id = rs.getInt("id");
+                    int orderId = rs.getInt("orderId");
                     String userId = rs.getString("userId");
                     String paymentMethod = rs.getString("paymentMethod");
-                    String amount = rs.getString("amount");
+                    float amount = rs.getFloat("amount");
                     String status = rs.getString("status");
                     String transactionCode = rs.getString("transactionCode");
-                    LocalDateTime paidAt = rs.getTimestamp("paid_at").toLocalDateTime();
-                    PaymentDTO u = new PaymentDTO(id, orderId, userId, paymentMethod, amount, status, transactionCode, DateTimeFormatter.ISO_DATE, DateTimeFormatter.ISO_DATE);
+                    Date paidAt = rs.getDate("paid_at");
+                    PaymentDTO u = new PaymentDTO(id, orderId, userId, paymentMethod, amount, status, transactionCode, paidAt);
                     result.add(u);
                 }
             } catch (Exception e) {
