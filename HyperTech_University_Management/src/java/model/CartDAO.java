@@ -25,9 +25,9 @@ public class CartDAO {
             ps.setString(1, value);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                String id = rs.getString("id");
+                int id = rs.getInt("id");
                 String userId = rs.getString("userId");
-                CartDTO u = new CartDTO(id, id);
+                CartDTO u = new CartDTO(id, userId);
                 result.add(u);
             }
         } catch (Exception e) {
@@ -45,9 +45,9 @@ public class CartDAO {
             System.out.println(ps.toString());
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                String id = rs.getString("id");
+                int id = rs.getInt("id");
                 String userId = rs.getString("userId");
-                CartDTO u = new CartDTO("id", id);
+                CartDTO u = new CartDTO(id, userId);
                 result.add(u);
             }
         } catch (Exception e) {
@@ -55,4 +55,21 @@ public class CartDAO {
         }
         return result;
     }
+    
+    public boolean createCart(String userId) {
+    String sql = "INSERT INTO cart (user_id) VALUES (?)";
+
+    try (Connection con = DbUtil.getConnection();
+         PreparedStatement ps = con.prepareStatement(sql)) {
+
+        ps.setString(1, userId);
+
+        return ps.executeUpdate() > 0;
+
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+
+    return false;
+}
 }
