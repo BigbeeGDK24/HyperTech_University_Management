@@ -10,15 +10,12 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import model.UserDAO;
-import model.UserDTO;
 
 /**
  *
- * @author hasot
+ * @author ASUS
  */
-public class signInController extends HttpServlet {
+public class DiscountController extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -32,54 +29,17 @@ public class signInController extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        request.setCharacterEncoding("UTF-8");
-        response.setCharacterEncoding("UTF-8");
-        String error = "";
-        String msg = "";
-        String url = "";
-        try {
-
-            String Username = request.getParameter("Username");
-            String name = request.getParameter("name");
-            String email = request.getParameter("email");
-            String password = request.getParameter("password");
-            String phone = request.getParameter("phone");
-            String address = request.getParameter("address");
-            String created_at = request.getParameter("created_at");
-
-            Username = Username.trim();
-            if (Username.isEmpty()) {
-                error += ("chua nhap Username <br/>");
-            }
-            name = name.trim();
-            if (name.isEmpty()) {
-                error += ("chua nhap name <br/>");
-            }
-            UserDAO udao = new UserDAO();
-            UserDTO u = udao.searchByUsername(Username);
-            if (u != null) {
-                error += "username da ton tai";
-            }
-            u = new UserDTO(Username, name, email, password, phone, address, created_at);
-            System.out.println(u);
-            if (error.isEmpty()) {
-                if (udao.addU(u)) {
-                    msg = "Da tao user thanh cong moi ban dang nhap";
-                } else {
-                    error += "Gap loi, khong the tao user!";
-                    request.setAttribute("u", u);
-                }
-                request.setAttribute("msg", msg);
-            } else {
-                request.setAttribute("error", error);
-                request.setAttribute("u", u);
-//=============================================
-                url = "university-form.jsp";
-            }
-            System.out.println(u);
-
-        } catch (Exception e) {
-
+        try ( PrintWriter out = response.getWriter()) {
+            /* TODO output your page here. You may use following sample code. */
+            out.println("<!DOCTYPE html>");
+            out.println("<html>");
+            out.println("<head>");
+            out.println("<title>Servlet DiscountController</title>");            
+            out.println("</head>");
+            out.println("<body>");
+            out.println("<h1>Servlet DiscountController at " + request.getContextPath() + "</h1>");
+            out.println("</body>");
+            out.println("</html>");
         }
     }
 
