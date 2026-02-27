@@ -1,4 +1,6 @@
 /*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
@@ -13,6 +15,10 @@ import java.util.logging.Logger;
 
 /**
  *
+ * @author truon
+ */
+public class DbUtil {
+
  * @author Computing Fundamental - HCM Campus
  */
 public class DbUtil {
@@ -28,6 +34,7 @@ public class DbUtil {
         conn = DriverManager.getConnection(url, DB_USER_NAME, DB_PASSWORD);
         return conn;
     }
+
     
     public static void main(String[] args) {
         try {
@@ -37,5 +44,6 @@ public class DbUtil {
         } catch (SQLException ex) {
             Logger.getLogger(DbUtil.class.getName()).log(Level.SEVERE, null, ex);
         }
+
     }
 }
