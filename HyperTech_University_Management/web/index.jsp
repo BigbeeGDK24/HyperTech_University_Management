@@ -1,10 +1,10 @@
 <%-- 
     Document   : index
-    Created on : Jan 30, 2026, 12:28:08 PM
+    Created on : Feb 27, 2026, 11:40:04 AM
     Author     : truon
 --%>
 
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -12,6 +12,7 @@
         <title>JSP Page</title>
     </head>
     <body>
+        <jsp:include page="header.jsp"/>
         <h1>Hello World!</h1>
     </body>
 </html>
