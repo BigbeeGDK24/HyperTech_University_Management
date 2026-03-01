@@ -8,95 +8,177 @@ import util.DbUtil;
 
 public class OrderDAO {
 
-    public OrderDAO() {
+    // ===============================
+    // CREATE - INSERT
+    // ===============================
+    public boolean insert(OrderDTO order) {
+        String sql = "INSERT INTO orders (user_id, total_price, status) VALUES (?, ?, ?)";
+
+        try ( Connection conn = DbUtil.getConnection();  PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, order.getUserID());
+            ps.setDouble(2, order.getTotalPrice());
+            ps.setString(3, order.getStatus());
+
+            return ps.executeUpdate() > 0;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     // ===============================
-    // SEARCH BY COLUMN (EQUAL)
+    // READ - GET ALL
     // ===============================
-    public ArrayList<OrderDTO> searchByColum(String column, String value) {
+    public ArrayList<OrderDTO> getAll() {
+        ArrayList<OrderDTO> list = new ArrayList<>();
+        String sql = "SELECT * FROM orders";
+
+        try ( Connection conn = DbUtil.getConnection();  PreparedStatement ps = conn.prepareStatement(sql);  ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                OrderDTO o = new OrderDTO(
+                        rs.getInt("id"),
+                        rs.getString("user_id"),
+                        rs.getDouble("total_price"),
+                        rs.getString("status"),
+                        rs.getTimestamp("created_at")
+                );
+                list.add(o);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    // ===============================
+    // READ - SEARCH EQUAL
+    // ===============================
+    public ArrayList<OrderDTO> searchByColumn(String column, String value) {
         ArrayList<OrderDTO> result = new ArrayList<>();
-        try {
-            Connection conn = DbUtil.getConnection();
-            String sql = "SELECT * FROM orders WHERE " + column + " = ?";
-            PreparedStatement ps = conn.prepareStatement(sql);
+
+        // Chỉ cho phép search các cột hợp lệ (tránh SQL Injection)
+        if (!column.equals("id")
+                && !column.equals("user_id")
+                && !column.equals("status")) {
+            return result;
+        }
+
+        String sql = "SELECT * FROM orders WHERE " + column + " = ?";
+
+        try ( Connection conn = DbUtil.getConnection();  PreparedStatement ps = conn.prepareStatement(sql)) {
+
             ps.setString(1, value);
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {
-                int id = rs.getInt("id");
-                String userID = rs.getString("user_id");
-                double totalPrice = rs.getDouble("total_price");
-                String status = rs.getString("status");
-                java.sql.Timestamp createdAt = rs.getTimestamp("created_at");
-
-                OrderDTO o = new OrderDTO(id, userID, totalPrice, status, createdAt);
-                result.add(o);
+                result.add(new OrderDTO(
+                        rs.getInt("id"),
+                        rs.getString("user_id"),
+                        rs.getDouble("total_price"),
+                        rs.getString("status"),
+                        rs.getTimestamp("created_at")
+                ));
             }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
+
         return result;
     }
 
     // ===============================
-    // FILTER BY COLUMN (LIKE)
+    // READ - FILTER LIKE
     // ===============================
-    public ArrayList<OrderDTO> filterByColum(String column, String value) {
+    public ArrayList<OrderDTO> filterByColumn(String column, String value) {
         ArrayList<OrderDTO> result = new ArrayList<>();
-        try {
-            Connection conn = DbUtil.getConnection();
-            String sql = "SELECT * FROM orders WHERE " + column + " LIKE ?";
-            PreparedStatement ps = conn.prepareStatement(sql);
+
+        if (!column.equals("user_id")
+                && !column.equals("status")) {
+            return result;
+        }
+
+        String sql = "SELECT * FROM orders WHERE " + column + " LIKE ?";
+
+        try ( Connection conn = DbUtil.getConnection();  PreparedStatement ps = conn.prepareStatement(sql)) {
+
             ps.setString(1, "%" + value + "%");
-            System.out.println(ps.toString());
-
             ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                int id = rs.getInt("id");
-                String userID = rs.getString("user_id");
-                double totalPrice = rs.getDouble("total_price");
-                String status = rs.getString("status");
-                java.sql.Timestamp createdAt = rs.getTimestamp("created_at");
 
-                OrderDTO o = new OrderDTO(id, userID, totalPrice, status, createdAt);
-                result.add(o);
+            while (rs.next()) {
+                result.add(new OrderDTO(
+                        rs.getInt("id"),
+                        rs.getString("user_id"),
+                        rs.getDouble("total_price"),
+                        rs.getString("status"),
+                        rs.getTimestamp("created_at")
+                ));
             }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
+
         return result;
     }
 
     // ===============================
-    // WRAPPER METHODS (GIỐNG BÀI MẪU)
+    // UPDATE - FULL UPDATE
     // ===============================
-    public ArrayList<OrderDTO> searchByID(String id) {
-        return searchByColum("id", id);
-    }
+    public boolean update(OrderDTO order) {
+        String sql = "UPDATE orders SET user_id=?, total_price=?, status=? WHERE id=?";
 
-    public ArrayList<OrderDTO> searchByUserID(String userID) {
-        return searchByColum("user_id", userID);
-    }
+        try ( Connection conn = DbUtil.getConnection();  PreparedStatement ps = conn.prepareStatement(sql)) {
 
-    public ArrayList<OrderDTO> filterByStatus(String status) {
-        return filterByColum("status", status);
+            ps.setString(1, order.getUserID());
+            ps.setDouble(2, order.getTotalPrice());
+            ps.setString(3, order.getStatus());
+            ps.setInt(4, order.getId());
+
+            return ps.executeUpdate() > 0;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     // ===============================
-    // UPDATE STATUS (THAY softDelete)
+    // UPDATE - ONLY STATUS
     // ===============================
     public boolean updateStatus(int id, String status) {
-        try {
-            Connection conn = DbUtil.getConnection();
-            String sql = "UPDATE orders SET status=? WHERE id=?";
-            PreparedStatement ps = conn.prepareStatement(sql);
+        String sql = "UPDATE orders SET status=? WHERE id=?";
+
+        try ( Connection conn = DbUtil.getConnection();  PreparedStatement ps = conn.prepareStatement(sql)) {
+
             ps.setString(1, status);
             ps.setInt(2, id);
+
             return ps.executeUpdate() > 0;
+
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println(e.getMessage());
+        }
+        return false;
+    }
+
+    // ===============================
+    // DELETE
+    // ===============================
+    public boolean delete(int id) {
+        String sql = "DELETE FROM orders WHERE id=?";
+
+        try ( Connection conn = DbUtil.getConnection();  PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, id);
+            return ps.executeUpdate() > 0;
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return false;
     }

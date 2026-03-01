@@ -4,7 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
-import util.DbUtil;
+import util.DbUtil; // Đảm bảo đúng tên package tiện ích của bạn (DbUtil hoặc DbUtils)
 
 public class OrderItemDAO {
 
@@ -12,7 +12,7 @@ public class OrderItemDAO {
     }
 
     // ===============================
-    // SEARCH BY COLUMN (EQUAL)
+    // READ: SEARCH BY COLUMN (EQUAL)
     // ===============================
     public ArrayList<OrderItemDTO> searchByColum(String column, String value) {
         ArrayList<OrderItemDTO> result = new ArrayList<>();
@@ -30,9 +30,7 @@ public class OrderItemDAO {
                 float price = rs.getFloat("price");
                 int quantity = rs.getInt("quantity");
 
-                OrderItemDTO item = new OrderItemDTO(
-                        id, orderID, productID, price, quantity
-                );
+                OrderItemDTO item = new OrderItemDTO(id, orderID, productID, price, quantity);
                 result.add(item);
             }
         } catch (Exception e) {
@@ -42,7 +40,7 @@ public class OrderItemDAO {
     }
 
     // ===============================
-    // FILTER BY COLUMN (LIKE)
+    // READ: FILTER BY COLUMN (LIKE)
     // ===============================
     public ArrayList<OrderItemDTO> filterByColum(String column, String value) {
         ArrayList<OrderItemDTO> result = new ArrayList<>();
@@ -61,9 +59,7 @@ public class OrderItemDAO {
                 float price = rs.getFloat("price");
                 int quantity = rs.getInt("quantity");
 
-                OrderItemDTO item = new OrderItemDTO(
-                        id, orderID, productID, price, quantity
-                );
+                OrderItemDTO item = new OrderItemDTO(id, orderID, productID, price, quantity);
                 result.add(item);
             }
         } catch (Exception e) {
@@ -73,39 +69,96 @@ public class OrderItemDAO {
     }
 
     // ===============================
-    // WRAPPER METHODS (GIỐNG BÀI MẪU)
+    // READ: WRAPPER METHODS
     // ===============================
-    public ArrayList<OrderItemDTO> searchByID(String id) {
-        return searchByColum("id", id);
+    public OrderItemDTO searchByID(int id) {
+        // Chuyển int sang String để dùng chung hàm searchByColum
+        ArrayList<OrderItemDTO> list = searchByColum("id", String.valueOf(id));
+        if (!list.isEmpty()) {
+            return list.get(0);
+        }
+        return null;
     }
 
-    public ArrayList<OrderItemDTO> searchByOrderID(String orderID) {
-        return searchByColum("order_id", orderID);
+    public ArrayList<OrderItemDTO> searchByOrderID(int orderID) {
+        return searchByColum("order_id", String.valueOf(orderID));
     }
 
-    public ArrayList<OrderItemDTO> searchByProductID(String productID) {
-        return searchByColum("product_id", productID);
+    public ArrayList<OrderItemDTO> searchByProductID(int productID) {
+        return searchByColum("product_id", String.valueOf(productID));
     }
 
     // ===============================
-    // INSERT ORDER ITEM
+    // CREATE: ADD ORDER ITEM
     // ===============================
-    public boolean insert(OrderItemDTO item) {
+    public boolean add(OrderItemDTO item) {
+        int result = 0;
         try {
             Connection conn = DbUtil.getConnection();
-            String sql = "INSERT INTO order_items(order_id, product_id, price, quantity) "
-                    + "VALUES(?,?,?,?)";
+            // Giả sử id là tự tăng (Auto Increment) nên không insert id
+            String sql = "INSERT INTO order_items(order_id, product_id, price, quantity) VALUES (?, ?, ?, ?)";
+            
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setInt(1, item.getOrderID());
             ps.setInt(2, item.getProductID());
-            ps.setDouble(3, item.getPrice());
+            ps.setFloat(3,(float) item.getPrice());
             ps.setInt(4, item.getQuantity());
 
-            return ps.executeUpdate() > 0;
+            result = ps.executeUpdate();
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println(e.getMessage());
         }
-        return false;
+        return result > 0;
+    }
+
+    // ===============================
+    // UPDATE: UPDATE ORDER ITEM
+    // ===============================
+    public boolean update(OrderItemDTO item) {
+        int result = 0;
+        try {
+            Connection conn = DbUtil.getConnection();
+            String sql = "UPDATE order_items "
+                       + "SET order_id = ?, "
+                       + "    product_id = ?, "
+                       + "    price = ?, "
+                       + "    quantity = ? "
+                       + "WHERE id = ?";
+
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, item.getOrderID());
+            ps.setInt(2, item.getProductID());
+            ps.setFloat(3, (float) item.getPrice());
+            ps.setInt(4, item.getQuantity());
+            ps.setInt(5, item.getId()); // Cập nhật dựa trên ID
+
+            result = ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println(e.getMessage());
+        }
+        return result > 0;
+    }
+
+    // ===============================
+    // DELETE: HARD DELETE
+    // ===============================
+    public boolean delete(int id) {
+        int result = 0;
+        try {
+            Connection conn = DbUtil.getConnection();
+            // Xóa cứng khỏi database. Nếu bạn muốn xóa mềm thì đổi thành UPDATE status
+            String sql = "DELETE FROM order_items WHERE id = ?";
+            
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, id);
+            
+            result = ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println(e.getMessage());
+        }
+        return result > 0;
     }
 }
