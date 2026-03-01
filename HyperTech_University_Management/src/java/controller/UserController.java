@@ -95,8 +95,7 @@ public class UserController extends HttpServlet {
 
                 if (error.isEmpty()) {
                     if (udao.add(u)) {
-                        CartDAO cartDAO = new CartDAO();
-                        cartDAO.createCart(username); 
+                        CartDAO cartdao = new CartDAO(); 
                         msg = "Tao user thanh cong, moi ban dang nhap";
                         url = "login.jsp";
                     } else {
