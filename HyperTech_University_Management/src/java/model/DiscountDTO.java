@@ -4,37 +4,38 @@
  */
 package model;
 
-import java.time.format.DateTimeFormatter;
+import java.sql.Date;
 
 /**
  *
  * @author hasot
  */
 public class DiscountDTO {
-    private String id;
+    private int id;
     private String name;
-    private double discount_percent;
-    private DateTimeFormatter start_date;
-    private DateTimeFormatter end_date;
-    private String created_at;
+    private int discount_percent;
+    private Date start_date;
+    private Date end_date;
+    
 
     public DiscountDTO() {
-    }
+    }  
 
-    public DiscountDTO(String id, String name, double discount_percent, DateTimeFormatter start_date, DateTimeFormatter end_date, String created_at) {
+    public DiscountDTO(int id, String name, int discount_percent, Date start_date, Date end_date) {
         this.id = id;
         this.name = name;
         this.discount_percent = discount_percent;
         this.start_date = start_date;
         this.end_date = end_date;
-        this.created_at = created_at;
     }
 
-    public String getId() {
+
+
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -46,37 +47,28 @@ public class DiscountDTO {
         this.name = name;
     }
 
-    public double getDiscount_percent() {
+    public int getDiscount_percent() {
         return discount_percent;
     }
 
-    public void setDiscount_percent(double discount_percent) {
+    public void setDiscount_percent(int discount_percent) {
         this.discount_percent = discount_percent;
     }
 
-    public DateTimeFormatter getStart_date() {
+    public Date getStart_date() {
         return start_date;
     }
 
-    public void setStart_date(DateTimeFormatter start_date) {
+    public void setStart_date(Date start_date) {
         this.start_date = start_date;
     }
 
-    public DateTimeFormatter getEnd_date() {
+    public Date getEnd_date() {
         return end_date;
     }
 
-    public void setEnd_date(DateTimeFormatter end_date) {
+    public void setEnd_date(Date end_date) {
         this.end_date = end_date;
     }
-
-    public String getCreated_at() {
-        return created_at;
-    }
-
-    public void setCreated_at(String created_at) {
-        this.created_at = created_at;
-    }
-
-    
+ 
 }

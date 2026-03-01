@@ -5,10 +5,9 @@
 package model;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.Timestamp;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import util.DbUtil;
 
@@ -29,14 +28,13 @@ public class DiscountDAO {
             ps.setString(1, value);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                String id = rs.getString("id");
+                int id = rs.getInt("id");
                 String name = rs.getString("name");
-                double discount_percent = rs.getDouble("discount_percent");
-                Timestamp start_date = rs.getTimestamp("paid_at");
-                Timestamp end_date = rs.getTimestamp("paid_at");
-                String created_at = rs.getString("created_at");
+                int discount_percent = rs.getInt("discount_percent");
+                Date start_date = rs.getDate("start_date");
+                Date end_date = rs.getDate("end_date");
 
-                DiscountDTO u = new DiscountDTO(id, name, discount_percent, DateTimeFormatter.ISO_DATE, DateTimeFormatter.ISO_DATE, created_at);
+                DiscountDTO u = new DiscountDTO(id, name, discount_percent, start_date, end_date);
                 result.add(u);
             }
         } catch (Exception e) {
@@ -54,14 +52,13 @@ public class DiscountDAO {
             System.out.println(ps.toString());
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                String id = rs.getString("id");
+                int id = rs.getInt("id");
                 String name = rs.getString("name");
-                double discount_percent = rs.getDouble("discount_percent");
-                Timestamp start_date = rs.getTimestamp("paid_at");
-                Timestamp end_date = rs.getTimestamp("paid_at");
-                String created_at = rs.getString("created_at");
+                int discount_percent = rs.getInt("discount_percent");
+                Date start_date = rs.getDate("paid_at");
+                Date end_date = rs.getDate("paid_at");
 
-                DiscountDTO u = new DiscountDTO(id, name, discount_percent, DateTimeFormatter.ISO_DATE, DateTimeFormatter.ISO_DATE, created_at);
+                DiscountDTO u = new DiscountDTO(id, name, discount_percent, start_date, end_date);
                 result.add(u);
             }
         } catch (Exception e) {
@@ -69,5 +66,5 @@ public class DiscountDAO {
         }
         return result;
     }
-}
+    }
 }

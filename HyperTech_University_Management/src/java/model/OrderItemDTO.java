@@ -5,13 +5,13 @@ public class OrderItemDTO {
     private int id;
     private int orderID;
     private int productID;
-    private double price;
+    private float price;
     private int quantity;
 
     public OrderItemDTO() {
     }
 
-    public OrderItemDTO(int id, int orderID, int productID, double price, int quantity) {
+    public OrderItemDTO(int id, int orderID, int productID, float price, int quantity) {
         this.id = id;
         this.orderID = orderID;
         this.productID = productID;
@@ -47,7 +47,7 @@ public class OrderItemDTO {
         return price;
     }
 
-    public void setPrice(double price) {
+    public void setPrice(float price) {
         this.price = price;
     }
 

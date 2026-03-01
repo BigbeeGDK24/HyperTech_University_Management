@@ -7,8 +7,7 @@ public class CategoryDTO {
     private int id;
     private String name;
     private String description;
-    private Timestamp createdAt;
-
+    
     public CategoryDTO() {
     }
 
@@ -16,7 +15,6 @@ public class CategoryDTO {
         this.id = id;
         this.name = name;
         this.description = description;
-        this.createdAt = createdAt;
     }
 
     public int getId() {
@@ -43,11 +41,5 @@ public class CategoryDTO {
         this.description = description;
     }
 
-    public Timestamp getCreatedAt() {
-        return createdAt;
-    }
 
-    public void setCreatedAt(Timestamp createdAt) {
-        this.createdAt = createdAt;
-    }
 }

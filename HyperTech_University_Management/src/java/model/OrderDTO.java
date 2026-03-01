@@ -8,7 +8,7 @@ public class OrderDTO {
     private String userID;
     private double totalPrice;
     private String status;
-    private Timestamp createdAt;
+
 
     public OrderDTO() {
     }
@@ -18,7 +18,6 @@ public class OrderDTO {
         this.userID = userID;
         this.totalPrice = totalPrice;
         this.status = status;
-        this.createdAt = createdAt;
     }
 
     public int getId() {
@@ -53,11 +52,6 @@ public class OrderDTO {
         this.status = status;
     }
 
-    public Timestamp getCreatedAt() {
-        return createdAt;
-    }
 
-    public void setCreatedAt(Timestamp createdAt) {
-        this.createdAt = createdAt;
-    }
+    
 }
