@@ -40,7 +40,7 @@ public class AdminController extends HttpServlet {
                 String password = request.getParameter("txtPassword");
 
                 AdminDAO adao = new AdminDAO();
-                AdminDTO admin = adao.login(username, password);
+                AdminDTO admin = adao.adLogin(username, password);
 
                 if (admin != null) {
                     // Lưu session với tên là "admin" để phân biệt với "user"

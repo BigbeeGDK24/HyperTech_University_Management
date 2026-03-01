@@ -9,15 +9,28 @@ package model;
  * @author hasot
  */
 public class CartDTO {
+
+    private int cartItemId;
     private int cartId;
-    private String userId;
+    private int productId;
+    private int quality;
 
     public CartDTO() {
     }
 
-    public CartDTO(int cartId, String userId) {
+    public CartDTO(int cartItemId, int cartId, int productId, int quality) {
+        this.cartItemId = cartItemId;
         this.cartId = cartId;
-        this.userId = userId;
+        this.productId = productId;
+        this.quality = quality;
+    }
+
+    public int getCartItemId() {
+        return cartItemId;
+    }
+
+    public void setCartItemId(int cartItemId) {
+        this.cartItemId = cartItemId;
     }
 
     public int getCartId() {
@@ -28,13 +41,19 @@ public class CartDTO {
         this.cartId = cartId;
     }
 
-    public String getUserId() {
-        return userId;
+    public int getProductId() {
+        return productId;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setProductId(int productId) {
+        this.productId = productId;
     }
 
-     
+    public int getQuality() {
+        return quality;
+    }
+
+    public void setQuality(int quality) {
+        this.quality = quality;
+    }
 }

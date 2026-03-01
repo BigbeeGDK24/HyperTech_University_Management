@@ -15,19 +15,21 @@ import util.DbUtil;
  * @author hasot
  */
 public class CartDAO {
-
     public ArrayList<CartDTO> searchByColum(String column, String value) {
         ArrayList<CartDTO> result = new ArrayList<>();
         try {
             Connection conn = DbUtil.getConnection();
-            String sql = "SELECT * FROM Cart WHERE " + column + "=?";
+            String sql = "SELECT * FROM CartItem WHERE " + column + "=?";
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, value);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                int id = rs.getInt("id");
-                String userId = rs.getString("userId");
-                CartDTO u = new CartDTO(id, userId);
+                String CartItemId = rs.getString("CartItemId");
+                String cartId = rs.getString("cartId");
+                String productId = rs.getString("productId");
+                int quality = rs.getInt("quality");
+
+                CartDTO u = new CartDTO(quality, quality, quality, quality);
                 result.add(u);
             }
         } catch (Exception e) {
@@ -39,15 +41,18 @@ public class CartDAO {
         ArrayList<CartDTO> result = new ArrayList<>();
         try {
             Connection conn = DbUtil.getConnection();
-            String sql = "SELECT * FROM cart WHERE " + column + " LIKE ?";
+            String sql = "SELECT * FROM cartItem WHERE " + column + " LIKE ?";
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, "%" + value + "%");
             System.out.println(ps.toString());
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                int id = rs.getInt("id");
-                String userId = rs.getString("userId");
-                CartDTO u = new CartDTO(id, userId);
+                String CartItemId = rs.getString("CartItemId");
+                String cartId = rs.getString("cartId");
+                String productId = rs.getString("productId");
+                int quality = rs.getInt("quality");
+
+                CartDTO u = new CartDTO(quality, quality, quality, quality);
                 result.add(u);
             }
         } catch (Exception e) {
@@ -55,8 +60,7 @@ public class CartDAO {
         }
         return result;
     }
-    
-    public boolean createCart(String userId) {
+        public boolean createCart(String userId) {
     String sql = "INSERT INTO cart (user_id) VALUES (?)";
 
     try (Connection con = DbUtil.getConnection();
@@ -72,4 +76,5 @@ public class CartDAO {
 
     return false;
 }
+    
 }
