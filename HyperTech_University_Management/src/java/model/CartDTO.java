@@ -10,36 +10,39 @@ package model;
  */
 public class CartDTO {
 
-    private int cartItemId;
     private int cartId;
+    private String username;
     private int productId;
     private int quality;
 
     public CartDTO() {
     }
 
-    public CartDTO(int cartItemId, int cartId, int productId, int quality) {
-        this.cartItemId = cartItemId;
+    public CartDTO(int cartId, String username, int productId, int quality) {
         this.cartId = cartId;
+        this.username = username;
         this.productId = productId;
         this.quality = quality;
     }
 
-    public int getCartItemId() {
-        return cartItemId;
-    }
-
-    public void setCartItemId(int cartItemId) {
-        this.cartItemId = cartItemId;
-    }
+    
 
     public int getCartId() {
         return cartId;
     }
 
-    public void setCartId(int cartId) {
+    public void setCartItemId(int cartId) {
         this.cartId = cartId;
     }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
 
     public int getProductId() {
         return productId;
