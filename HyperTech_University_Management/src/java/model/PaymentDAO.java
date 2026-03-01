@@ -7,98 +7,79 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import util.DbUtil;
 
-/**
- *
- * @author hasot
- */
 public class PaymentDAO {
 
-    public PaymentDAO() {
-    }
+    // ===============================
+    // GET ALL
+    // ===============================
+    public ArrayList<PaymentDTO> getAll() {
+        ArrayList<PaymentDTO> list = new ArrayList<>();
+        String sql = "SELECT * FROM payments";
 
-    // ================== READ (SEARCH & FILTER) ==================
+        try ( Connection conn = DbUtil.getConnection();  PreparedStatement ps = conn.prepareStatement(sql);  ResultSet rs = ps.executeQuery()) {
 
-    public ArrayList<PaymentDTO> searchByColum(String column, String value) {
-        ArrayList<PaymentDTO> result = new ArrayList<>();
-        try {
-            Connection conn = DbUtil.getConnection();
-            String sql = "SELECT * FROM payment WHERE " + column + "=?";
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setString(1, value);
-            ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                int id = rs.getInt("id");
-                int orderId = rs.getInt("orderId");
-                String userId = rs.getString("userId");
-                String paymentMethod = rs.getString("paymentMethod");
-                float amount = rs.getFloat("amount");
-                String status = rs.getString("status");
-                String transactionCode = rs.getString("transactionCode");
-                Date paid_at = rs.getDate("paid_at");
-                
-                PaymentDTO p = new PaymentDTO(id, orderId, userId, paymentMethod, amount, status, transactionCode, paid_at);
-                result.add(p);
+                PaymentDTO p = new PaymentDTO(
+                        rs.getInt("id"),
+                        rs.getInt("order_id"),
+                        rs.getString("user_id"),
+                        rs.getString("payment_method"),
+                        rs.getFloat("amount"),
+                        rs.getString("status"),
+                        rs.getString("transaction_code"),
+                        rs.getDate("paid_at") // dùng Date theo DTO
+                );
+                list.add(p);
             }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return result;
+
+        return list;
     }
 
-    public ArrayList<PaymentDTO> filterByColum(String column, String value) {
-        ArrayList<PaymentDTO> result = new ArrayList<>();
-        try {
-            Connection conn = DbUtil.getConnection();
-            String sql = "SELECT * FROM payment WHERE " + column + " LIKE ?";
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setString(1, "%" + value + "%");
-            System.out.println(ps.toString());
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                int id = rs.getInt("id");
-                int orderId = rs.getInt("orderId");
-                String userId = rs.getString("userId");
-                String paymentMethod = rs.getString("paymentMethod");
-                float amount = rs.getFloat("amount");
-                String status = rs.getString("status");
-                String transactionCode = rs.getString("transactionCode");
-                Date paid_at = rs.getDate("paid_at");
-                
-                PaymentDTO p = new PaymentDTO(id, orderId, userId, paymentMethod, amount, status, transactionCode, paid_at);
-                result.add(p);
+    // ===============================
+    // GET BY ID
+    // ===============================
+    public PaymentDTO getById(int id) {
+        String sql = "SELECT * FROM payments WHERE id=?";
+
+        try ( Connection conn = DbUtil.getConnection();  PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, id);
+
+            try ( ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return new PaymentDTO(
+                            rs.getInt("id"),
+                            rs.getInt("order_id"),
+                            rs.getString("user_id"),
+                            rs.getString("payment_method"),
+                            rs.getFloat("amount"),
+                            rs.getString("status"),
+                            rs.getString("transaction_code"),
+                            rs.getDate("paid_at")
+                    );
+                }
             }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return result;
-    }
 
-    public PaymentDTO searchByID(int id) {
-        ArrayList<PaymentDTO> list = searchByColum("id", String.valueOf(id));
-        if (list.size() > 0) {
-            return list.get(0);
-        }
         return null;
     }
 
-    public ArrayList<PaymentDTO> searchByUserId(String userId) {
-        return searchByColum("userId", userId);
-    }
-    
-    public ArrayList<PaymentDTO> searchByOrderId(int orderId) {
-        return searchByColum("orderId", String.valueOf(orderId));
-    }
+    // ===============================
+    // INSERT
+    // ===============================
+    public boolean insert(PaymentDTO p) {
 
-    // ================== CREATE ==================
+        String sql = "INSERT INTO payments (order_id, user_id, payment_method, amount, status, transaction_code, paid_at) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
-    public boolean add(PaymentDTO p) {
-        int result = 0;
-        try {
-            Connection conn = DbUtil.getConnection();
-            // Giả sử cột `id` là tự động tăng (AUTO_INCREMENT) nên không truyền vào câu INSERT
-            String sql = "INSERT INTO payment (orderId, userId, paymentMethod, amount, status, transactionCode, paid_at) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        try ( Connection conn = DbUtil.getConnection();  PreparedStatement ps = conn.prepareStatement(sql)) {
 
-            PreparedStatement ps = conn.prepareStatement(sql);
             ps.setInt(1, p.getOrderId());
             ps.setString(2, p.getUserId());
             ps.setString(3, p.getPaymentMethod());
@@ -107,84 +88,60 @@ public class PaymentDAO {
             ps.setString(6, p.getTransactionCode());
             ps.setDate(7, p.getPaid_at());
 
-            result = ps.executeUpdate();
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("Add Payment Error: " + e.getMessage());
-        }
-        return result > 0;
-    }
-
-    // ================== UPDATE ==================
-
-    public boolean update(PaymentDTO p) {
-        int result = 0;
-        try {
-            Connection conn = DbUtil.getConnection();
-            String sql = "UPDATE payment "
-                    + "   SET orderId = ?"
-                    + "      ,userId = ?"
-                    + "      ,paymentMethod = ?"
-                    + "      ,amount = ?"
-                    + "      ,status = ?"
-                    + "      ,transactionCode = ?"
-                    + "      ,paid_at = ?"
-                    + " WHERE id = ?";
-
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setInt(1, p.getOrderId());
-            ps.setString(2, p.getUserId());
-            ps.setString(3, p.getPaymentMethod());
-            ps.setFloat(4, p.getAmount());
-            ps.setString(5, p.getStatus());
-            ps.setString(6, p.getTransactionCode());
-            ps.setDate(7, p.getPaid_at());
-            ps.setInt(8, p.getId()); // Cập nhật dựa trên ID
-
-            result = ps.executeUpdate();
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("Update Payment Error: " + e.getMessage());
-        }
-        return result > 0;
-    }
-
-    // ================== DELETE ==================
-
-    /**
-     * Tùy thuộc vào thiết kế DB, cột status của bạn có kiểu String.
-     * Hàm softDelete này sẽ chuyển status thành 'Cancelled' hoặc 'Deleted'.
-     */
-    public boolean softDelete(int id) {
-        try {
-            Connection conn = DbUtil.getConnection();
-            String sql = "UPDATE payment SET status = 'Deleted' WHERE id = ?";
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setInt(1, id);
-            
             return ps.executeUpdate() > 0;
+
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("Soft Delete Payment Error: " + e.getMessage());
         }
+
         return false;
     }
-    
-    /**
-     * Hàm xóa vĩnh viễn (Hard Delete) khỏi database
-     */
-    public boolean delete(int id) {
-        try {
-            Connection conn = DbUtil.getConnection();
-            String sql = "DELETE FROM payment WHERE id = ?";
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setInt(1, id);
-            
+
+    // ===============================
+    // UPDATE
+    // ===============================
+    public boolean update(PaymentDTO p) {
+
+        String sql = "UPDATE payments SET order_id=?, user_id=?, payment_method=?, amount=?, status=?, transaction_code=?, paid_at=? WHERE id=?";
+
+        try ( Connection conn = DbUtil.getConnection();  PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, p.getOrderId());
+            ps.setString(2, p.getUserId());
+            ps.setString(3, p.getPaymentMethod());
+            ps.setFloat(4, p.getAmount());
+            ps.setString(5, p.getStatus());
+            ps.setString(6, p.getTransactionCode());
+            ps.setDate(7, p.getPaid_at());
+            ps.setInt(8, p.getId());
+
             return ps.executeUpdate() > 0;
+
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("Delete Payment Error: " + e.getMessage());
         }
+
+        return false;
+    }
+
+    // ===============================
+    // UPDATE STATUS
+    // ===============================
+    public boolean updateStatus(int id, String status) {
+
+        String sql = "UPDATE payments SET status=? WHERE id=?";
+
+        try ( Connection conn = DbUtil.getConnection();  PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, status);
+            ps.setInt(2, id);
+
+            return ps.executeUpdate() > 0;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         return false;
     }
 }
