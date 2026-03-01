@@ -1,7 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package util;
 
 import java.sql.Connection;
@@ -10,12 +7,8 @@ import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
- *
- * @author truon
- */
 public class DbUtil {
-
+//    Do not change this code
     private static final String DB_NAME = "banhang_db";
     private static final String DB_USER_NAME = "sa";
     private static final String DB_PASSWORD = "12345";
@@ -27,7 +20,7 @@ public class DbUtil {
         conn = DriverManager.getConnection(url, DB_USER_NAME, DB_PASSWORD);
         return conn;
     }
-
+    
     public static void main(String[] args) {
         try {
             System.out.println(getConnection());
@@ -36,6 +29,5 @@ public class DbUtil {
         } catch (SQLException ex) {
             Logger.getLogger(DbUtil.class.getName()).log(Level.SEVERE, null, ex);
         }
-
     }
 }

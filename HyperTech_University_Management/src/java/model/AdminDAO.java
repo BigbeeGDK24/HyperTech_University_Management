@@ -8,7 +8,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import org.mindrot.jbcrypt.BCrypt;
-import utils.DbUtils;
+import util.DbUtil;
 
 /**
  *
@@ -16,37 +16,72 @@ import utils.DbUtils;
  */
 public class AdminDAO {
 
-    public AdminDAO() {
+    /*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+     */
 
-    }
-
-    public AdminDTO searchByID(String adminID) {
-        AdminDTO ad = null;
+    public AdminDTO searchByAdminName(String Username) {
+        AdminDTO admin = null;
         try {
-            Connection con = DbUtils.getConnection();
-            String sql = "SELECT * FROM admin WHERE adminID=?";
+            Connection con = DbUtil.getConnection();
+            String sql = "SELECT * FROM admin WHERE admin=?";
             System.out.println(sql);
 
             PreparedStatement letter = con.prepareStatement(sql);
-            letter.setString(1, adminID);
+            letter.setString(1, Username);
             ResultSet rs = letter.executeQuery();
 
             while (rs.next()) {
-                String username = rs.getString("adminID");
-                String password = rs.getString("adPass");
-                ad = new AdminDTO(username , password);
+                String username = rs.getString("Username");
+                String password = rs.getString("password");
+                admin = new AdminDTO(username, password);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-return ad;
+        return admin;
     }
-    
-    public AdminDTO login(String adminID , String adPass){
-        AdminDTO ad = searchByID(adminID);
-        if(ad != null && BCrypt.checkpw(adPass, ad.getAdPass())){
-            return ad;
+
+    public AdminDTO adLogin(String Username, String Password) {
+        AdminDTO admin = searchByAdminName(Username);
+        if (admin != null && BCrypt.checkpw(Password, admin.getPassword())) {
+            return admin;
         }
         return null;
+    }
+
+    public boolean addAd(AdminDTO ad) {
+        int result = 0;
+        try {
+
+            Connection conn = DbUtil.getConnection();
+            String sql = "INSERT INTO users (Username, password) VALUES (?,?)";
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, ad.getUsername());
+            ps.setString(2, ad.getPassword());
+            result = ps.executeUpdate();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        return result > 0;
+    }
+
+    public boolean UpdateAd(AdminDTO ad) {
+        int result = 0;
+        try {
+
+            Connection conn = DbUtil.getConnection();
+            String sql = "UPDATE admin"
+                    + "   SET adPass = ?"
+                    + " WHERE admin = ?";
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, ad.getPassword());
+            ps.setString(2, ad.getUsername());
+            result = ps.executeUpdate();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        return result > 0;
     }
 }
