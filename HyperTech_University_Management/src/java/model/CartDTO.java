@@ -10,7 +10,6 @@ package model;
  */
 public class CartDTO {
 
-    private int cartId;
     private String username;
     private int productId;
     private int quality;
@@ -18,21 +17,10 @@ public class CartDTO {
     public CartDTO() {
     }
 
-    public CartDTO(int cartId, String username, int productId, int quality) {
-        this.cartId = cartId;
+    public CartDTO( String username, int productId, int quality) {
         this.username = username;
         this.productId = productId;
         this.quality = quality;
-    }
-
-    
-
-    public int getCartId() {
-        return cartId;
-    }
-
-    public void setCartItemId(int cartId) {
-        this.cartId = cartId;
     }
 
     public String getUsername() {
