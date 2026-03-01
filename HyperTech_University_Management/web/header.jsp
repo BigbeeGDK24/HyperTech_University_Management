@@ -1,6 +1,7 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
 <link rel="stylesheet" href="css/header.css">
+<link rel="stylesheet" href="css/home.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
 <!-- Banner -->
@@ -8,7 +9,6 @@
 
 <!-- Header -->
 <header class="main-header">
-
     <a href="home.jsp" class="logo">TKT</a>
 
     <button class="menu-btn">
@@ -21,12 +21,9 @@
     </div>
 
     <div class="header-right">
-
         <a href="#" class="item">
             <i class="fa-solid fa-headset"></i>
-            <div>
-                Hotline<br><b>1900.5301</b>
-            </div>
+            <div>Hotline<br><b>1900.5301</b></div>
         </a>
 
         <a href="#" class="item">
@@ -48,9 +45,7 @@
             <i class="fa-solid fa-user"></i>
             <div>Đăng nhập</div>
         </a>
-
     </div>
-
 </header>
 
 <div class="sub-menu">
@@ -62,93 +57,102 @@
     <a href="#">Tra cứu bảo hành</a>
 </div>
 
+<!-- ================= MAIN LAYOUT ================= -->
+
 <div class="main-layout">
 
     <!-- SIDEBAR -->
     <div class="sidebar">
         <ul class="category-list">
-
-            <li>
-                <a href="#">
-                    <span>Laptop</span>
-                    <span class="arrow">›</span>
-                </a>
-            </li>
-
-            <li>
-                <a href="#">
-                    <span>Main, CPU, VGA</span>
-                    <span class="arrow">›</span>
-                </a>
-            </li>
-
-            <li>
-                <a href="#">
-                    <span>Case, Nguồn, Tản</span>
-                    <span class="arrow">›</span>
-                </a>
-            </li>
-
-            <li>
-                <a href="#">
-                    <span>Ổ cứng, RAM, Thẻ nhớ</span>
-                    <span class="arrow">›</span>
-                </a>
-            </li>
-
-            <li>
-                <a href="#">
-                    <span>Màn hình</span>
-                    <span class="arrow">›</span>
-                </a>
-            </li>
-
-            <li>
-                <a href="#">
-                    <span>Bàn phím</span>
-                    <span class="arrow">›</span>
-                </a>
-            </li>
-
-            <li>
-                <a href="#">
-                    <span>Chuột + Lót chuột</span>
-                    <span class="arrow">›</span>
-                </a>
-            </li>
-
+            <li><a href="#"><span>Laptop</span><span class="arrow">›</span></a></li>
+            <li><a href="#"><span>Main, CPU, VGA</span><span class="arrow">›</span></a></li>
+            <li><a href="#"><span>Case, Nguồn, Tản</span><span class="arrow">›</span></a></li>
+            <li><a href="#"><span>Ổ cứng, RAM, Thẻ nhớ</span><span class="arrow">›</span></a></li>
+            <li><a href="#"><span>Màn hình</span><span class="arrow">›</span></a></li>
+            <li><a href="#"><span>Bàn phím</span><span class="arrow">›</span></a></li>
+            <li><a href="#"><span>Chuột + Lót chuột</span><span class="arrow">›</span></a></li>
         </ul>
     </div>
 
-    <!-- BANNER -->
-   <div class="home-wrapper">
+    <!-- CONTENT -->
+    <div class="content">
 
-    <!-- CỘT TRÁI -->
-    <div class="home-banner">
+        <!-- Banner khu vực -->
+        <div class="home-wrapper">
 
-        <a href="khuyenmai.jsp">
-            <img class="banner-main" src="images/madaothanhcong.png">
-        </a>
+            <div class="home-left">
+                <a href="khuyenmai.jsp">
+                    <img class="banner-main" src="images/madaothanhcong.png">
+                </a>
 
-        <div class="banner-row">
-            <a href="BestSeller.jsp">
-                <img class="banner-small" src="images/laptopgaming.jpg">
-            </a>
+                <div class="banner-row">
+                    <a href="BestSeller.jsp">
+                        <img class="banner-small" src="images/laptopgaming.jpg">
+                    </a>
+                    <a href="BestSeller2.jsp">
+                        <img class="banner-small" src="images/chuotgaming.jpg">
+                    </a>
+                </div>
+            </div>
 
-            <a href="BestSeller2.jsp">
-                <img class="banner-small" src="images/chuotgaming.jpg">
-            </a>
+            <div class="home-middle">
+                <a href="BestSeller3.jsp">
+                    <img class="banner-keyboard" src="images/keyboard_new.jpg">
+                </a>
+            </div>
+
         </div>
 
-    </div>
+        <!-- ================= SẢN PHẨM ĐÃ XEM ================= -->
+        <section class="section-viewed">
+            <div id="section_viewed">
 
-    <!-- CỘT PHẢI -->
-    <div class="home-vertical">
-        <a href="BestSeller3.jsp">
-            <img class="banner-vertical" src="images/keyboard.jpg">
-        </a>
-    </div>
+                <div class="section-heading">
+                    <h2>Sản phẩm đã xem</h2>
+                </div>
 
+                <div id="viewed-products">
+                </div>
+
+            </div>
+        </section>
+
+    </div>
 </div>
 
+<!-- Fixed RTX -->
+<div class="fixed-rtx">
+    <a href="LaptopRTX.jsp">
+        <img src="images/laptoprtx.jpg" alt="Laptop RTX">
+    </a>
 </div>
+
+
+<script>
+window.addEventListener("load", function () {
+
+    const banner = document.querySelector(".fixed-rtx");
+    const topBanner = document.querySelector(".top-banner");
+    const mainHeader = document.querySelector(".main-header");
+    const subMenu = document.querySelector(".sub-menu");
+
+    const spacing = 35;
+
+    // Tính vị trí ban đầu
+    const baseTop =
+        topBanner.offsetHeight +
+        mainHeader.offsetHeight +
+        subMenu.offsetHeight +
+        spacing;
+
+    // Set vị trí ban đầu
+    banner.style.top = baseTop + "px";
+
+    // Scroll effect
+    window.addEventListener("scroll", function () {
+        const offset = window.scrollY * 0.2;  // tốc độ trôi
+        banner.style.top = (baseTop + offset) + "px";
+    });
+
+});
+</script>
