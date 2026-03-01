@@ -1,0 +1,57 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css to edit this template
+*/
+/* 
+    Created on : Mar 1, 2026, 5:06:20 PM
+    Author     : truon
+*/
+
+/* ================================================= */
+/* =============== VIEWED PRODUCT GREY ============= */
+/* ================================================= */
+
+.section-viewed {
+    width: 100%;
+    margin-top: 50px;
+    min-height: 150px;   /* tăng chiều cao thật sự */
+    padding: 20px 0 40px; /* chỉ để khoảng cách nhẹ */
+    background: #e9e9e9;
+}
+
+#section_viewed {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0;   /* bỏ 30px ở trên */
+    background: transparent;
+}
+
+/* ===== Tiêu đề ===== */
+
+.section-heading {
+    position: relative;
+    margin-top: 0;          /* thêm */
+    margin-bottom: 20px;
+    padding: 0 20px;
+}
+
+.section-heading h2 {
+    font-size: 22px;
+    font-weight: 700;
+    color: #222;
+    padding-left: 18px;
+    margin: 0;              /* QUAN TRỌNG – bỏ margin mặc định */
+}
+
+/* Thanh đỏ bên trái */
+
+.section-heading h2::before {
+    content: "";
+    position: absolute;
+    left: 20px;
+    top: 0;                 /* chỉnh lại để sát hơn */
+    width: 5px;
+    height: 22px;
+    background: #c4000f;
+    border-radius: 3px;
+}
