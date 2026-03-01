@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package model;
 
 import java.sql.Connection;
@@ -11,60 +7,151 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import util.DbUtil;
 
-/**
- *
- * @author hasot
- */
-        
-
 public class DiscountDAO {
-    public class CartItemDAO {
-    public ArrayList<DiscountDTO> searchByColum(String column, String value) {
-        ArrayList<DiscountDTO> result = new ArrayList<>();
-        try {
-            Connection conn = DbUtil.getConnection();
-            String sql = "SELECT * FROM discounts WHERE " + column + "=?";
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setString(1, value);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                int id = rs.getInt("id");
-                String name = rs.getString("name");
-                int discount_percent = rs.getInt("discount_percent");
-                Date start_date = rs.getDate("start_date");
-                Date end_date = rs.getDate("end_date");
 
-                DiscountDTO u = new DiscountDTO(id, name, discount_percent, start_date, end_date);
-                result.add(u);
-            }
-        } catch (Exception e) {
-        }
+    // ================= SEARCH EXACT =================
+    public ArrayList<CategoryDTO> searchByColumn(String column, String value) {
+    ArrayList<CategoryDTO> result = new ArrayList<>();
+
+    // Whitelist tránh SQL Injection
+    if (!column.equals("id") &&
+        !column.equals("name") &&
+        !column.equals("description") &&
+        !column.equals("created_at")) {
         return result;
     }
 
-    public ArrayList<DiscountDTO> filterByColum(String column, String value) {
-        ArrayList<DiscountDTO> result = new ArrayList<>();
-        try {
-            Connection conn = DbUtil.getConnection();
-            String sql = "SELECT * FROM discounts WHERE " + column + " LIKE ?";
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setString(1, "%" + value + "%");
-            System.out.println(ps.toString());
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                int id = rs.getInt("id");
-                String name = rs.getString("name");
-                int discount_percent = rs.getInt("discount_percent");
-                Date start_date = rs.getDate("paid_at");
-                Date end_date = rs.getDate("paid_at");
+    try {
+        Connection conn = DbUtil.getConnection();
+        String sql = "SELECT * FROM categories WHERE " + column + " = ?";
+        PreparedStatement ps = conn.prepareStatement(sql);
+        ps.setString(1, value);
 
-                DiscountDTO u = new DiscountDTO(id, name, discount_percent, start_date, end_date);
-                result.add(u);
-            }
+        ResultSet rs = ps.executeQuery();
+
+        while (rs.next()) {
+            int id = rs.getInt("id");
+            String name = rs.getString("name");
+            String description = rs.getString("description");
+            java.sql.Timestamp createdAt = rs.getTimestamp("created_at");
+
+            CategoryDTO c = new CategoryDTO(id, name, description, createdAt);
+            result.add(c);
+        }
+
+        rs.close();
+        ps.close();
+        conn.close();
+
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+
+    return result;
+}
+
+
+// ===============================
+// FILTER BY COLUMN (LIKE)
+// ===============================
+public ArrayList<CategoryDTO> filterByColumn(String column, String value) {
+    ArrayList<CategoryDTO> result = new ArrayList<>();
+
+    if (!column.equals("id") &&
+        !column.equals("name") &&
+        !column.equals("description") &&
+        !column.equals("created_at")) {
+        return result;
+    }
+
+    try {
+        Connection conn = DbUtil.getConnection();
+        String sql = "SELECT * FROM categories WHERE " + column + " LIKE ?";
+        PreparedStatement ps = conn.prepareStatement(sql);
+        ps.setString(1, "%" + value + "%");
+
+        ResultSet rs = ps.executeQuery();
+
+        while (rs.next()) {
+            int id = rs.getInt("id");
+            String name = rs.getString("name");
+            String description = rs.getString("description");
+            java.sql.Timestamp createdAt = rs.getTimestamp("created_at");
+
+            CategoryDTO c = new CategoryDTO(id, name, description, createdAt);
+            result.add(c);
+        }
+
+        rs.close();
+        ps.close();
+        conn.close();
+
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+
+    return result;
+}
+    // ================= INSERT =================
+    public boolean insert(DiscountDTO discount) {
+
+        String sql = "INSERT INTO discounts (name, discount_percent, start_date, end_date) VALUES (?, ?, ?, ?)";
+
+        try (Connection conn = DbUtil.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, discount.getName());
+            ps.setInt(2, discount.getDiscount_percent());
+            ps.setDate(3, discount.getStart_date());
+            ps.setDate(4, discount.getEnd_date());
+
+            return ps.executeUpdate() > 0;
+
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return result;
+
+        return false;
     }
+
+    // ================= UPDATE =================
+    public boolean update(DiscountDTO discount) {
+
+        String sql = "UPDATE discounts SET name = ?, discount_percent = ?, start_date = ?, end_date = ? WHERE id = ?";
+
+        try (Connection conn = DbUtil.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, discount.getName());
+            ps.setInt(2, discount.getDiscount_percent());
+            ps.setDate(3, discount.getStart_date());
+            ps.setDate(4, discount.getEnd_date());
+            ps.setInt(5, discount.getId());
+
+            return ps.executeUpdate() > 0;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    // ================= DELETE =================
+    public boolean delete(int id) {
+
+        String sql = "DELETE FROM discounts WHERE id = ?";
+
+        try (Connection conn = DbUtil.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, id);
+            return ps.executeUpdate() > 0;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return false;
     }
 }
