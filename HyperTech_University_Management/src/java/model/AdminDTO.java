@@ -9,8 +9,6 @@ package model;
  * @author truon
  */
 public class AdminDTO {
-    private String Username;
-    private String Password;
 
     public AdminDTO() {
         
@@ -26,16 +24,16 @@ public class AdminDTO {
         return Username;
     }
 
-    public String getPassword() {
-        return Password;
+    public String getAdPass() {
+        return adPass;
     }
 
-    public void setUsername(String Username) {
-        this.Username = Username;
+    public void setAdminID(String adminID) {
+        this.adminID = adminID;
     }
 
-    public void setPassword(String Password) {
-        this.Password = Password;
+    public void setAdPass(String adPass) {
+        this.adPass = adPass;
     }
-    
+
 }
