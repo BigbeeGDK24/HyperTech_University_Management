@@ -3,6 +3,8 @@ package model;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
 import org.mindrot.jbcrypt.BCrypt;
 import util.DbUtil;
 
@@ -35,7 +37,36 @@ public class UserDAO {
         }
         return user;
     }
+public List<UserDTO> getAllUsers() {
 
+    List<UserDTO> list = new ArrayList<>();
+    String sql = "SELECT * FROM users";
+
+    try (Connection con = DbUtil.getConnection();
+         PreparedStatement ps = con.prepareStatement(sql);
+         ResultSet rs = ps.executeQuery()) {
+
+        while (rs.next()) {
+
+            UserDTO user = new UserDTO(
+                    rs.getString("Username"),
+                    rs.getString("name"),
+                    rs.getString("email"),
+                    rs.getString("password"),
+                    rs.getString("phone"),
+                    rs.getString("address"),
+                    rs.getBoolean("status")
+            );
+
+            list.add(user);
+        }
+
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+
+    return list;
+}
     // ================= LOGIN =================
     public UserDTO login(String Username, String Password) {
         UserDTO user = searchByUsername(Username);
