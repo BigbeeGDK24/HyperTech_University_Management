@@ -97,11 +97,11 @@ public class OrderItemDAO {
             Connection conn = DbUtil.getConnection();
             // Giả sử id là tự tăng (Auto Increment) nên không insert id
             String sql = "INSERT INTO order_items(order_id, product_id, price, quantity) VALUES (?, ?, ?, ?)";
-            
+
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setInt(1, item.getOrderID());
             ps.setInt(2, item.getProductID());
-            ps.setFloat(3,(float) item.getPrice());
+            ps.setFloat(3, (float) item.getPrice());
             ps.setInt(4, item.getQuantity());
 
             result = ps.executeUpdate();
@@ -120,11 +120,11 @@ public class OrderItemDAO {
         try {
             Connection conn = DbUtil.getConnection();
             String sql = "UPDATE order_items "
-                       + "SET order_id = ?, "
-                       + "    product_id = ?, "
-                       + "    price = ?, "
-                       + "    quantity = ? "
-                       + "WHERE id = ?";
+                    + "SET order_id = ?, "
+                    + "    product_id = ?, "
+                    + "    price = ?, "
+                    + "    quantity = ? "
+                    + "WHERE id = ?";
 
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setInt(1, item.getOrderID());
@@ -150,15 +150,59 @@ public class OrderItemDAO {
             Connection conn = DbUtil.getConnection();
             // Xóa cứng khỏi database. Nếu bạn muốn xóa mềm thì đổi thành UPDATE status
             String sql = "DELETE FROM order_items WHERE id = ?";
-            
+
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setInt(1, id);
-            
+
             result = ps.executeUpdate();
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println(e.getMessage());
         }
         return result > 0;
+    }
+    // ===============================
+// STATISTICS - TOTAL SOLD QUANTITY
+// ===============================
+
+    public int getTotalSoldQuantity() {
+        int total = 0;
+        String sql = "SELECT SUM(quantity) AS total FROM order_items";
+
+        try ( Connection conn = DbUtil.getConnection();  PreparedStatement ps = conn.prepareStatement(sql);  ResultSet rs = ps.executeQuery()) {
+
+            if (rs.next()) {
+                total = rs.getInt("total");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return total;
+    }
+
+// ===============================
+// STATISTICS - TOP 5 SELLING PRODUCTS
+// ===============================
+    public ArrayList<Integer> getTopSellingProductIDs() {
+        ArrayList<Integer> list = new ArrayList<>();
+
+        String sql = "SELECT product_id, SUM(quantity) AS total "
+                + "FROM order_items "
+                + "GROUP BY product_id "
+                + "ORDER BY total DESC "
+                + "LIMIT 5";
+
+        try ( Connection conn = DbUtil.getConnection();  PreparedStatement ps = conn.prepareStatement(sql);  ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                list.add(rs.getInt("product_id"));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return list;
     }
 }
