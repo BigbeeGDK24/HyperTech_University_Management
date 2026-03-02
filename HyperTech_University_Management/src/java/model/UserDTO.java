@@ -7,18 +7,22 @@ public class UserDTO {
     private String password;
     private String phone;
     private String address;
+    private boolean status;
 
     public UserDTO() {
     }
 
-    public UserDTO(String Username, String name, String email, String password, String phone, String address) {
+    public UserDTO(String Username, String name, String email, String password, String phone, String address, boolean status) {
         this.Username = Username;
         this.name = name;
         this.email = email;
         this.password = password;
         this.phone = phone;
         this.address = address;
+        this.status = status;
     }
+
+    
 
     public String getUsername() {
         return Username;
@@ -66,6 +70,14 @@ public class UserDTO {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public boolean isStatus() {
+        return status;
+    }
+
+    public void setStatus(boolean status) {
+        this.status = status;
     }
    
 
