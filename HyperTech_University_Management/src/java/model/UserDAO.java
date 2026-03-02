@@ -25,8 +25,9 @@ public class UserDAO {
                 String password = rs.getString("password");
                 String phone = rs.getString("phone");
                 String address = rs.getString("address");
-
-                user = new UserDTO(Username, name, email, password, phone, address);
+                boolean status = rs.getBoolean("status");
+                        
+                user = new UserDTO(Username, name, email, password, phone, address, status);
             }
 
         } catch (Exception e) {
@@ -40,7 +41,11 @@ public class UserDAO {
         UserDTO user = searchByUsername(Username);
 
         if (user != null && BCrypt.checkpw(Password, user.getPassword())) {
-            return user;
+            if (user.isStatus() == true) {
+                return user;
+            } else {
+                return null;
+            }
         }
         return null;
     }
@@ -52,6 +57,13 @@ public class UserDAO {
 
         try (Connection conn = DbUtil.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
+//private String Username;
+//    private String name;
+//    private String email;
+//    private String password;
+//    private String phone;
+//    private String address;
+//    private boolean status;
 
             // Hash mật khẩu trước khi lưu
             String hashedPassword = BCrypt.hashpw(u.getPassword(), BCrypt.gensalt());
@@ -62,7 +74,7 @@ public class UserDAO {
             ps.setString(4, hashedPassword);
             ps.setString(5, u.getPhone());
             ps.setString(6, u.getAddress());
-
+            ps.setBoolean(7, true);
             return ps.executeUpdate() > 0;
 
         } catch (Exception e) {
@@ -71,4 +83,20 @@ public class UserDAO {
 
         return false;
     }
+    public boolean updateUserStatus(String username, int status) {
+    boolean check = false;
+    String sql = "UPDATE users SET status = ? WHERE Username = ?";
+    try (Connection con = DbUtil.getConnection();
+         PreparedStatement ps = con.prepareStatement(sql)) {
+
+        ps.setInt(1, status);
+        ps.setString(2, username);
+
+        check = ps.executeUpdate() > 0;
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    return check;
+}
+
 }
