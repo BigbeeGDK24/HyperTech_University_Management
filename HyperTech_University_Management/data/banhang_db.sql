@@ -5,9 +5,8 @@ USE banhang_db;
 -- BẢNG USERS
 -- ==============================
 CREATE TABLE users (
-    Username NVARCHAR(70) PRIMARY KEY,
-    name NVARCHAR(50) NOT NULL,
-    email NVARCHAR(70) NOT NULL UNIQUE,
+    username NVARCHAR(50) NOT NULL,
+    email NVARCHAR(70) NOT NULL PRIMARY KEY,
     password NVARCHAR(255) NOT NULL,
     phone VARCHAR(10),
     address NVARCHAR(MAX),
