@@ -7,23 +7,15 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
     Author     : truon
 */
 
-/* ================================================= */
-/* =============== VIEWED PRODUCT GREY ============= */
-/* ================================================= */
+/* ===== VIEWED SAME WIDTH AS LEFT + KEYBOARD ===== */
 
 .section-viewed {
-    width: 100%;
     margin-top: 50px;
-    min-height: 150px;   /* tăng chiều cao thật sự */
-    padding: 20px 0 40px; /* chỉ để khoảng cách nhẹ */
+    padding: 30px 0 150px;
     background: #e9e9e9;
-}
 
-#section_viewed {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0;   /* bỏ 30px ở trên */
-    background: transparent;
+    /* Trừ phần RTX */
+    width: calc(100% - 150px); 
 }
 
 /* ===== Tiêu đề ===== */
