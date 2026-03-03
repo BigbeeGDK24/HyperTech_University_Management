@@ -7,14 +7,16 @@ public class CategoryDTO {
     private int id;
     private String name;
     private String description;
-    
+    private boolean status;
+
     public CategoryDTO() {
     }
 
-    public CategoryDTO(int id, String name, String description, Timestamp createdAt) {
+    public CategoryDTO(int id, String name, String description, boolean status) {
         this.id = id;
         this.name = name;
         this.description = description;
+        this.status = status;
     }
 
     public int getId() {
@@ -40,6 +42,16 @@ public class CategoryDTO {
     public void setDescription(String description) {
         this.description = description;
     }
+
+    public boolean isStatus() {
+        return status;
+    }
+
+    public void setStatus(boolean status) {
+        this.status = status;
+    }
+    
+  
 
 
 }

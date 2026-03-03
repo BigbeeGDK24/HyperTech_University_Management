@@ -8,14 +8,16 @@ import util.DbUtil;
 
 public class CategoryDAO {
 
-    // ===============================
-    // GET ALL CATEGORIES
-    // ===============================
+    // =====================================================
+    // 1. LẤY TẤT CẢ CATEGORY ACTIVE
+    // =====================================================
     public ArrayList<CategoryDTO> getAll() {
         ArrayList<CategoryDTO> list = new ArrayList<>();
-        String sql = "SELECT * FROM categories";
+        String sql = "SELECT * FROM categories WHERE status = 1";
 
-        try ( Connection conn = DbUtil.getConnection();  PreparedStatement ps = conn.prepareStatement(sql);  ResultSet rs = ps.executeQuery()) {
+        try (Connection con = DbUtil.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {
                 list.add(extractCategory(rs));
@@ -28,13 +30,14 @@ public class CategoryDAO {
         return list;
     }
 
-    // ===============================
-    // GET CATEGORY BY ID
-    // ===============================
+    // =====================================================
+    // 2. LẤY THEO ID (CHỈ ACTIVE)
+    // =====================================================
     public CategoryDTO getById(int id) {
-        String sql = "SELECT * FROM categories WHERE id = ?";
+        String sql = "SELECT * FROM categories WHERE id = ? AND status = 1";
 
-        try ( Connection conn = DbUtil.getConnection();  PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection con = DbUtil.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
 
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
@@ -50,14 +53,15 @@ public class CategoryDAO {
         return null;
     }
 
-    // ===============================
-    // SEARCH BY NAME (LIKE)
-    // ===============================
+    // =====================================================
+    // 3. SEARCH THEO TÊN (CHỈ ACTIVE)
+    // =====================================================
     public ArrayList<CategoryDTO> searchByName(String name) {
         ArrayList<CategoryDTO> list = new ArrayList<>();
-        String sql = "SELECT * FROM categories WHERE name LIKE ?";
+        String sql = "SELECT * FROM categories WHERE name LIKE ? AND status = 1";
 
-        try ( Connection conn = DbUtil.getConnection();  PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection con = DbUtil.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
 
             ps.setString(1, "%" + name + "%");
             ResultSet rs = ps.executeQuery();
@@ -73,13 +77,14 @@ public class CategoryDAO {
         return list;
     }
 
-    // ===============================
-    // INSERT CATEGORY
-    // ===============================
+    // =====================================================
+    // 4. THÊM CATEGORY (MẶC ĐỊNH ACTIVE)
+    // =====================================================
     public boolean insert(CategoryDTO c) {
-        String sql = "INSERT INTO categories (name, description) VALUES (?, ?)";
+        String sql = "INSERT INTO categories (name, description, status) VALUES (?, ?, 1)";
 
-        try ( Connection conn = DbUtil.getConnection();  PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection con = DbUtil.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
 
             ps.setString(1, c.getName());
             ps.setString(2, c.getDescription());
@@ -93,17 +98,19 @@ public class CategoryDAO {
         return false;
     }
 
-    // ===============================
-    // UPDATE CATEGORY
-    // ===============================
+    // =====================================================
+    // 5. UPDATE CATEGORY
+    // =====================================================
     public boolean update(CategoryDTO c) {
-        String sql = "UPDATE categories SET name = ?, description = ? WHERE id = ?";
+        String sql = "UPDATE categories SET name = ?, description = ?, status = ? WHERE id = ?";
 
-        try ( Connection conn = DbUtil.getConnection();  PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection con = DbUtil.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
 
             ps.setString(1, c.getName());
             ps.setString(2, c.getDescription());
-            ps.setInt(3, c.getId());
+            ps.setBoolean(3, c.isStatus());
+            ps.setInt(4, c.getId());
 
             return ps.executeUpdate() > 0;
 
@@ -114,16 +121,16 @@ public class CategoryDAO {
         return false;
     }
 
-    // ===============================
-    // DELETE CATEGORY
-    // ===============================
-    public boolean delete(int id) {
-        String sql = "DELETE FROM categories WHERE id = ?";
+    // =====================================================
+    // 6. SOFT DELETE
+    // =====================================================
+    public boolean softDelete(int id) {
+        String sql = "UPDATE categories SET status = 0 WHERE id = ?";
 
-        try ( Connection conn = DbUtil.getConnection();  PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (Connection con = DbUtil.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
 
             ps.setInt(1, id);
-
             return ps.executeUpdate() > 0;
 
         } catch (Exception e) {
@@ -133,15 +140,15 @@ public class CategoryDAO {
         return false;
     }
 
-    // ===============================
-    // EXTRACT CATEGORY (PRIVATE)
-    // ===============================
+    // =====================================================
+    // HÀM MAP RESULTSET → DTO
+    // =====================================================
     private CategoryDTO extractCategory(ResultSet rs) throws Exception {
-        int id = rs.getInt("id");
-        String name = rs.getString("name");
-        String description = rs.getString("description");
-        java.sql.Timestamp createdAt = rs.getTimestamp("created_at");
-
-        return new CategoryDTO(id, name, description, createdAt);
+        return new CategoryDTO(
+                rs.getInt("id"),
+                rs.getString("name"),
+                rs.getString("description"),
+                rs.getBoolean("status")
+        );
     }
 }
