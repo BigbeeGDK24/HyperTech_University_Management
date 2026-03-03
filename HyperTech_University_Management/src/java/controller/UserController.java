@@ -142,11 +142,11 @@ public class UserController extends HttpServlet {
 
     protected void doUpdate(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String id = request.getParameter("id");
+        String email = request.getParameter("email");
         UserDAO udao = new UserDAO();
 
         // Tìm kiếm thông tin cũ từ DB
-        UserDTO u = udao.searchByUsername(id);
+        UserDTO u = udao.searchByEmail(email);
 
         if (u != null) {
             request.setAttribute("u", u);
@@ -160,33 +160,33 @@ public class UserController extends HttpServlet {
 
     private UserDTO extractUserFromRequest(HttpServletRequest request) {
         String Username = request.getParameter("Username");
-        String name = request.getParameter("name");
         String email = request.getParameter("email");
         String password = request.getParameter("password");
         String phone = request.getParameter("phone");
         String address = request.getParameter("address");
-        boolean status = "on".equals(request.getParameter("status"));
+        boolean status = true;
 
-        return new UserDTO(Username, name, email, password, phone, address, status);
+        return new UserDTO(Username, email, password, phone, address, status);
     }
 
     private String validateUser(UserDTO u, boolean isUpdate) {
         StringBuilder error = new StringBuilder();
         if (u.getUsername()== null || u.getUsername().trim().isEmpty()) {
-            error.append("Chưa nhập chưa nhập username <br/>");
+            error.append("Chưa nhập username <br/>");
         }
-        if (u.getName() == null || u.getName().trim().isEmpty()) {
+        if (u.getEmail()== null || u.getEmail().trim().isEmpty()) {
             error.append("Chưa nhập Name <br/>");
         }
         if (u.getEmail()== null || u.getEmail().trim().isEmpty()) {
             error.append("Chưa nhập email <br/>");
         }
+        
 
         // Nếu là thêm mới, cần check trùng ID (Update thì không cần check vì ID là readonly)
         if (!isUpdate) {
             UserDAO udao = new UserDAO();
-            if (udao.searchByUsername(u.getUsername()) != null) {
-                error.append("Username đã tồn tại, vui lòng chọn ID khác! <br/>");
+            if (udao.searchByEmail(u.getUsername()) != null) {
+                error.append("email đã tồn tại, vui lòng chọn email khác! <br/>");
             }
         }
         return error.toString();
@@ -209,7 +209,7 @@ public class UserController extends HttpServlet {
         request.setAttribute("u", u);
         request.setAttribute("msg", msg);
         request.setAttribute("error", error);
-        request.getRequestDispatcher("university-form.jsp").forward(request, response);
+        response.sendRedirect("UserServlet");
     }
 
     protected void doSaveUpdate(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -231,6 +231,17 @@ public class UserController extends HttpServlet {
         request.setAttribute("msg", msg);
         request.setAttribute("error", error);
         request.getRequestDispatcher("university-form.jsp").forward(request, response);
+    }
+
+    protected void doGetAll(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        UserDAO udao = new UserDAO();
+        ArrayList<UserDTO> list = new ArrayList<>(udao.getAllUsers());
+
+        request.setAttribute("list", list);
+// tùy lựa chọn của mình mà chỉnh trang
+        request.getRequestDispatcher("search.jsp").forward(request, response);
     }
 
     // Hàm hỗ trợ parse số để tránh lập lại code try-catch
@@ -279,7 +290,10 @@ public class UserController extends HttpServlet {
                     // Khi người dùng nhấn nút "Update" trong Form -> Lưu vào DB
                     doSaveUpdate(request, response);
                     break;
-
+                
+                case "getAllUsers":
+    doGetAll(request, response);
+    break;
                 default:
                     // Nếu action không khớp, mặc định quay về trang search hoặc báo lỗi
                     request.setAttribute("error", "Hành động không hợp lệ: " + action);

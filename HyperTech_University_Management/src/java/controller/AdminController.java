@@ -50,49 +50,7 @@ public class AdminController extends HttpServlet {
                     request.setAttribute("error", "Sai tài khoản hoặc mật khẩu Admin!");
                 }
             }
-
-            /* ===================== VIEW USER LIST ===================== */
-            else if ("viewUsers".equals(action)) {
-
-                if (session.getAttribute("admin") == null) {
-                    response.sendRedirect("login.jsp");
-                    return;
-                }
-
-                UserDAO udao = new UserDAO();
-                List<UserDTO> list = udao.getAllUsers();
-                request.setAttribute("listUser", list);
-
-                url = "adminDashboard.jsp";
-            }
-
-            /* ===================== CHANGE USER STATUS ===================== */
-            else if ("changeStatus".equals(action)) {
-
-                if (session.getAttribute("admin") == null) {
-                    response.sendRedirect("login.jsp");
-                    return;
-                }
-
-                String username = request.getParameter("username");
-                int status = Integer.parseInt(request.getParameter("status"));
-
-                UserDAO udao = new UserDAO();
-                boolean result = udao.updateUserStatus(username, status);
-
-                if (result) {
-                    request.setAttribute("message", "Cập nhật trạng thái thành công!");
-                } else {
-                    request.setAttribute("error", "Cập nhật thất bại!");
-                }
-
-                // load lại danh sách
-                List<UserDTO> list = udao.getAllUsers();
-                request.setAttribute("listUser", list);
-
-                url = "adminDashboard.jsp";
-            }
-
+            
             /* ===================== ADMIN LOGOUT ===================== */
             else if ("logout".equals(action)) {
 
