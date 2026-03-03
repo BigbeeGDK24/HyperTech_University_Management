@@ -219,7 +219,7 @@ public class UserController extends HttpServlet {
 
         if (error.isEmpty()) {
             UserDAO udao = new UserDAO();
-            if (udao.update(u)) {
+            if (udao.UpdateU(u)) {
                 msg = "Đã cập nhật thành công!";
             } else {
                 error = "Lỗi hệ thống: Không thể cập nhật!";

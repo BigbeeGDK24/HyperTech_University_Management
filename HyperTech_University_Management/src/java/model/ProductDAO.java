@@ -8,12 +8,16 @@ import util.DbUtil;
 
 public class ProductDAO {
 
-    // ================= GET ALL =================
+    // =====================================================
+    // 1. LẤY TẤT CẢ SẢN PHẨM ĐANG HOẠT ĐỘNG
+    // =====================================================
     public ArrayList<ProductDTO> getAll() {
         ArrayList<ProductDTO> list = new ArrayList<>();
-        String sql = "SELECT * FROM products";
+        String sql = "SELECT * FROM products WHERE status = 1";
 
-        try ( Connection con = DbUtil.getConnection();  PreparedStatement ps = con.prepareStatement(sql);  ResultSet rs = ps.executeQuery()) {
+        try (Connection con = DbUtil.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {
                 list.add(extractProduct(rs));
@@ -26,11 +30,14 @@ public class ProductDAO {
         return list;
     }
 
-    // ================= GET BY ID =================
+    // =====================================================
+    // 2. LẤY THEO ID
+    // =====================================================
     public ProductDTO getById(int id) {
         String sql = "SELECT * FROM products WHERE id = ?";
 
-        try ( Connection con = DbUtil.getConnection();  PreparedStatement ps = con.prepareStatement(sql)) {
+        try (Connection con = DbUtil.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
 
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
@@ -46,12 +53,15 @@ public class ProductDAO {
         return null;
     }
 
-    // ================= SEARCH BY NAME =================
+    // =====================================================
+    // 3. SEARCH THEO TÊN (CHỈ LẤY SẢN PHẨM ACTIVE)
+    // =====================================================
     public ArrayList<ProductDTO> searchByName(String name) {
         ArrayList<ProductDTO> list = new ArrayList<>();
-        String sql = "SELECT * FROM products WHERE name LIKE ?";
+        String sql = "SELECT * FROM products WHERE name LIKE ? AND status = 1";
 
-        try ( Connection con = DbUtil.getConnection();  PreparedStatement ps = con.prepareStatement(sql)) {
+        try (Connection con = DbUtil.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
 
             ps.setString(1, "%" + name + "%");
             ResultSet rs = ps.executeQuery();
@@ -67,41 +77,16 @@ public class ProductDAO {
         return list;
     }
 
-    // ================= ADD =================
+    // =====================================================
+    // 4. THÊM SẢN PHẨM
+    // =====================================================
     public boolean add(ProductDTO p) {
-        String sql = "INSERT INTO products ( category_id, name, price, stock, description, image) "
-                + "VALUES ( ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO products "
+                + "(category_id, name, price, stock, description, image, status) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?)";
 
-        try ( Connection con = DbUtil.getConnection();  PreparedStatement ps = con.prepareStatement(sql)) {
-
-            ps.setInt(2, p.getCategory_id());
-            ps.setString(3, p.getName());
-            ps.setFloat(4, p.getPrice());
-            ps.setInt(5, p.getStock());
-            ps.setString(6, p.getDescription());
-            ps.setString(7, p.getImage());
-
-            return ps.executeUpdate() > 0;
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return false;
-    }
-
-    // ================= UPDATE =================
-    public boolean update(ProductDTO p) {
-        String sql = "UPDATE products SET "
-                + "category_id = ?, "
-                + "name = ?, "
-                + "price = ?, "
-                + "stock = ?, "
-                + "description = ?, "
-                + "image = ? "
-                + "WHERE id = ?";
-
-        try ( Connection con = DbUtil.getConnection();  PreparedStatement ps = con.prepareStatement(sql)) {
+        try (Connection con = DbUtil.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
 
             ps.setInt(1, p.getCategory_id());
             ps.setString(2, p.getName());
@@ -109,7 +94,7 @@ public class ProductDAO {
             ps.setInt(4, p.getStock());
             ps.setString(5, p.getDescription());
             ps.setString(6, p.getImage());
-            ps.setInt(7, p.getId());
+            ps.setBoolean(7, true); // mặc định active
 
             return ps.executeUpdate() > 0;
 
@@ -120,11 +105,44 @@ public class ProductDAO {
         return false;
     }
 
-    // ================= DELETE =================
-    public boolean delete(int id) {
-        String sql = "DELETE FROM products WHERE id = ?";
+    // =====================================================
+    // 5. UPDATE
+    // =====================================================
+    public boolean update(ProductDTO p) {
+        String sql = "UPDATE products SET "
+                + "category_id=?, name=?, price=?, stock=?, "
+                + "description=?, image=?, status=? "
+                + "WHERE id=?";
 
-        try ( Connection con = DbUtil.getConnection();  PreparedStatement ps = con.prepareStatement(sql)) {
+        try (Connection con = DbUtil.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setInt(1, p.getCategory_id());
+            ps.setString(2, p.getName());
+            ps.setFloat(3, p.getPrice());
+            ps.setInt(4, p.getStock());
+            ps.setString(5, p.getDescription());
+            ps.setString(6, p.getImage());
+            ps.setBoolean(7, p.getStatus());
+            ps.setInt(8, p.getId());
+
+            return ps.executeUpdate() > 0;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    // =====================================================
+    // 6. DELETE MỀM (SOFT DELETE)
+    // =====================================================
+    public boolean delete(int id) {
+        String sql = "UPDATE products SET status = 0 WHERE id = ?";
+
+        try (Connection con = DbUtil.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
 
             ps.setInt(1, id);
             return ps.executeUpdate() > 0;
@@ -136,9 +154,15 @@ public class ProductDAO {
         return false;
     }
 
+    // =====================================================
+    // 7. ĐẾM SỐ SẢN PHẨM ACTIVE
+    // =====================================================
     public int countProducts() {
-        String sql = "SELECT COUNT(*) FROM products";
-        try ( Connection con = DbUtil.getConnection();  PreparedStatement ps = con.prepareStatement(sql);  ResultSet rs = ps.executeQuery()) {
+        String sql = "SELECT COUNT(*) FROM products WHERE status = 1";
+
+        try (Connection con = DbUtil.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
 
             if (rs.next()) {
                 return rs.getInt(1);
@@ -147,19 +171,23 @@ public class ProductDAO {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
         return 0;
     }
 
-    // ================= EXTRACT =================
+    // =====================================================
+    // HÀM HỖ TRỢ
+    // =====================================================
     private ProductDTO extractProduct(ResultSet rs) throws Exception {
-        int id = rs.getInt("id");
-        int category_id = rs.getInt("category_id");
-        String name = rs.getString("name");
-        float price = rs.getFloat("price");
-        int stock = rs.getInt("stock");
-        String description = rs.getString("description");
-        String image = rs.getString("image");
-
-        return new ProductDTO(id, category_id, name, price, stock, description, image);
+        return new ProductDTO(
+                rs.getInt("id"),
+                rs.getInt("category_id"),
+                rs.getString("name"),
+                rs.getFloat("price"),
+                rs.getInt("stock"),
+                rs.getString("description"),
+                rs.getString("image"),
+                rs.getBoolean("status")
+        );
     }
 }
