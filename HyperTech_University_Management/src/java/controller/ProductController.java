@@ -9,7 +9,7 @@ import model.ProductDTO;
 
 public class ProductController extends HttpServlet {
 
-    // ================= CHECK LOGIN =================
+    // ================= CHECK ROLE =================
     private boolean isAdmin(HttpServletRequest request) {
         return request.getSession().getAttribute("admin") != null;
     }
@@ -29,67 +29,48 @@ public class ProductController extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         response.setCharacterEncoding("UTF-8");
 
-        // ===== CHƯA LOGIN =====
         if (!isLoggedIn(request)) {
             response.sendRedirect("login.jsp");
             return;
         }
 
         String action = request.getParameter("action");
-        if (action == null || action.isEmpty()) {
-            action = "searchProduct";
-        }
+        if (action == null) action = "searchProduct";
 
-        try {
-            switch (action) {
+        switch (action) {
 
-                // ===== USER + ADMIN =====
-                case "searchProduct":
-                    doSearch(request, response);
-                    break;
+            // ================= USER + ADMIN =================
+            case "searchProduct":
+                doSearch(request, response);
+                break;
 
-                // ===== ADMIN ONLY =====
-                case "addProduct":
-                    if (isAdmin(request)) {
-                        doAdd(request, response);
-                    } else {
-                        deny(response);
-                    }
-                    break;
+            case "viewProduct":
+                doView(request, response);
+                break;
 
-                case "deleteProduct":
-                    if (isAdmin(request)) {
-                        doDelete(request, response);
-                    } else {
-                        deny(response);
-                    }
-                    break;
+            // ================= ADMIN ONLY =================
+            case "addProduct":
+                if (isAdmin(request)) doAdd(request, response);
+                else deny(response);
+                break;
 
-                case "updateProduct":
-                    if (isAdmin(request)) {
-                        doUpdate(request, response);
-                    } else {
-                        deny(response);
-                    }
-                    break;
+            case "updateProduct":
+                if (isAdmin(request)) doUpdate(request, response);
+                else deny(response);
+                break;
 
-                case "saveUpdateProduct":
-                    if (isAdmin(request)) {
-                        doSaveUpdate(request, response);
-                    } else {
-                        deny(response);
-                    }
-                    break;
+            case "deleteProduct":
+                if (isAdmin(request)) doSoftDelete(request, response);
+                else deny(response);
+                break;
 
-                default:
-                    doSearch(request, response);
-                    break;
-            }
+            case "ProductStatistic":
+                if (isAdmin(request)) doStatistic(request, response);
+                else deny(response);
+                break;
 
-        } catch (Exception e) {
-            e.printStackTrace();
-            request.setAttribute("error", "System error!");
-            request.getRequestDispatcher("error.jsp").forward(request, response);
+            default:
+                doSearch(request, response);
         }
     }
 
@@ -98,9 +79,7 @@ public class ProductController extends HttpServlet {
             throws ServletException, IOException {
 
         String keywords = request.getParameter("keywords");
-        if (keywords == null) {
-            keywords = "";
-        }
+        if (keywords == null) keywords = "";
 
         ProductDAO dao = new ProductDAO();
         ArrayList<ProductDTO> list;
@@ -114,6 +93,18 @@ public class ProductController extends HttpServlet {
         request.setAttribute("list", list);
         request.setAttribute("keywords", keywords);
         request.getRequestDispatcher("product-search.jsp").forward(request, response);
+    }
+
+    // ================= VIEW DETAIL =================
+    private void doView(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        int id = parseInt(request.getParameter("id"));
+        ProductDAO dao = new ProductDAO();
+        ProductDTO product = dao.getById(id);
+
+        request.setAttribute("product", product);
+        request.getRequestDispatcher("product-detail.jsp").forward(request, response);
     }
 
     // ================= ADD =================
@@ -130,40 +121,8 @@ public class ProductController extends HttpServlet {
         }
     }
 
-    // ================= DELETE =================
-    @Override
-    protected void doDelete(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-
-        int id = parseInt(request.getParameter("id"));
-        ProductDAO dao = new ProductDAO();
-
-        if (dao.delete(id)) {
-            response.sendRedirect("ProductController?action=searchProduct");
-        } else {
-            response.sendRedirect("ProductController?action=searchProduct&error=deleteFail");
-        }
-    }
-
-    // ================= LOAD UPDATE FORM =================
+    // ================= UPDATE =================
     private void doUpdate(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-
-        int id = parseInt(request.getParameter("id"));
-        ProductDAO dao = new ProductDAO();
-        ProductDTO p = dao.getById(id);
-
-        if (p != null) {
-            request.setAttribute("p", p);
-            request.setAttribute("mode", "update");
-            request.getRequestDispatcher("product-form.jsp").forward(request, response);
-        } else {
-            response.sendRedirect("ProductController?action=searchProduct");
-        }
-    }
-
-    // ================= SAVE UPDATE =================
-    private void doSaveUpdate(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
 
         ProductDTO p = extractProduct(request);
@@ -176,7 +135,32 @@ public class ProductController extends HttpServlet {
         }
     }
 
-    // ================= EXTRACT PRODUCT =================
+    // ================= SOFT DELETE =================
+    private void doSoftDelete(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
+
+        int id = parseInt(request.getParameter("id"));
+        ProductDAO dao = new ProductDAO();
+
+        if (dao.delete(id)) {
+            response.sendRedirect("ProductController?action=searchProduct");
+        } else {
+            response.sendRedirect("ProductController?action=searchProduct&error=deleteFail");
+        }
+    }
+
+    // ================= COUNT PRODUCT =================
+    private void doStatistic(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        ProductDAO dao = new ProductDAO();
+        int total = dao.countProducts();
+
+        request.setAttribute("totalProduct", total);
+        request.getRequestDispatcher("admin-dashboard.jsp").forward(request, response);
+    }
+
+    // ================= EXTRACT =================
     private ProductDTO extractProduct(HttpServletRequest request) {
 
         int id = parseInt(request.getParameter("id"));
@@ -187,32 +171,23 @@ public class ProductController extends HttpServlet {
         String description = request.getParameter("description");
         String image = request.getParameter("image");
 
-        return new ProductDTO(id, category_id, name, price, stock, description, image);
+        return new ProductDTO(id, category_id, name, price, stock, description, image, true);
     }
 
-    // ================= SAFE PARSE =================
     private int parseInt(String value) {
-        try {
-            return Integer.parseInt(value);
-        } catch (Exception e) {
-            return 0;
-        }
+        try { return Integer.parseInt(value); }
+        catch (Exception e) { return 0; }
     }
 
     private float parseFloat(String value) {
-        try {
-            return Float.parseFloat(value);
-        } catch (Exception e) {
-            return 0;
-        }
+        try { return Float.parseFloat(value); }
+        catch (Exception e) { return 0; }
     }
 
-    // ================= DENY ACCESS =================
     private void deny(HttpServletResponse response) throws IOException {
         response.sendError(HttpServletResponse.SC_FORBIDDEN, "Admin only!");
     }
 
-    // ================= GET / POST =================
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
