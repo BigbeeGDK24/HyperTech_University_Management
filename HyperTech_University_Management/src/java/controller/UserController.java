@@ -5,7 +5,7 @@
 package controller;
 
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.util.ArrayList;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import model.UserDAO;
 import model.UserDTO;
+import org.apache.tomcat.jni.User;
 
 /**
  *
@@ -37,23 +38,23 @@ public class UserController extends HttpServlet {
         response.setCharacterEncoding("UTF-8");
         String url = "";
         HttpSession session = request.getSession();
-        if (session.getAttribute("user") == null) {
+        if (session.getAttribute("User") == null) {
             String txtUsername = request.getParameter("txtUsername");
             String txtPassword = request.getParameter("txtPassword");
 
             UserDAO udao = new UserDAO();
-            UserDTO user = udao.login(txtUsername, txtPassword);
-            System.out.println(user);
-            if (user != null) {
-                if (user.isStatus()) {
+            UserDTO User = udao.login(txtUsername, txtPassword);
+            System.out.println(User);
+            if (User != null) {
+                if (User.isStatus()) {
                     url = "welcome.jsp";
-                    session.setAttribute("user", user);
+                    session.setAttribute("User", User);
                 } else {
-                    url = "e403.jsp";
+                    url = "welcome.jsp";
                 }
             } else {
                 url = "login.jsp";
-                request.setAttribute("message", "Invalid username or password!");
+                request.setAttribute("message", "Invalid Username or password!");
             }
 
         } else {
@@ -69,7 +70,7 @@ public class UserController extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         response.setCharacterEncoding("UTF-8");
         HttpSession session = request.getSession();
-        if (session.getAttribute("user") != null) {
+        if (session.getAttribute("User") != null) {
             // huy bo toan bo noi dung session
             session.invalidate();
         }
@@ -77,13 +78,218 @@ public class UserController extends HttpServlet {
         response.sendRedirect(url);
     }
 
+    @Override
+    protected void doDelete(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        request.setCharacterEncoding("UTF-8");
+        response.setCharacterEncoding("UTF-8");
+        response.setContentType("text/html;charset=UTF-8");
+        String keywords = request.getParameter("keywords");
+        String id = request.getParameter("id");
+        if (keywords == null) {
+            keywords = "";
+        }
+        if (id == null) {
+            id = "";
+        }
+
+        System.out.println(keywords);
+        UserDAO udao = new UserDAO();
+        // Xoa
+        if (!id.isEmpty()) {
+            boolean check = udao.updateUserStatus(id, false);
+            if (check) {
+                request.setAttribute("msg", "Deleted!");
+            } else {
+                request.setAttribute("msg", "Error, can not delete: " + id);
+            }
+        }
+
+        // Tim kiem
+        ArrayList<UserDTO> list = new ArrayList<>();
+        if (keywords.trim().length() > 0) {
+            list = udao.filterByColum("username", keywords);
+        }
+        request.setAttribute("list", list);
+        request.setAttribute("keywords", keywords);
+        String url = "search.jsp";
+        RequestDispatcher rd = request.getRequestDispatcher(url);
+        rd.forward(request, response);
+    }
+
+    protected void doSearch(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        request.setCharacterEncoding("UTF-8");
+        response.setCharacterEncoding("UTF-8");
+        response.setContentType("text/html;charset=UTF-8");
+        String keywords = request.getParameter("keywords");
+        if (keywords == null) {
+            keywords = "";
+        }
+
+        System.out.println(keywords);
+        UserDAO udao = new UserDAO();
+        ArrayList<UserDTO> list = new ArrayList<>();
+        if (keywords.trim().length() > 0) {
+            list = udao.filterByColum("username", keywords);
+        }
+        request.setAttribute("list", list);
+        request.setAttribute("keywords", keywords);
+        String url = "search.jsp";
+        RequestDispatcher rd = request.getRequestDispatcher(url);
+        rd.forward(request, response);
+    }
+
+    protected void doUpdate(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        String id = request.getParameter("id");
+        UserDAO udao = new UserDAO();
+
+        // Tìm kiếm thông tin cũ từ DB
+        UserDTO u = udao.searchByUsername(id);
+
+        if (u != null) {
+            request.setAttribute("u", u);
+            request.setAttribute("mode", "update");
+            request.getRequestDispatcher("university-form.jsp").forward(request, response);
+        } else {
+            request.setAttribute("error", "Không tìm thấy User với ID này!");
+            request.getRequestDispatcher("SearchUserController").forward(request, response);
+        }
+    }
+
+    private UserDTO extractUserFromRequest(HttpServletRequest request) {
+        String Username = request.getParameter("Username");
+        String name = request.getParameter("name");
+        String email = request.getParameter("email");
+        String password = request.getParameter("password");
+        String phone = request.getParameter("phone");
+        String address = request.getParameter("address");
+        boolean status = "on".equals(request.getParameter("status"));
+
+        return new UserDTO(Username, name, email, password, phone, address, status);
+    }
+
+    private String validateUser(UserDTO u, boolean isUpdate) {
+        StringBuilder error = new StringBuilder();
+        if (u.getUsername()== null || u.getUsername().trim().isEmpty()) {
+            error.append("Chưa nhập chưa nhập username <br/>");
+        }
+        if (u.getName() == null || u.getName().trim().isEmpty()) {
+            error.append("Chưa nhập Name <br/>");
+        }
+        if (u.getEmail()== null || u.getEmail().trim().isEmpty()) {
+            error.append("Chưa nhập email <br/>");
+        }
+
+        // Nếu là thêm mới, cần check trùng ID (Update thì không cần check vì ID là readonly)
+        if (!isUpdate) {
+            UserDAO udao = new UserDAO();
+            if (udao.searchByUsername(u.getUsername()) != null) {
+                error.append("Username đã tồn tại, vui lòng chọn ID khác! <br/>");
+            }
+        }
+        return error.toString();
+    }
+
+    protected void doAdd(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        UserDTO u = extractUserFromRequest(request);
+        String error = validateUser(u, false);
+        String msg = "";
+
+        if (error.isEmpty()) {
+            UserDAO udao = new UserDAO();
+            if (udao.add(u)) {
+                msg = "Đã thêm User thành công!";
+            } else {
+                error = "Lỗi hệ thống: Không thể thêm vào database!";
+            }
+        }
+
+        request.setAttribute("u", u);
+        request.setAttribute("msg", msg);
+        request.setAttribute("error", error);
+        request.getRequestDispatcher("university-form.jsp").forward(request, response);
+    }
+
+    protected void doSaveUpdate(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        UserDTO u = extractUserFromRequest(request);
+        String error = validateUser(u, true);
+        String msg = "";
+
+        if (error.isEmpty()) {
+            UserDAO udao = new UserDAO();
+            if (udao.update(u)) {
+                msg = "Đã cập nhật thành công!";
+            } else {
+                error = "Lỗi hệ thống: Không thể cập nhật!";
+            }
+        }
+
+        request.setAttribute("u", u);
+        request.setAttribute("mode", "update");
+        request.setAttribute("msg", msg);
+        request.setAttribute("error", error);
+        request.getRequestDispatcher("university-form.jsp").forward(request, response);
+    }
+
+    // Hàm hỗ trợ parse số để tránh lập lại code try-catch
+    private int parseOrDefault(String value, int defaultValue) {
+        try {
+            return Integer.parseInt(value);
+        } catch (Exception e) {
+            return defaultValue;
+        }
+    }
+
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        // Thiết lập Encoding để tránh lỗi tiếng Việt
+        request.setCharacterEncoding("UTF-8");
+        response.setCharacterEncoding("UTF-8");
+
         String action = request.getParameter("action");
-        if(action.equals("login")){
-            doLogin(request, response);
-        }else if (action.equals("logout")){
-            doLogout(request, response);
+
+        // Phòng trường hợp action bị null (người dùng truy cập trực tiếp URL)
+        if (action == null || action.isEmpty()) {
+            doSearch(request, response);
+            return;
+        }
+
+        try {
+            switch (action) {
+                case "searchUser":
+                    doSearch(request, response);
+                    break;
+
+                case "addUser":
+                    doAdd(request, response);
+                    break;
+
+                case "deleteUser":
+                    doDelete(request, response);
+                    break;
+
+                case "updateUser":
+                    // Khi người dùng nhấn nút "Sửa" ở danh sách -> Đổ dữ liệu ra Form
+                    doUpdate(request, response);
+                    break;
+
+                case "saveUpdateUser":
+                    // Khi người dùng nhấn nút "Update" trong Form -> Lưu vào DB
+                    doSaveUpdate(request, response);
+                    break;
+
+                default:
+                    // Nếu action không khớp, mặc định quay về trang search hoặc báo lỗi
+                    request.setAttribute("error", "Hành động không hợp lệ: " + action);
+                    doSearch(request, response);
+                    break;
+            }
+        } catch (Exception e) {
+            log("Error at UserController: " + e.toString());
+            request.setAttribute("error", "Hệ thống đang gặp sự cố, vui lòng thử lại sau.");
+            request.getRequestDispatcher("error.jsp").forward(request, response);
         }
     }
 
