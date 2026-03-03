@@ -69,12 +69,11 @@ public class ProductDAO {
 
     // ================= ADD =================
     public boolean add(ProductDTO p) {
-        String sql = "INSERT INTO products (id, category_id, name, price, stock, description, image) "
-                + "VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO products ( category_id, name, price, stock, description, image) "
+                + "VALUES ( ?, ?, ?, ?, ?, ?)";
 
         try ( Connection con = DbUtil.getConnection();  PreparedStatement ps = con.prepareStatement(sql)) {
 
-            ps.setInt(1, p.getId());
             ps.setInt(2, p.getCategory_id());
             ps.setString(3, p.getName());
             ps.setFloat(4, p.getPrice());
@@ -135,6 +134,20 @@ public class ProductDAO {
         }
 
         return false;
+    }
+
+    public int countProducts() {
+        String sql = "SELECT COUNT(*) FROM products";
+        try ( Connection con = DbUtil.getConnection();  PreparedStatement ps = con.prepareStatement(sql);  ResultSet rs = ps.executeQuery()) {
+
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
     }
 
     // ================= EXTRACT =================
