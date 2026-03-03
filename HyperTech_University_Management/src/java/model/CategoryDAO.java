@@ -8,133 +8,140 @@ import util.DbUtil;
 
 public class CategoryDAO {
 
-    public CategoryDAO() {
-    }
+    // ===============================
+    // GET ALL CATEGORIES
+    // ===============================
+    public ArrayList<CategoryDTO> getAll() {
+        ArrayList<CategoryDTO> list = new ArrayList<>();
+        String sql = "SELECT * FROM categories";
 
-    // ===============================
-    // SEARCH BY COLUMN (EQUAL)
-    // ===============================
-    public ArrayList<CategoryDTO> searchByColum(String column, String value) {
-        ArrayList<CategoryDTO> result = new ArrayList<>();
-        try {
-            Connection conn = DbUtil.getConnection();
-            String sql = "SELECT * FROM categories WHERE " + column + " = ?";
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setString(1, value);
-            ResultSet rs = ps.executeQuery();
+        try ( Connection conn = DbUtil.getConnection();  PreparedStatement ps = conn.prepareStatement(sql);  ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {
-                int id = rs.getInt("id");
-                String name = rs.getString("name");
-                String description = rs.getString("description");
-                java.sql.Timestamp createdAt = rs.getTimestamp("created_at");
-
-                CategoryDTO c = new CategoryDTO(id, name, description, createdAt);
-                result.add(c);
+                list.add(extractCategory(rs));
             }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return result;
+
+        return list;
     }
 
     // ===============================
-    // FILTER BY COLUMN (LIKE)
+    // GET CATEGORY BY ID
     // ===============================
-    public ArrayList<CategoryDTO> filterByColum(String column, String value) {
-        ArrayList<CategoryDTO> result = new ArrayList<>();
-        try {
-            Connection conn = DbUtil.getConnection();
-            String sql = "SELECT * FROM categories WHERE " + column + " LIKE ?";
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setString(1, "%" + value + "%");
-            System.out.println(ps.toString());
+    public CategoryDTO getById(int id) {
+        String sql = "SELECT * FROM categories WHERE id = ?";
 
+        try ( Connection conn = DbUtil.getConnection();  PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                int id = rs.getInt("id");
-                String name = rs.getString("name");
-                String description = rs.getString("description");
-                java.sql.Timestamp createdAt = rs.getTimestamp("created_at");
 
-                CategoryDTO c = new CategoryDTO(id, name, description, createdAt);
-                result.add(c);
+            if (rs.next()) {
+                return extractCategory(rs);
             }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return result;
+
+        return null;
     }
 
     // ===============================
-    // WRAPPER METHODS (GIỐNG BÀI MẪU)
+    // SEARCH BY NAME (LIKE)
     // ===============================
-    public ArrayList<CategoryDTO> searchByID(String id) {
-        return searchByColum("id", id);
-    }
-
     public ArrayList<CategoryDTO> searchByName(String name) {
-        return searchByColum("name", name);
-    }
+        ArrayList<CategoryDTO> list = new ArrayList<>();
+        String sql = "SELECT * FROM categories WHERE name LIKE ?";
 
-    public ArrayList<CategoryDTO> filterByName(String name) {
-        return filterByColum("name", name);
+        try ( Connection conn = DbUtil.getConnection();  PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, "%" + name + "%");
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                list.add(extractCategory(rs));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return list;
     }
 
     // ===============================
     // INSERT CATEGORY
     // ===============================
     public boolean insert(CategoryDTO c) {
-        try {
-            Connection conn = DbUtil.getConnection();
-            String sql = "INSERT INTO categories(name, description) VALUES(?,?)";
-            PreparedStatement ps = conn.prepareStatement(sql);
+        String sql = "INSERT INTO categories (name, description) VALUES (?, ?)";
+
+        try ( Connection conn = DbUtil.getConnection();  PreparedStatement ps = conn.prepareStatement(sql)) {
+
             ps.setString(1, c.getName());
             ps.setString(2, c.getDescription());
 
             return ps.executeUpdate() > 0;
+
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println(e.getMessage());
         }
+
         return false;
-    }// insert
+    }
 
     // ===============================
     // UPDATE CATEGORY
     // ===============================
     public boolean update(CategoryDTO c) {
-        try {
-            Connection conn = DbUtil.getConnection();
-            String sql = "UPDATE categories SET name=?, description=? WHERE id=?";
-            PreparedStatement ps = conn.prepareStatement(sql);
+        String sql = "UPDATE categories SET name = ?, description = ? WHERE id = ?";
+
+        try ( Connection conn = DbUtil.getConnection();  PreparedStatement ps = conn.prepareStatement(sql)) {
+
             ps.setString(1, c.getName());
             ps.setString(2, c.getDescription());
             ps.setInt(3, c.getId());
 
             return ps.executeUpdate() > 0;
+
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println(e.getMessage());
         }
+
         return false;
     }
 
     // ===============================
-    // DELETE CATEGORY (HARD DELETE)
+    // DELETE CATEGORY
     // ===============================
-    public boolean delete(String id) {
-        try {
-            Connection conn = DbUtil.getConnection();
-            String sql = "DELETE FROM categories WHERE id=?";
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setString(1, id);
+    public boolean delete(int id) {
+        String sql = "DELETE FROM categories WHERE id = ?";
+
+        try ( Connection conn = DbUtil.getConnection();  PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, id);
 
             return ps.executeUpdate() > 0;
+
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println(e.getMessage());
         }
+
         return false;
+    }
+
+    // ===============================
+    // EXTRACT CATEGORY (PRIVATE)
+    // ===============================
+    private CategoryDTO extractCategory(ResultSet rs) throws Exception {
+        int id = rs.getInt("id");
+        String name = rs.getString("name");
+        String description = rs.getString("description");
+        java.sql.Timestamp createdAt = rs.getTimestamp("created_at");
+
+        return new CategoryDTO(id, name, description, createdAt);
     }
 }

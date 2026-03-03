@@ -17,11 +17,12 @@ public class ProductDTO {
     private int stock;
     private String description;
     private String image;
+     private Boolean status;
 
     public ProductDTO() {
     }
 
-    public ProductDTO(int id, int category_id, String name, float price, int stock, String description, String image) {
+    public ProductDTO(int id, int category_id, String name, float price, int stock, String description, String image, Boolean status) {
         this.id = id;
         this.category_id = category_id;
         this.name = name;
@@ -29,6 +30,7 @@ public class ProductDTO {
         this.stock = stock;
         this.description = description;
         this.image = image;
+        this.status = status;
     }
 
     public int getId() {
@@ -86,5 +88,17 @@ public class ProductDTO {
     public void setImage(String image) {
         this.image = image;
     }
+
+    public Boolean getStatus() {
+        return status;
+    }
+
+    public void setStatus(Boolean status) {
+        this.status = status;
+    }
+
+   
+
+   
 
 }
