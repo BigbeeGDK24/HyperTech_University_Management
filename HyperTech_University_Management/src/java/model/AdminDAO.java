@@ -7,7 +7,6 @@ package model;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import org.mindrot.jbcrypt.BCrypt;
 import util.DbUtil;
 
 /**
@@ -24,19 +23,24 @@ public class AdminDAO {
     public AdminDTO searchByAdminName(String Username) {
         AdminDTO admin = null;
         try {
-            Connection con = DbUtil.getConnection();
-            String sql = "SELECT * FROM admin WHERE admin=?";
+            Connection conn = DbUtil.getConnection();
+            String sql = "SELECT * FROM admin WHERE username=?";
             System.out.println(sql);
 
-            PreparedStatement letter = con.prepareStatement(sql);
+            PreparedStatement letter = conn.prepareStatement(sql);
             letter.setString(1, Username);
             ResultSet rs = letter.executeQuery();
 
-            while (rs.next()) {
-                String username = rs.getString("Username");
-                String password = rs.getString("password");
-                admin = new AdminDTO(username, password);
-            }
+            if (rs.next()) {
+
+            String user = rs.getString("username");
+            String pass = rs.getString("password");
+
+            admin = new AdminDTO(user, pass);
+        }
+            rs.close();
+        letter.close();
+        conn.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -45,7 +49,9 @@ public class AdminDAO {
 
     public AdminDTO adLogin(String Username, String Password) {
         AdminDTO admin = searchByAdminName(Username);
-        if (admin != null && BCrypt.checkpw(Password, admin.getPassword())) {
+        if (admin != null && Password.equals(admin.getPassword())) {
+            System.out.println("amin: " + admin);
+                    
             return admin;
         }
         return null;

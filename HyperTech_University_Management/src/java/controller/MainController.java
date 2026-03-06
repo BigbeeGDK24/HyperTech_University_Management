@@ -35,7 +35,7 @@ public class MainController extends HttpServlet {
         if (action == null) {
             url = "login.jsp";
         } else if (action.equals("login") || action.equals("logout")) {
-            url = "UserController";
+            url = "AdminController";
         } else if (action.contains("University")) {
             // Tất cả action có chữ "University" như: addUniversity, deleteUniversity...
             url = "UniversityController";
