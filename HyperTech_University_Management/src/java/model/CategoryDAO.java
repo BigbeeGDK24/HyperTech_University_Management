@@ -14,10 +14,13 @@ public class CategoryDAO {
     public ArrayList<CategoryDTO> getAll() {
         ArrayList<CategoryDTO> list = new ArrayList<>();
         String sql = "SELECT * FROM categories WHERE status = 1";
+        
+        
+        
 
         try (Connection con = DbUtil.getConnection();
              PreparedStatement ps = con.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
+             ResultSet rs = ps.executeQuery()) {   
 
             while (rs.next()) {
                 list.add(extractCategory(rs));
