@@ -1,83 +1,76 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package model;
 
 public class UserDTO {
-    private String Username;
-    private String name;
+    private String username;
     private String email;
     private String password;
     private String phone;
     private String address;
-    private String created_at;
+    private boolean status;
 
-    public UserDTO(String Username, String name, String email, String password, String phone, String address, String created_at) {
-        this.Username = Username;
-        this.name = name;
+    public UserDTO() {
+    }
+
+    public UserDTO(String username, String email, String password, String phone, String address, boolean status) {
+        this.username = username;
         this.email = email;
         this.password = password;
         this.phone = phone;
         this.address = address;
-        this.created_at = created_at;
+        this.status = status;
     }
+
+    
 
     public String getUsername() {
-        return Username;
+        return username;
     }
 
-    public String getName() {
-        return name;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getEmail() {
         return email;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public String getCreated_at() {
-        return created_at;
-    }
-
-    public void setUsername(String Username) {
-        this.Username = Username;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getPassword() {
+        return password;
     }
 
     public void setPassword(String password) {
         this.password = password;
     }
 
+    public String getPhone() {
+        return phone;
+    }
+
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public String getAddress() {
+        return address;
     }
 
     public void setAddress(String address) {
         this.address = address;
     }
 
-    public void setCreated_at(String created_at) {
-        this.created_at = created_at;
+    public boolean isStatus() {
+        return status;
     }
+
+    public void setStatus(boolean status) {
+        this.status = status;
+    }
+   
+
+   
     
 }
-

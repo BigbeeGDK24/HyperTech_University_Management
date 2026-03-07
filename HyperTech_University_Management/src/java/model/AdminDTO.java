@@ -10,30 +10,33 @@ package model;
  */
 public class AdminDTO {
 
-    private String adminID;
-    private String adPass;
+    private String Username;
+    private String Password;
 
-    public AdminDTO(String adminID, String adPass) {
-        this.adminID = adminID;
-        this.adPass = adPass;
+    public AdminDTO() {
+
     }
 
-
-
-    public String getAdminID() {
-        return adminID;
+    public AdminDTO(String Username, String Password) {
+        this.Username = Username;
+        this.Password = Password;
     }
 
-    public String getAdPass() {
-        return adPass;
+    public String getUsername() {
+        return Username;
     }
 
-    public void setAdminID(String adminID) {
-        this.adminID = adminID;
+    public void setUsername(String Username) {
+        this.Username = Username;
     }
 
-    public void setAdPass(String adPass) {
-        this.adPass = adPass;
+    public String getPassword() {
+        return Password;
     }
+
+    public void setPassword(String Password) {
+        this.Password = Password;
+    }
+
 
 }

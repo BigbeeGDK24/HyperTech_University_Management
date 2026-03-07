@@ -1,95 +1,193 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package model;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
-import utils.DbUtils;
+import util.DbUtil;
 
-/**
- *
- * @author truon
- */
 public class ProductDAO {
 
-    public ArrayList<ProductDTO> searchByColumn(String column, String value) {
-        ArrayList<ProductDTO> products = new ArrayList<>();
+    // =====================================================
+    // 1. LẤY TẤT CẢ SẢN PHẨM ĐANG HOẠT ĐỘNG
+    // =====================================================
+    public ArrayList<ProductDTO> getAll() {
+        ArrayList<ProductDTO> list = new ArrayList<>();
+        String sql = "SELECT * FROM products WHERE status = 1";
 
-        try {
-            Connection con = DbUtils.getConnection();
-            String sql = "SELECT * FROM products WHERE " + column + "=?";
-            PreparedStatement ps = con.prepareStatement(sql);
-            ps.setString(1, value);
-            ResultSet rs = ps.executeQuery();
+        try (Connection con = DbUtil.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {
-                String id = rs.getString("id");
-                String name = rs.getString("name");
-                String description = rs.getString("description");
-                double price = rs.getDouble("price");
-                int quantity = rs.getInt("quantity");
-                String category = rs.getString("category");
-                boolean status = rs.getBoolean("status");
-                
-                ProductDTO product = new ProductDTO(id, category, name, name, sql, description, name, category);
-                products.add(product);
+                list.add(extractProduct(rs));
             }
 
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        return products;
+        return list;
     }
 
-    public ArrayList<ProductDTO> filterByColumn(String column, String value) {
-        ArrayList<ProductDTO> products = new ArrayList<>();
+    // =====================================================
+    // 2. LẤY THEO ID
+    // =====================================================
+    public ProductDTO getById(int id) {
+        String sql = "SELECT * FROM products WHERE id = ?";
 
-        try {
-            Connection con = DbUtil.getConnection();
-            String sql = "SELECT * FROM products WHERE status = 1 AND " + column + " LIKE ?";
-            PreparedStatement ps = con.prepareStatement(sql);
-            ps.setString(1, "%" + value + "%");
+        try (Connection con = DbUtil.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
 
-            while (rs.next()) {
-                ProductDTO product = extractProduct(rs);
-                products.add(product);
+            if (rs.next()) {
+                return extractProduct(rs);
             }
 
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        return products;
+        return null;
     }
 
-    public ArrayList<ProductDTO> searchByID(String id) {
-        return searchByColumn("id", id);
-    }
-
+    // =====================================================
+    // 3. SEARCH THEO TÊN (CHỈ LẤY SẢN PHẨM ACTIVE)
+    // =====================================================
     public ArrayList<ProductDTO> searchByName(String name) {
-        return searchByColumn("name", name);
-    }
+        ArrayList<ProductDTO> list = new ArrayList<>();
+        String sql = "SELECT * FROM products WHERE name LIKE ? AND status = 1";
 
-    public ArrayList<ProductDTO> filterByName(String name) {
-        return filterByColumn("name", name);
-    }
+        try (Connection con = DbUtil.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
 
-    public boolean softDelete(String id) {
-        try {
-            Connection con = DbUtil.getConnection();
-            String sql = "UPDATE products SET status = 0 WHERE id=?";
-            PreparedStatement ps = con.prepareStatement(sql);
-            ps.setString(1, id);
-            return ps.executeUpdate() > 0;
+            ps.setString(1, "%" + name + "%");
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                list.add(extractProduct(rs));
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        return list;
+    }
+
+    // =====================================================
+    // 4. THÊM SẢN PHẨM
+    // =====================================================
+    public boolean add(ProductDTO p) {
+        String sql = "INSERT INTO products "
+                + "(category_id, name, price, stock, description, image, status) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?)";
+
+        try (Connection con = DbUtil.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setInt(1, p.getCategory_id());
+            ps.setString(2, p.getName());
+            ps.setFloat(3, p.getPrice());
+            ps.setInt(4, p.getStock());
+            ps.setString(5, p.getDescription());
+            ps.setString(6, p.getImage());
+            ps.setBoolean(7, true); // mặc định active
+
+            return ps.executeUpdate() > 0;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         return false;
+    }
+
+    // =====================================================
+    // 5. UPDATE
+    // =====================================================
+    public boolean update(ProductDTO p) {
+        String sql = "UPDATE products SET "
+                + "category_id=?, name=?, price=?, stock=?, "
+                + "description=?, image=?, status=? "
+                + "WHERE id=?";
+
+        try (Connection con = DbUtil.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setInt(1, p.getCategory_id());
+            ps.setString(2, p.getName());
+            ps.setFloat(3, p.getPrice());
+            ps.setInt(4, p.getStock());
+            ps.setString(5, p.getDescription());
+            ps.setString(6, p.getImage());
+            ps.setBoolean(7, p.getStatus());
+            ps.setInt(8, p.getId());
+
+            return ps.executeUpdate() > 0;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    // =====================================================
+    // 6. DELETE MỀM (SOFT DELETE)
+    // =====================================================
+    public boolean delete(int id) {
+        String sql = "UPDATE products SET status = 0 WHERE id = ?";
+
+        try (Connection con = DbUtil.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setInt(1, id);
+            return ps.executeUpdate() > 0;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    // =====================================================
+    // 7. ĐẾM SỐ SẢN PHẨM ACTIVE
+    // =====================================================
+    public int countProducts() {
+        String sql = "SELECT COUNT(*) FROM products WHERE status = 1";
+
+        try (Connection con = DbUtil.getConnection();
+             PreparedStatement ps = con.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return 0;
+    }
+
+    // =====================================================
+    // HÀM HỖ TRỢ
+    // =====================================================
+    private ProductDTO extractProduct(ResultSet rs) throws Exception {
+        return new ProductDTO(
+                rs.getInt("id"),
+                rs.getInt("category_id"),
+                rs.getString("name"),
+                rs.getFloat("price"),
+                rs.getInt("stock"),
+                rs.getString("description"),
+                rs.getString("image"),
+                rs.getBoolean("status")
+        );
     }
 }

@@ -1,0 +1,221 @@
+package model;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import util.DbUtil;
+
+public class ComplaintDAO {
+
+    // =====================================================
+    // 1. LẤY TẤT CẢ COMPLAINT (Admin xem toàn bộ)
+    // =====================================================
+    public ArrayList<ComplaintDTO> getAll() {
+        ArrayList<ComplaintDTO> list = new ArrayList<>();
+        String sql = "SELECT * FROM complaints";
+
+        try ( Connection conn = DbUtil.getConnection();  PreparedStatement ps = conn.prepareStatement(sql);  ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                list.add(extractComplaint(rs));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return list;
+    }
+
+    // =====================================================
+    // 2. LẤY THEO ID (Xem chi tiết)
+    // =====================================================
+    public ComplaintDTO getById(int id) {
+        String sql = "SELECT * FROM complaints WHERE id = ?";
+
+        try ( Connection conn = DbUtil.getConnection();  PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return extractComplaint(rs);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    // =====================================================
+    // 3. LẤY THEO USER (User xem khiếu nại của mình)
+    // =====================================================
+    public ArrayList<ComplaintDTO> getByUserId(String userId) {
+        ArrayList<ComplaintDTO> list = new ArrayList<>();
+        String sql = "SELECT * FROM complaints WHERE user_id = ?";
+
+        try ( Connection conn = DbUtil.getConnection();  PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, userId);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                list.add(extractComplaint(rs));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return list;
+    }
+
+    // =====================================================
+    // 4. LỌC THEO TRẠNG THÁI (Admin lọc pending, resolved...)
+    // =====================================================
+    public ArrayList<ComplaintDTO> getByStatus(String status) {
+        ArrayList<ComplaintDTO> list = new ArrayList<>();
+        String sql = "SELECT * FROM complaints WHERE status = ?";
+
+        try ( Connection conn = DbUtil.getConnection();  PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, status);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                list.add(extractComplaint(rs));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return list;
+    }
+
+    // =====================================================
+    // 5. INSERT (User gửi khiếu nại)
+    // =====================================================
+    public boolean insert(ComplaintDTO c) {
+        String sql = "INSERT INTO complaints (user_id, order_id, product_id, title, content, status) "
+                + "VALUES (?, ?, ?, ?, ?, ?)";
+
+        try ( Connection conn = DbUtil.getConnection();  PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, c.getUserId());
+            ps.setInt(2, c.getOrderId());
+            ps.setInt(3, c.getProductId());
+            ps.setString(4, c.getTitle());
+            ps.setString(5, c.getContent());
+            ps.setString(6, c.getStatus()); // thường là "pending"
+
+            return ps.executeUpdate() > 0;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    // =====================================================
+    // 6. UPDATE TOÀN BỘ (Nếu cho phép chỉnh sửa)
+    // =====================================================
+    public boolean update(ComplaintDTO c) {
+        String sql = "UPDATE complaints SET user_id=?, order_id=?, product_id=?, "
+                + "title=?, content=?, status=? WHERE id=?";
+
+        try ( Connection conn = DbUtil.getConnection();  PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, c.getUserId());
+            ps.setInt(2, c.getOrderId());
+            ps.setInt(3, c.getProductId());
+            ps.setString(4, c.getTitle());
+            ps.setString(5, c.getContent());
+            ps.setString(6, c.getStatus());
+            ps.setInt(7, c.getId());
+
+            return ps.executeUpdate() > 0;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    // =====================================================
+    // 7. UPDATE STATUS (Admin xử lý khiếu nại)
+    // =====================================================
+    public boolean updateStatus(int id, String status) {
+        String sql = "UPDATE complaints SET status=? WHERE id=?";
+
+        try ( Connection conn = DbUtil.getConnection();  PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, status);
+            ps.setInt(2, id);
+
+            return ps.executeUpdate() > 0;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    // =====================================================
+    // 8. DELETE
+    // =====================================================
+    public boolean delete(int id) {
+        String sql = "DELETE FROM complaints WHERE id=?";
+
+        try ( Connection conn = DbUtil.getConnection();  PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, id);
+            return ps.executeUpdate() > 0;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    // =====================================================
+    // 9. ĐẾM SỐ COMPLAINT (Dashboard Admin)
+    // =====================================================
+    public int countComplaints() {
+        String sql = "SELECT COUNT(*) FROM complaints";
+
+        try ( Connection conn = DbUtil.getConnection();  PreparedStatement ps = conn.prepareStatement(sql);  ResultSet rs = ps.executeQuery()) {
+
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return 0;
+    }
+
+    // =====================================================
+    // HÀM HỖ TRỢ: CHUYỂN ResultSet → ComplaintDTO
+    // =====================================================
+    private ComplaintDTO extractComplaint(ResultSet rs) throws Exception {
+        return new ComplaintDTO(
+                rs.getInt("id"),
+                rs.getString("user_id"),
+                rs.getInt("order_id"),
+                rs.getInt("product_id"),
+                rs.getString("title"),
+                rs.getString("content"),
+                rs.getString("status")
+        );
+    }
+}
