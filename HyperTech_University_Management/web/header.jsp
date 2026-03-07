@@ -193,17 +193,23 @@
         </div>
 
         <!-- FORM -->
-        <div class="login-body">
-            <input type="text" placeholder="Email">
-            <input type="password" placeholder="Mật khẩu">
+        <form action="MainController" method="post">
 
-            <div class="forgot">
-                <a href="#">Quên mật khẩu?</a>
+            <input type="hidden" name="action" value="login">
+            <div class="login-body">
+                <input type="text" placeholder="Email" name="txtUsername">
+                <input type="password" placeholder="Mật khẩu" name="txtPassword">
+
+                <div class="forgot">
+                    <a href="#">Quên mật khẩu?</a>
+                </div>
+                <c:if test="not empty message">
+                    <span style="color:red"> ${message}</span>
+                </c:if>
+
+                <button class="login-submit">ĐĂNG NHẬP</button>
             </div>
-
-            <button class="login-submit">ĐĂNG NHẬP</button>
-        </div>
-
+        </form>
         <!-- DIVIDER -->
         <div class="divider">
             <span>Hoặc đăng nhập bằng</span>
@@ -333,12 +339,25 @@
 </script>
 
 <script>
-const switchToLogin = document.getElementById("switchToLogin");
-const loginModal = document.getElementById("loginModal");
+    const switchToLogin = document.getElementById("switchToLogin");
+    const loginModal = document.getElementById("loginModal");
 
-switchToLogin.addEventListener("click", function(e){
-    e.preventDefault();
-    registerModal.classList.remove("show");
-    loginModal.classList.add("show");
+    switchToLogin.addEventListener("click", function (e) {
+        e.preventDefault();
+        registerModal.classList.remove("show");
+        loginModal.classList.add("show");
+    });
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    <% if(request.getAttribute("message") != null){ %>
+
+        const modal = document.getElementById("loginModal");
+        modal.classList.add("show");
+        document.body.style.overflow = "hidden";
+
+    <% } %>
+
 });
 </script>

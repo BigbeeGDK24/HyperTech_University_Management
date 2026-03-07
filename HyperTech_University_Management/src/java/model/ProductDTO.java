@@ -1,24 +1,21 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package model;
 
-/**
- *
- * @author truon
- */
 public class ProductDTO {
-    private String id;
-    private String category_id;
+
+    private int id;
+    private int category_id;
     private String name;
-    private String price;
-    private String stock;
+    private double price;
+    private int stock;
     private String description;
     private String image;
-    private String created_ad;
+    private boolean status;
 
-    public ProductDTO(String id, String category_id, String name, String price, String stock, String description, String image, String created_ad) {
+    public ProductDTO() {
+    }
+
+    public ProductDTO(int id, int category_id, String name, double price, int stock,
+                      String description, String image, boolean status) {
         this.id = id;
         this.category_id = category_id;
         this.name = name;
@@ -26,71 +23,70 @@ public class ProductDTO {
         this.stock = stock;
         this.description = description;
         this.image = image;
-        this.created_ad = created_ad;
+        this.status = status;
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public String getCategory_id() {
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getCategory_id() {
         return category_id;
+    }
+
+    public void setCategory_id(int category_id) {
+        this.category_id = category_id;
     }
 
     public String getName() {
         return name;
     }
 
-    public String getPrice() {
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public double getPrice() {
         return price;
     }
 
-    public String getStock() {
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    public int getStock() {
         return stock;
+    }
+
+    public void setStock(int stock) {
+        this.stock = stock;
     }
 
     public String getDescription() {
         return description;
     }
 
-    public String getImage() {
-        return image;
-    }
-
-    public String getCreated_ad() {
-        return created_ad;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public void setCategory_id(String category_id) {
-        this.category_id = category_id;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setPrice(String price) {
-        this.price = price;
-    }
-
-    public void setStock(String stock) {
-        this.stock = stock;
-    }
-
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getImage() {
+        return image;
     }
 
     public void setImage(String image) {
         this.image = image;
     }
 
-    public void setCreated_ad(String created_ad) {
-        this.created_ad = created_ad;
+    public boolean getStatus() {
+        return status;
     }
- 
+
+    public void setStatus(boolean status) {
+        this.status = status;
+    }
 }
