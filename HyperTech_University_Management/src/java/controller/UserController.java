@@ -14,7 +14,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import model.UserDAO;
 import model.UserDTO;
-import org.apache.tomcat.jni.User;
 
 /**
  *
@@ -44,21 +43,24 @@ public class UserController extends HttpServlet {
 
             UserDAO udao = new UserDAO();
             UserDTO User = udao.login(txtUsername, txtPassword);
+            
             System.out.println(User);
             if (User != null) {
                 if (User.isStatus()) {
-                    url = "welcome.jsp";
+                    url = "header.jsp";
                     session.setAttribute("User", User);
                 } else {
-                    url = "welcome.jsp";
+                    url = "header.jsp";
                 }
             } else {
-                url = "login.jsp";
-                request.setAttribute("message", "Invalid Username or password!");
+                url = "header.jsp";
+                request.setAttribute("message", "sai ten");
+                request.setAttribute("showLoginModal", true);
             }
 
         } else {
-            url = "welcome.jsp";
+            url = "header.jsp";
+            request.setAttribute("showLoginModal", true);
         }
         // Chuyen trang
         RequestDispatcher rd = request.getRequestDispatcher(url);
@@ -269,8 +271,8 @@ public class UserController extends HttpServlet {
 
         try {
             switch (action) {
-                case "searchUser":
-                    doSearch(request, response);
+                case "login":
+                    doLogin(request, response);
                     break;
 
                 case "addUser":

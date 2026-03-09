@@ -1,7 +1,6 @@
 package controller;
 
 import java.io.IOException;
-import java.util.List;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -15,56 +14,91 @@ import model.UserDTO;
 
 public class AdminController extends HttpServlet {
 
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
+    protected void doLogin(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        response.setContentType("text/html;charset=UTF-8");
         request.setCharacterEncoding("UTF-8");
         response.setCharacterEncoding("UTF-8");
 
-        String url = "login.jsp";
         HttpSession session = request.getSession();
-        String action = request.getParameter("action");
+        String url = "header.jsp";
+            String txtUsername = request.getParameter("txtUsername");
+            String txtPassword = request.getParameter("txtPassword");
+            System.out.println(txtUsername);
+System.out.println(txtPassword);
+            AdminDAO adao = new AdminDAO();
+            AdminDTO admin = adao.adLogin(txtUsername, txtPassword);
+ if (admin != null) {
 
-        try {
+        session.setAttribute("admin", admin);
+        url = "adminDashboard.jsp";
 
-            /* ===================== ADMIN LOGIN ===================== */
-            if ("login".equals(action)) {
+    } else {
 
-                String username = request.getParameter("txtUsername");
-                String password = request.getParameter("txtPassword");
+        // ================= CHECK USER =================
+        // ===== KHÔNG PHẢI ADMIN → CHUYỂN QUA USERCONTROLLER =====
+        url = "UserController?action=login&txtUsername=" + txtUsername + "&txtPassword=" + txtPassword;
+        response.sendRedirect(url);
+        return;
+    }
 
-                AdminDAO adao = new AdminDAO();
-                AdminDTO admin = adao.adLogin(username, password);
-
-                if (admin != null) {
-                    session.setAttribute("admin", admin);
-
-                    // load danh sách user khi vào dashboard
-                    UserDAO udao = new UserDAO();
-                    List<UserDTO> list = udao.getAllUsers();
-                    request.setAttribute("listUser", list);
-
-                    url = "adminDashboard.jsp";
-                } else {
-                    request.setAttribute("error", "Sai tài khoản hoặc mật khẩu Admin!");
-                }
-            }
-            
-            /* ===================== ADMIN LOGOUT ===================== */
-            else if ("logout".equals(action)) {
-
-                session.removeAttribute("admin");
-                response.sendRedirect("login.jsp");
-                return;
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 
         RequestDispatcher rd = request.getRequestDispatcher(url);
         rd.forward(request, response);
+    }
+
+    protected void doLogout(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        HttpSession session = request.getSession();
+
+        if (session.getAttribute("user") != null) {
+            session.invalidate();
+        }
+
+        response.sendRedirect("login.jsp");
+    }
+
+    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        request.setCharacterEncoding("UTF-8");
+        response.setCharacterEncoding("UTF-8");
+
+        String action = request.getParameter("action");
+        System.out.println("ACTION = " + action);
+
+        if (action == null || action.isEmpty()) {
+            response.sendRedirect("login.jsp");
+            return;
+        }
+
+        try {
+
+            switch (action) {
+
+                case "login":
+                    doLogin(request, response);
+                    break;
+
+                case "logout":
+                    doLogout(request, response);
+                    break;
+
+                default:
+                    request.setAttribute("error", "Hành động không hợp lệ: " + action);
+                    request.getRequestDispatcher("error.jsp").forward(request, response);
+                    break;
+            }
+
+        } catch (Exception e) {
+
+            log("Error at AdminController: " + e.toString());
+
+            request.setAttribute("error", "Hệ thống đang gặp sự cố, vui lòng thử lại sau.");
+            request.getRequestDispatcher("error.jsp").forward(request, response);
+
+        }
     }
 
     @Override
@@ -79,8 +113,4 @@ public class AdminController extends HttpServlet {
         processRequest(request, response);
     }
 
-    @Override
-    public String getServletInfo() {
-        return "Admin Controller";
-    }
 }

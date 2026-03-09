@@ -14,22 +14,22 @@ public class UserDAO {
     // ================= SEARCH =================
     public UserDTO searchByEmail(String email) {
         UserDTO user = null;
-        String sql = "SELECT * FROM users WHERE email=?";
-
+        String sql = "SELECT * FROM users WHERE email =?";
+        System.out.println("EMAIL=" + email + "|");
+        System.out.println(sql);
         try ( Connection con = DbUtil.getConnection();  PreparedStatement ps = con.prepareStatement(sql)) {
 
             ps.setString(1, email);
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
-                String username = rs.getString("username");
+                String Username = rs.getString("username");               
                 String password = rs.getString("password");
                 String phone = rs.getString("phone");
                 String address = rs.getString("address");
                 boolean status = rs.getBoolean("status");
-
-                user = new UserDTO( username, email, password, phone, address, status);
-            }
+                user = new UserDTO(email, Username, password, phone, address, status);
+                }
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -47,13 +47,13 @@ public class UserDAO {
             System.out.println(ps.toString());
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                String Username = rs.getString("Username");
                 String email = rs.getString("email");
+                String Username = rs.getString("username");               
                 String password = rs.getString("password");
                 String phone = rs.getString("phone");
                 String address = rs.getString("address");
                 boolean status = rs.getBoolean("status");
-                UserDTO u = new UserDTO(Username, email, password, phone, address, status);
+                UserDTO u = new UserDTO(email, Username, password, phone, address, status);
                 result.add(u);
                 System.out.println(u);
             }
@@ -73,8 +73,8 @@ public class UserDAO {
             while (rs.next()) {
 
                 UserDTO user = new UserDTO(
-                        rs.getString("username"),
                         rs.getString("email"),
+                        rs.getString("username"),                        
                         rs.getString("password"),
                         rs.getString("phone"),
                         rs.getString("address"),
@@ -95,7 +95,7 @@ public class UserDAO {
     public UserDTO login(String email, String Password) {
         UserDTO user = searchByEmail(email);
 
-        if (user != null && BCrypt.checkpw(Password, user.getPassword())) {
+        if (user != null && Password.equals(user.getPassword())) {
             if (user.isStatus()) {
                 return user;
             } else {
