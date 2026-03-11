@@ -1,39 +1,33 @@
 package model;
 
 public class UserDTO {
-    private String Username;
-    private String name;
+    private String username;
     private String email;
     private String password;
     private String phone;
     private String address;
+    private boolean status;
 
     public UserDTO() {
     }
 
-    public UserDTO(String Username, String name, String email, String password, String phone, String address) {
-        this.Username = Username;
-        this.name = name;
+    public UserDTO(String username, String email, String password, String phone, String address, boolean status) {
+        this.username = username;
         this.email = email;
         this.password = password;
         this.phone = phone;
         this.address = address;
+        this.status = status;
     }
+
+    
 
     public String getUsername() {
-        return Username;
+        return username;
     }
 
-    public void setUsername(String Username) {
-        this.Username = Username;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getEmail() {
@@ -66,6 +60,14 @@ public class UserDTO {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public boolean isStatus() {
+        return status;
+    }
+
+    public void setStatus(boolean status) {
+        this.status = status;
     }
    
 

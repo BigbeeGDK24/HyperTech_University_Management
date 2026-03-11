@@ -1,27 +1,21 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package model;
 
-/**
- *
- * @author truon
- */
 public class ProductDTO {
 
     private int id;
     private int category_id;
     private String name;
-    private float price;
+    private double price;
     private int stock;
     private String description;
     private String image;
+    private boolean status;
 
     public ProductDTO() {
     }
 
-    public ProductDTO(int id, int category_id, String name, float price, int stock, String description, String image) {
+    public ProductDTO(int id, int category_id, String name, double price, int stock,
+                      String description, String image, boolean status) {
         this.id = id;
         this.category_id = category_id;
         this.name = name;
@@ -29,6 +23,7 @@ public class ProductDTO {
         this.stock = stock;
         this.description = description;
         this.image = image;
+        this.status = status;
     }
 
     public int getId() {
@@ -55,11 +50,11 @@ public class ProductDTO {
         this.name = name;
     }
 
-    public float getPrice() {
+    public double getPrice() {
         return price;
     }
 
-    public void setPrice(float price) {
+    public void setPrice(double price) {
         this.price = price;
     }
 
@@ -87,4 +82,11 @@ public class ProductDTO {
         this.image = image;
     }
 
+    public boolean getStatus() {
+        return status;
+    }
+
+    public void setStatus(boolean status) {
+        this.status = status;
+    }
 }

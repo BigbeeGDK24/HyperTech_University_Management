@@ -36,6 +36,10 @@
         <servlet-name>ProductController</servlet-name>
         <servlet-class>controller.ProductController</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ProductDiscount</servlet-name>
+        <servlet-class>controller.ProductDiscount</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>AdminController</servlet-name>
         <url-pattern>/AdminController</url-pattern>
@@ -71,6 +75,10 @@
     <servlet-mapping>
         <servlet-name>ProductController</servlet-name>
         <url-pattern>/ProductController</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ProductDiscount</servlet-name>
+        <url-pattern>/ProductDiscount</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

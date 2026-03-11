@@ -4,161 +4,183 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
-import util.DbUtil; // Đảm bảo đúng tên package tiện ích của bạn (DbUtil hoặc DbUtils)
+import util.DbUtil;
 
 public class OrderItemDAO {
 
-    public OrderItemDAO() {
-    }
+    // =====================================================
+    // 1. LẤY DANH SÁCH ITEM THEO ORDER (RẤT QUAN TRỌNG)
+    // =====================================================
+    public ArrayList<OrderItemDTO> getByOrderId(int orderId) {
+        ArrayList<OrderItemDTO> list = new ArrayList<>();
+        String sql = "SELECT * FROM order_items WHERE order_id = ?";
 
-    // ===============================
-    // READ: SEARCH BY COLUMN (EQUAL)
-    // ===============================
-    public ArrayList<OrderItemDTO> searchByColum(String column, String value) {
-        ArrayList<OrderItemDTO> result = new ArrayList<>();
-        try {
-            Connection conn = DbUtil.getConnection();
-            String sql = "SELECT * FROM order_items WHERE " + column + " = ?";
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setString(1, value);
+        try (Connection conn = DbUtil.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, orderId);
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {
-                int id = rs.getInt("id");
-                int orderID = rs.getInt("order_id");
-                int productID = rs.getInt("product_id");
-                float price = rs.getFloat("price");
-                int quantity = rs.getInt("quantity");
-
-                OrderItemDTO item = new OrderItemDTO(id, orderID, productID, price, quantity);
-                result.add(item);
+                list.add(extractItem(rs));
             }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return result;
+
+        return list;
     }
 
-    // ===============================
-    // READ: FILTER BY COLUMN (LIKE)
-    // ===============================
-    public ArrayList<OrderItemDTO> filterByColum(String column, String value) {
-        ArrayList<OrderItemDTO> result = new ArrayList<>();
-        try {
-            Connection conn = DbUtil.getConnection();
-            String sql = "SELECT * FROM order_items WHERE " + column + " LIKE ?";
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setString(1, "%" + value + "%");
-            System.out.println(ps.toString());
+    // =====================================================
+    // 2. LẤY THEO ID
+    // =====================================================
+    public OrderItemDTO getById(int id) {
+        String sql = "SELECT * FROM order_items WHERE id = ?";
 
+        try (Connection conn = DbUtil.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                int id = rs.getInt("id");
-                int orderID = rs.getInt("order_id");
-                int productID = rs.getInt("product_id");
-                float price = rs.getFloat("price");
-                int quantity = rs.getInt("quantity");
 
-                OrderItemDTO item = new OrderItemDTO(id, orderID, productID, price, quantity);
-                result.add(item);
+            if (rs.next()) {
+                return extractItem(rs);
             }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return result;
-    }
 
-    // ===============================
-    // READ: WRAPPER METHODS
-    // ===============================
-    public OrderItemDTO searchByID(int id) {
-        // Chuyển int sang String để dùng chung hàm searchByColum
-        ArrayList<OrderItemDTO> list = searchByColum("id", String.valueOf(id));
-        if (!list.isEmpty()) {
-            return list.get(0);
-        }
         return null;
     }
 
-    public ArrayList<OrderItemDTO> searchByOrderID(int orderID) {
-        return searchByColum("order_id", String.valueOf(orderID));
-    }
+    // =====================================================
+    // 3. INSERT (Tạo khi checkout)
+    // =====================================================
+    public boolean insert(OrderItemDTO item) {
+        String sql = "INSERT INTO order_items(order_id, product_id, price, quantity) VALUES (?, ?, ?, ?)";
 
-    public ArrayList<OrderItemDTO> searchByProductID(int productID) {
-        return searchByColum("product_id", String.valueOf(productID));
-    }
+        try (Connection conn = DbUtil.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
 
-    // ===============================
-    // CREATE: ADD ORDER ITEM
-    // ===============================
-    public boolean add(OrderItemDTO item) {
-        int result = 0;
-        try {
-            Connection conn = DbUtil.getConnection();
-            // Giả sử id là tự tăng (Auto Increment) nên không insert id
-            String sql = "INSERT INTO order_items(order_id, product_id, price, quantity) VALUES (?, ?, ?, ?)";
-            
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setInt(1, item.getOrderID());
-            ps.setInt(2, item.getProductID());
-            ps.setFloat(3,(float) item.getPrice());
-            ps.setInt(4, item.getQuantity());
-
-            result = ps.executeUpdate();
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println(e.getMessage());
-        }
-        return result > 0;
-    }
-
-    // ===============================
-    // UPDATE: UPDATE ORDER ITEM
-    // ===============================
-    public boolean update(OrderItemDTO item) {
-        int result = 0;
-        try {
-            Connection conn = DbUtil.getConnection();
-            String sql = "UPDATE order_items "
-                       + "SET order_id = ?, "
-                       + "    product_id = ?, "
-                       + "    price = ?, "
-                       + "    quantity = ? "
-                       + "WHERE id = ?";
-
-            PreparedStatement ps = conn.prepareStatement(sql);
             ps.setInt(1, item.getOrderID());
             ps.setInt(2, item.getProductID());
             ps.setFloat(3, (float) item.getPrice());
             ps.setInt(4, item.getQuantity());
-            ps.setInt(5, item.getId()); // Cập nhật dựa trên ID
 
-            result = ps.executeUpdate();
+            return ps.executeUpdate() > 0;
+
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println(e.getMessage());
         }
-        return result > 0;
+
+        return false;
     }
 
-    // ===============================
-    // DELETE: HARD DELETE
-    // ===============================
-    public boolean delete(int id) {
-        int result = 0;
-        try {
-            Connection conn = DbUtil.getConnection();
-            // Xóa cứng khỏi database. Nếu bạn muốn xóa mềm thì đổi thành UPDATE status
-            String sql = "DELETE FROM order_items WHERE id = ?";
-            
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setInt(1, id);
-            
-            result = ps.executeUpdate();
+    // =====================================================
+    // 4. DELETE THEO ORDER (Xóa toàn bộ item khi xóa order)
+    // =====================================================
+    public boolean deleteByOrderId(int orderId) {
+        String sql = "DELETE FROM order_items WHERE order_id = ?";
+
+        try (Connection conn = DbUtil.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, orderId);
+            return ps.executeUpdate() > 0;
+
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println(e.getMessage());
         }
-        return result > 0;
+
+        return false;
+    }
+
+    // =====================================================
+    // 5. TỔNG TIỀN CỦA 1 ORDER
+    // =====================================================
+    public float getTotalAmountByOrder(int orderId) {
+        float total = 0;
+        String sql = "SELECT SUM(price * quantity) FROM order_items WHERE order_id = ?";
+
+        try (Connection conn = DbUtil.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, orderId);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                total = rs.getFloat(1);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return total;
+    }
+
+    // =====================================================
+    // 6. TỔNG SỐ LƯỢNG BÁN
+    // =====================================================
+    public int getTotalSoldQuantity() {
+        int total = 0;
+        String sql = "SELECT SUM(quantity) FROM order_items";
+
+        try (Connection conn = DbUtil.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            if (rs.next()) {
+                total = rs.getInt(1);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return total;
+    }
+
+    // =====================================================
+    // 7. TOP 5 SẢN PHẨM BÁN CHẠY
+    // =====================================================
+    public ArrayList<Integer> getTopSellingProductIDs() {
+        ArrayList<Integer> list = new ArrayList<>();
+
+        String sql = "SELECT product_id, SUM(quantity) AS total "
+                   + "FROM order_items "
+                   + "GROUP BY product_id "
+                   + "ORDER BY total DESC";
+
+        try (Connection conn = DbUtil.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            int count = 0;
+            while (rs.next() && count < 5) {
+                list.add(rs.getInt("product_id"));
+                count++;
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return list;
+    }
+
+    // =====================================================
+    // HÀM HỖ TRỢ
+    // =====================================================
+    private OrderItemDTO extractItem(ResultSet rs) throws Exception {
+        return new OrderItemDTO(
+                rs.getInt("id"),
+                rs.getInt("order_id"),
+                rs.getInt("product_id"),
+                rs.getFloat("price"),
+                rs.getInt("quantity")
+        );
     }
 }
