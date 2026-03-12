@@ -7,6 +7,7 @@ import javax.servlet.http.*;
 import model.ProductDAO;
 import model.ProductDTO;
 
+
 public class ProductController extends HttpServlet {
 
     // ================= CHECK ROLE =================
@@ -39,7 +40,7 @@ public class ProductController extends HttpServlet {
 
         switch (action) {
 
-            // ===== USER + ADMIN =====
+            // ================= USER + ADMIN =================
             case "searchProduct":
                 doSearch(request, response);
                 break;
@@ -48,19 +49,7 @@ public class ProductController extends HttpServlet {
                 doView(request, response);
                 break;
 
-            case "filterProductByCategory":
-                filterByCategory(request, response);
-                break;
-
-            // ===== ADMIN =====
-            case "showAddProductForm":
-                request.getRequestDispatcher("product-add.jsp").forward(request, response);
-                break;
-
-            case "showUpdateProductForm":
-                showUpdateForm(request, response);
-                break;
-
+            // ================= ADMIN ONLY =================
             case "addProduct":
                 if (isAdmin(request)) doAdd(request, response);
                 else deny(response);
@@ -76,7 +65,7 @@ public class ProductController extends HttpServlet {
                 else deny(response);
                 break;
 
-            case "productStatistic":
+            case "ProductStatistic":
                 if (isAdmin(request)) doStatistic(request, response);
                 else deny(response);
                 break;
@@ -89,23 +78,29 @@ public class ProductController extends HttpServlet {
     // ================= SEARCH =================
     private void doSearch(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+ String keywords = request.getParameter("keywords");
+    String category = request.getParameter("category");
 
-        String keywords = request.getParameter("keywords");
-        if (keywords == null) keywords = "";
+    if (keywords == null) keywords = "";
 
-        ProductDAO dao = new ProductDAO();
-        ArrayList<ProductDTO> list;
+    ProductDAO dao = new ProductDAO();
+    ArrayList<ProductDTO> list;
 
-        if (!keywords.trim().isEmpty()) {
-            list = dao.searchByName(keywords);
-        } else {
-            list = dao.getAll();
-        }
+    if (category != null) {
+        int category_id = Integer.parseInt(category);
+        list = dao.getByCategory(category_id);
+    } 
+    else if (!keywords.trim().isEmpty()) {
+        list = dao.searchByName(keywords);
+    } 
+    else {
+        list = dao.getAll();
+    }
 
-        request.setAttribute("list", list);
-        request.setAttribute("keywords", keywords);
+    request.setAttribute("list", list);
+    request.setAttribute("keywords", keywords);
 
-        request.getRequestDispatcher("product-search.jsp").forward(request, response);
+    request.getRequestDispatcher("BestSeller.jsp").forward(request, response);
     }
 
     // ================= VIEW DETAIL =================
@@ -113,46 +108,11 @@ public class ProductController extends HttpServlet {
             throws ServletException, IOException {
 
         int id = parseInt(request.getParameter("id"));
-
         ProductDAO dao = new ProductDAO();
         ProductDTO product = dao.getById(id);
 
-        if (product == null) {
-            response.sendRedirect("ProductController?action=searchProduct");
-            return;
-        }
-
         request.setAttribute("product", product);
-
         request.getRequestDispatcher("product-detail.jsp").forward(request, response);
-    }
-
-    // ================= FILTER CATEGORY =================
-    private void filterByCategory(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-
-        int categoryId = parseInt(request.getParameter("category_id"));
-
-        ProductDAO dao = new ProductDAO();
-        ArrayList<ProductDTO> list = dao.getByCategory(categoryId);
-
-        request.setAttribute("list", list);
-
-        request.getRequestDispatcher("product-search.jsp").forward(request, response);
-    }
-
-    // ================= SHOW UPDATE FORM =================
-    private void showUpdateForm(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-
-        int id = parseInt(request.getParameter("id"));
-
-        ProductDAO dao = new ProductDAO();
-        ProductDTO product = dao.getById(id);
-
-        request.setAttribute("product", product);
-
-        request.getRequestDispatcher("product-update.jsp").forward(request, response);
     }
 
     // ================= ADD =================
@@ -176,11 +136,6 @@ public class ProductController extends HttpServlet {
         ProductDTO p = extractProduct(request);
         ProductDAO dao = new ProductDAO();
 
-        if (!dao.exists(p.getId())) {
-            response.sendRedirect("ProductController?action=searchProduct&error=notFound");
-            return;
-        }
-
         if (dao.update(p)) {
             response.sendRedirect("ProductController?action=searchProduct");
         } else {
@@ -188,17 +143,12 @@ public class ProductController extends HttpServlet {
         }
     }
 
-    // ================= DELETE =================
+    // ================= SOFT DELETE =================
     private void doSoftDelete(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
 
         int id = parseInt(request.getParameter("id"));
         ProductDAO dao = new ProductDAO();
-
-        if (!dao.exists(id)) {
-            response.sendRedirect("ProductController?action=searchProduct");
-            return;
-        }
 
         if (dao.delete(id)) {
             response.sendRedirect("ProductController?action=searchProduct");
@@ -207,7 +157,7 @@ public class ProductController extends HttpServlet {
         }
     }
 
-    // ================= STATISTIC =================
+    // ================= COUNT PRODUCT =================
     private void doStatistic(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
@@ -215,17 +165,16 @@ public class ProductController extends HttpServlet {
         int total = dao.countProducts();
 
         request.setAttribute("totalProduct", total);
-
         request.getRequestDispatcher("admin-dashboard.jsp").forward(request, response);
     }
 
-    // ================= EXTRACT PRODUCT =================
+    // ================= EXTRACT =================
     private ProductDTO extractProduct(HttpServletRequest request) {
 
         int id = parseInt(request.getParameter("id"));
         int category_id = parseInt(request.getParameter("category_id"));
         String name = request.getParameter("name");
-        double price = parseDouble(request.getParameter("price"));
+        float price = parseFloat(request.getParameter("price"));
         int stock = parseInt(request.getParameter("stock"));
         String description = request.getParameter("description");
         String image = request.getParameter("image");
@@ -233,19 +182,16 @@ public class ProductController extends HttpServlet {
         return new ProductDTO(id, category_id, name, price, stock, description, image, true);
     }
 
-    // ================= PARSE INT =================
     private int parseInt(String value) {
         try { return Integer.parseInt(value); }
         catch (Exception e) { return 0; }
     }
 
-    // ================= PARSE DOUBLE =================
-    private double parseDouble(String value) {
-        try { return Double.parseDouble(value); }
+    private float parseFloat(String value) {
+        try { return Float.parseFloat(value); }
         catch (Exception e) { return 0; }
     }
 
-    // ================= ACCESS DENY =================
     private void deny(HttpServletResponse response) throws IOException {
         response.sendError(HttpServletResponse.SC_FORBIDDEN, "Admin only!");
     }

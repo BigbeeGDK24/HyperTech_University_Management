@@ -1,53 +1,32 @@
-<%-- 
-    Document   : Admin.jsp
-    Created on : Mar 9, 2026, 11:33:34 PM
-    Author     : truon
---%>
-
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
+       <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="UTF-8">
-        <title>Admin Dashboard</title>
+<head>
+<meta charset="UTF-8">
+<title>Admin Dashboard</title>
 
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/admin.css">
+<link rel="stylesheet" href="${pageContext.request.contextPath}/css/Admin.css">
 
-    </head>
+</head>
 
-    <body>
+<body>
 
-        <div class="admin-container">
+<div class="admin-container">
 
-            <!-- SIDEBAR -->
-            <div class="sidebar">
-
-                <h2 class="logo">Quản Lý</h2>
-
-                <ul>
-                    <li>Sản Phẩm</li>
-                    <li>Thoát</li>
-
-                </ul>
-
-            </div>
+    <!-- SIDEBAR -->
+    <div class="sidebar">
 
 
-            <!-- CONTENT -->
-            <div class="main">
+        <ul>
+            <li><a href="Admin.jsp">Trang Chủ</a></li>
+            <li><a href="product.jsp">Sản Phẩm</a></li>
+            <li><a href="login.jsp">Thoát</a></li>
+        </ul>
 
-                <div class="dashboard">
+    </div>
 
-                    <div class="card green">
-                        <h2>1264</h2>
-                        <p>Sản Phẩm</p>
-                    </div>
 
-                </div>
+</div>
 
-            </div>
-
-        </div>
-
-    </body>
+</body>
 </html>
