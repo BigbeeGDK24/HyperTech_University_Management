@@ -6,7 +6,7 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 import org.mindrot.jbcrypt.BCrypt;
-import util.DbUtils;
+import util.DbUtil;
 
 public class UserDAO {
 
@@ -16,7 +16,7 @@ public class UserDAO {
         String sql = "SELECT * FROM users WHERE email =?";
         System.out.println("EMAIL=" + email + "|");
         System.out.println(sql);
-        try ( Connection con = DbUtils.getConnection();  PreparedStatement ps = con.prepareStatement(sql)) {
+        try ( Connection con = DbUtil.getConnection();  PreparedStatement ps = con.prepareStatement(sql)) {
 
             ps.setString(1, email);
             ResultSet rs = ps.executeQuery();
@@ -39,7 +39,7 @@ public class UserDAO {
     public ArrayList<UserDTO> filterByColum(String column, String value) {
         ArrayList<UserDTO> result = new ArrayList<>();
         try {
-            Connection conn = DbUtils.getConnection();
+            Connection conn = DbUtil.getConnection();
             String sql = "SELECT * FROM users WHERE status = 1 AND " + column + " LIKE ?";
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, "%" + value + "%");
@@ -67,7 +67,7 @@ public class UserDAO {
         List<UserDTO> list = new ArrayList<>();
         String sql = "SELECT * FROM users";
 
-        try ( Connection con = DbUtils.getConnection();  PreparedStatement ps = con.prepareStatement(sql);  ResultSet rs = ps.executeQuery()) {
+        try ( Connection con = DbUtil.getConnection();  PreparedStatement ps = con.prepareStatement(sql);  ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {
 
@@ -109,7 +109,7 @@ public class UserDAO {
         String sql = "INSERT INTO users (Username, email, password, phone, address, status) "
                 + "VALUES (?, ?, ?, ?, ?, ?)";
 
-     try ( Connection conn = DbUtils.getConnection();  PreparedStatement ps = conn.prepareStatement(sql)) {
+     try ( Connection conn = DbUtil.getConnection();  PreparedStatement ps = conn.prepareStatement(sql)) {
 
             // Hash mật khẩu trước khi lưu
             String hashedPassword = BCrypt.hashpw(u.getPassword(), BCrypt.gensalt());
@@ -134,7 +134,7 @@ public class UserDAO {
     public boolean updateUserStatus(String email, boolean status) {
         boolean check = false;
         String sql = "UPDATE users SET status = ? WHERE email = ?";
-        try ( Connection con = DbUtils.getConnection();
+        try ( Connection con = DbUtil.getConnection();
                 PreparedStatement ps = con.prepareStatement(sql)) {
 
             ps.setBoolean(1, status);
@@ -150,7 +150,7 @@ public class UserDAO {
     public boolean UpdateU(UserDTO u) {
         int result = 0;
         try {
-           Connection conn = DbUtils.getConnection();
+           Connection conn = DbUtil.getConnection();
             String sql = "UPDATE users"
                     + "   SET username = ?"
                     + "      ,password = ?"
@@ -177,7 +177,7 @@ public class UserDAO {
         int count = 0;
         String sql = "SELECT COUNT(*) FROM users";
 
-        try ( Connection con = DbUtils.getConnection();
+        try ( Connection con = DbUtil.getConnection();
                 PreparedStatement ps = con.prepareStatement(sql);
                 ResultSet rs = ps.executeQuery()) {
 
