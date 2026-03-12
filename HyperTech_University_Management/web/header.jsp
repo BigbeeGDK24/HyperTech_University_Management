@@ -47,17 +47,26 @@
         <div class="item account">
     <i class="fa-solid fa-user"></i>
 
-    <div>
-        <c:choose>
-            <c:when test="${sessionScope.LOGIN_USER != null}">
-                Xin chào ${sessionScope.LOGIN_USER.name}
-            </c:when>
+    <%
+    Object user = session.getAttribute("User");
+    if(user != null){
+%>
 
-            <c:otherwise>
-                Đăng nhập
-            </c:otherwise>
-        </c:choose>
-    </div>
+<div>
+    <%= ((model.UserDTO)user).getUsername()%>
+</div>
+
+<%
+    } else {
+%>
+
+<div id="openLoginBtn" style="cursor:pointer;">
+    Đăng nhập
+</div>
+
+<%
+    }
+%>
 
                 <div class="account-divider"></div>
 
