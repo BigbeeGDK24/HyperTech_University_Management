@@ -190,4 +190,40 @@ public class ProductDAO {
                 rs.getBoolean("status")
         );
     }
+    
+    public ArrayList<ProductDTO> getByCategory(int category_id){
+
+    ArrayList<ProductDTO> list = new ArrayList<>();
+
+    try {
+        Connection con = DbUtil.getConnection();
+        String sql = "SELECT * FROM Product WHERE category_id = ?";
+        PreparedStatement ps = con.prepareStatement(sql);
+        ps.setInt(1, category_id);
+
+        ResultSet rs = ps.executeQuery();
+
+        while(rs.next()){
+
+            ProductDTO p = new ProductDTO(
+                rs.getInt("id"),
+                rs.getInt("category_id"),
+                rs.getString("name"),
+                rs.getFloat("price"),
+                rs.getInt("stock"),
+                rs.getString("description"),
+                rs.getString("image"),
+                rs.getBoolean("status")
+            );
+
+            list.add(p);
+        }
+
+    } catch(Exception e){
+        e.printStackTrace();
+    }
+
+    return list;
 }
+}
+

@@ -7,6 +7,7 @@ import javax.servlet.http.*;
 import model.ProductDAO;
 import model.ProductDTO;
 
+
 public class ProductController extends HttpServlet {
 
     // ================= CHECK ROLE =================
@@ -77,22 +78,29 @@ public class ProductController extends HttpServlet {
     // ================= SEARCH =================
     private void doSearch(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+ String keywords = request.getParameter("keywords");
+    String category = request.getParameter("category");
 
-        String keywords = request.getParameter("keywords");
-        if (keywords == null) keywords = "";
+    if (keywords == null) keywords = "";
 
-        ProductDAO dao = new ProductDAO();
-        ArrayList<ProductDTO> list;
+    ProductDAO dao = new ProductDAO();
+    ArrayList<ProductDTO> list;
 
-        if (!keywords.trim().isEmpty()) {
-            list = dao.searchByName(keywords);
-        } else {
-            list = dao.getAll();
-        }
+    if (category != null) {
+        int category_id = Integer.parseInt(category);
+        list = dao.getByCategory(category_id);
+    } 
+    else if (!keywords.trim().isEmpty()) {
+        list = dao.searchByName(keywords);
+    } 
+    else {
+        list = dao.getAll();
+    }
 
-        request.setAttribute("list", list);
-        request.setAttribute("keywords", keywords);
-        request.getRequestDispatcher("product-search.jsp").forward(request, response);
+    request.setAttribute("list", list);
+    request.setAttribute("keywords", keywords);
+
+    request.getRequestDispatcher("BestSeller.jsp").forward(request, response);
     }
 
     // ================= VIEW DETAIL =================
