@@ -1,189 +1,85 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
+ */
 package controller;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.io.PrintWriter;
 import javax.servlet.ServletException;
-import javax.servlet.http.*;
-import model.ProductDiscountDAO;
-import model.ProductDiscountDTO;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
+/**
+ *
+ * @author ASUS
+ */
 public class ProductDiscount extends HttpServlet {
 
-    // ================= CHECK ROLE =================
-    private boolean isAdmin(HttpServletRequest request) {
-        return request.getSession().getAttribute("admin") != null;
-    }
-
-    private boolean isUser(HttpServletRequest request) {
-        return request.getSession().getAttribute("user") != null;
-    }
-
-    private boolean isLoggedIn(HttpServletRequest request) {
-        return isAdmin(request) || isUser(request);
-    }
-
-    // ================= MAIN PROCESS =================
+    /**
+     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
+     * methods.
+     *
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
-        request.setCharacterEncoding("UTF-8");
-        response.setCharacterEncoding("UTF-8");
-
-        if (!isLoggedIn(request)) {
-            response.sendRedirect("login.jsp");
-            return;
-        }
-
-        String action = request.getParameter("action");
-        if (action == null) action = "searchProductDiscount";
-
-        switch (action) {
-
-            // ===== USER + ADMIN =====
-            case "searchProductDiscount":
-                doSearch(request, response);
-                break;
-
-            case "viewProductDiscount":
-                doView(request, response);
-                break;
-
-            case "filterProductDiscountByProduct":
-                filterByProduct(request, response);
-                break;
-
-            // ===== ADMIN =====
-            case "showAddProductDiscountForm":
-                request.getRequestDispatcher("productDiscount-add.jsp").forward(request, response);
-                break;
-
-            case "addProductDiscount":
-                if (isAdmin(request)) doAdd(request, response);
-                else deny(response);
-                break;
-
-            case "deleteProductDiscount":
-                if (isAdmin(request)) doDelete(request, response);
-                else deny(response);
-                break;
-
-            case "productDiscountStatistic":
-                if (isAdmin(request)) doStatistic(request, response);
-                else deny(response);
-                break;
-
-            default:
-                doSearch(request, response);
+        response.setContentType("text/html;charset=UTF-8");
+        try ( PrintWriter out = response.getWriter()) {
+            /* TODO output your page here. You may use following sample code. */
+            out.println("<!DOCTYPE html>");
+            out.println("<html>");
+            out.println("<head>");
+            out.println("<title>Servlet ProductDiscount</title>");            
+            out.println("</head>");
+            out.println("<body>");
+            out.println("<h1>Servlet ProductDiscount at " + request.getContextPath() + "</h1>");
+            out.println("</body>");
+            out.println("</html>");
         }
     }
 
-    // ================= SEARCH =================
-    private void doSearch(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-
-        ProductDiscountDAO dao = new ProductDiscountDAO();
-        ArrayList<ProductDiscountDTO> list = dao.getAll();
-
-        request.setAttribute("list", list);
-
-        request.getRequestDispatcher("productDiscount-search.jsp").forward(request, response);
-    }
-
-    // ================= VIEW DETAIL =================
-    private void doView(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-
-        int productID = parseInt(request.getParameter("product_id"));
-
-        ProductDiscountDAO dao = new ProductDiscountDAO();
-        ArrayList<ProductDiscountDTO> list = dao.searchByProductID(productID);
-
-        request.setAttribute("list", list);
-
-        request.getRequestDispatcher("productDiscount-detail.jsp").forward(request, response);
-    }
-
-    // ================= FILTER PRODUCT =================
-    private void filterByProduct(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-
-        int productID = parseInt(request.getParameter("product_id"));
-
-        ProductDiscountDAO dao = new ProductDiscountDAO();
-        ArrayList<ProductDiscountDTO> list = dao.searchByProductID(productID);
-
-        request.setAttribute("list", list);
-
-        request.getRequestDispatcher("productDiscount-search.jsp").forward(request, response);
-    }
-
-    // ================= ADD =================
-    private void doAdd(HttpServletRequest request, HttpServletResponse response)
-            throws IOException {
-
-        int productID = parseInt(request.getParameter("product_id"));
-        int discountID = parseInt(request.getParameter("discount_id"));
-
-        ProductDiscountDTO pd = new ProductDiscountDTO(productID, discountID);
-        ProductDiscountDAO dao = new ProductDiscountDAO();
-
-        if (dao.add(pd)) {
-            response.sendRedirect("ProductDiscount?action=searchProductDiscount");
-        } else {
-            response.sendRedirect("ProductDiscount?action=searchProductDiscount&error=addFail");
-        }
-    }
-
-    // ================= DELETE =================
-    protected void doDelete(HttpServletRequest request, HttpServletResponse response)
-            throws IOException {
-
-        int productID = parseInt(request.getParameter("product_id"));
-        int discountID = parseInt(request.getParameter("discount_id"));
-
-        ProductDiscountDAO dao = new ProductDiscountDAO();
-
-        if (dao.delete(productID, discountID)) {
-            response.sendRedirect("ProductDiscount?action=searchProductDiscount");
-        } else {
-            response.sendRedirect("ProductDiscount?action=searchProductDiscount&error=deleteFail");
-        }
-    }
-
-    // ================= STATISTIC =================
-    private void doStatistic(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-
-        ProductDiscountDAO dao = new ProductDiscountDAO();
-        ArrayList<ProductDiscountDTO> list = dao.getAll();
-
-        int total = list.size();
-
-        request.setAttribute("totalProductDiscount", total);
-
-        request.getRequestDispatcher("admin-dashboard.jsp").forward(request, response);
-    }
-
-    // ================= PARSE INT =================
-    private int parseInt(String value) {
-        try { return Integer.parseInt(value); }
-        catch (Exception e) { return 0; }
-    }
-
-    // ================= ACCESS DENY =================
-    private void deny(HttpServletResponse response) throws IOException {
-        response.sendError(HttpServletResponse.SC_FORBIDDEN, "Admin only!");
-    }
-
+    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
+    /**
+     * Handles the HTTP <code>GET</code> method.
+     *
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
     }
 
+    /**
+     * Handles the HTTP <code>POST</code> method.
+     *
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
     }
+
+    /**
+     * Returns a short description of the servlet.
+     *
+     * @return a String containing servlet description
+     */
+    @Override
+    public String getServletInfo() {
+        return "Short description";
+    }// </editor-fold>
+
 }

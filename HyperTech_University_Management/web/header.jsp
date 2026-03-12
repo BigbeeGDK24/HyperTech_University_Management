@@ -1,4 +1,5 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <link rel="stylesheet" href="css/header.css">
 <link rel="stylesheet" href="css/home.css">
@@ -44,22 +45,19 @@
         </a>
 
         <div class="item account">
-            <i class="fa-solid fa-user"></i>
-            <div>Đăng nhập</div>
+    <i class="fa-solid fa-user"></i>
 
-            <div class="account-dropdown">
+    <div>
+        <c:choose>
+            <c:when test="${sessionScope.LOGIN_USER != null}">
+                Xin chào ${sessionScope.LOGIN_USER.name}
+            </c:when>
 
-                <div class="account-top">
-                    <i class="fa-regular fa-hand"></i>
-                    <span>Xin chào, vui lòng đăng nhập</span>
-                </div>
-
-                <div class="account-buttons">
-                    <a href="#" class="btn-login" id="openLoginBtn">
-                        ĐĂNG NHẬP
-                    </a>
-                    <a href="#" class="btn-register" id="openRegisterBtn">ĐĂNG KÝ</a>
-                </div>
+            <c:otherwise>
+                Đăng nhập
+            </c:otherwise>
+        </c:choose>
+    </div>
 
                 <div class="account-divider"></div>
 
@@ -111,7 +109,7 @@
                 </a>
 
                 <div class="banner-row">
-                    <a href="BestSeller.jsp">
+                    <a href="LaptopController?action=list">
                         <img class="banner-small" src="images/laptopgaming.jpg">
                     </a>
                     <a href="BestSeller2.jsp">
@@ -189,7 +187,7 @@
         <!-- HEADER -->
         <div class="login-header">
             <h2>ĐĂNG NHẬP HOẶC TẠO TÀI KHOẢN</h2>
-            <span class="close-btn" id="closeModal">&times;</span>
+            <span class="close-btn" id="closeModal" style="cursor:pointer;">&times;</span>
         </div>
 
         <!-- FORM -->

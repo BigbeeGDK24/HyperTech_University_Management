@@ -241,3 +241,18 @@ VALUES
 (2,2,'momo',28000000,'paid','MOMO002',GETDATE()),
 (3,3,'COD',3000000,'pending',NULL,NULL),
 (4,4,'paypal',900000,'failed','PAY004',NULL);
+
+-- ================= Laptops =================
+CREATE TABLE laptops (
+    id INT IDENTITY(1,1) PRIMARY KEY,
+    name NVARCHAR(255),
+    cpu NVARCHAR(100),
+    gpu NVARCHAR(100),
+    ram NVARCHAR(50),
+    ssd NVARCHAR(50),
+    screen NVARCHAR(100),
+    refresh_rate NVARCHAR(50),
+    old_price FLOAT,
+    new_price FLOAT,
+    image_url NVARCHAR(255)
+);

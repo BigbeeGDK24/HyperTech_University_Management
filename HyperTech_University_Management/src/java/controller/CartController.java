@@ -1,171 +1,85 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
+ */
 package controller;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.io.PrintWriter;
 import javax.servlet.ServletException;
-import javax.servlet.http.*;
-import model.CartDAO;
-import model.CartDTO;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
+/**
+ *
+ * @author ASUS
+ */
 public class CartController extends HttpServlet {
 
-    // ================= CHECK LOGIN =================
-    private boolean isUser(HttpServletRequest request) {
-        return request.getSession().getAttribute("user") != null;
-    }
-
-    // ================= MAIN PROCESS =================
+    /**
+     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
+     * methods.
+     *
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
-        request.setCharacterEncoding("UTF-8");
-        response.setCharacterEncoding("UTF-8");
-
-        if (!isUser(request)) {
-            response.sendRedirect("login.jsp");
-            return;
-        }
-
-        String action = request.getParameter("action");
-        if (action == null) action = "viewCart";
-
-        switch (action) {
-
-            case "viewCart":
-                doViewCart(request, response);
-                break;
-
-            case "addToCart":
-                doAdd(request, response);
-                break;
-
-            case "updateCart":
-                doUpdate(request, response);
-                break;
-
-            case "deleteCartItem":
-                doDelete(request, response);
-                break;
-
-            case "clearCart":
-                doClear(request, response);
-                break;
-
-            default:
-                doViewCart(request, response);
+        response.setContentType("text/html;charset=UTF-8");
+        try ( PrintWriter out = response.getWriter()) {
+            /* TODO output your page here. You may use following sample code. */
+            out.println("<!DOCTYPE html>");
+            out.println("<html>");
+            out.println("<head>");
+            out.println("<title>Servlet CartController</title>");            
+            out.println("</head>");
+            out.println("<body>");
+            out.println("<h1>Servlet CartController at " + request.getContextPath() + "</h1>");
+            out.println("</body>");
+            out.println("</html>");
         }
     }
 
-    // ================= VIEW CART =================
-    private void doViewCart(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-
-        HttpSession session = request.getSession();
-        String userId = (String) session.getAttribute("user");
-
-        CartDAO dao = new CartDAO();
-        ArrayList<CartDTO> list = dao.getByUserId(userId);
-
-        request.setAttribute("cartList", list);
-
-        request.getRequestDispatcher("cart.jsp").forward(request, response);
-    }
-
-    // ================= ADD TO CART =================
-    private void doAdd(HttpServletRequest request, HttpServletResponse response)
-            throws IOException {
-
-        HttpSession session = request.getSession();
-        String userId = (String) session.getAttribute("user");
-
-        int productId = parseInt(request.getParameter("product_id"));
-        int quantity = parseInt(request.getParameter("quantity"));
-
-        if (quantity <= 0) quantity = 1;
-
-        CartDAO dao = new CartDAO();
-
-        CartDTO existing = dao.getItem(userId, productId);
-
-        if (existing == null) {
-
-            CartDTO cart = new CartDTO(userId, productId, quantity);
-            dao.insert(cart);
-
-        } else {
-
-            int newQuantity = existing.getQuality() + quantity;
-            dao.updateQuantity(userId, productId, newQuantity);
-
-        }
-
-        response.sendRedirect("CartController?action=viewCart");
-    }
-
-    // ================= UPDATE CART =================
-    private void doUpdate(HttpServletRequest request, HttpServletResponse response)
-            throws IOException {
-
-        HttpSession session = request.getSession();
-        String userId = (String) session.getAttribute("user");
-
-        int productId = parseInt(request.getParameter("product_id"));
-        int quantity = parseInt(request.getParameter("quantity"));
-
-        CartDAO dao = new CartDAO();
-
-        if (quantity <= 0) {
-            dao.deleteItem(userId, productId);
-        } else {
-            dao.updateQuantity(userId, productId, quantity);
-        }
-
-        response.sendRedirect("CartController?action=viewCart");
-    }
-
-    // ================= DELETE ITEM =================
-    protected void doDelete(HttpServletRequest request, HttpServletResponse response)
-            throws IOException {
-
-        HttpSession session = request.getSession();
-        String userId = (String) session.getAttribute("user");
-
-        int productId = parseInt(request.getParameter("product_id"));
-
-        CartDAO dao = new CartDAO();
-        dao.deleteItem(userId, productId);
-
-        response.sendRedirect("CartController?action=viewCart");
-    }
-
-    // ================= CLEAR CART =================
-    private void doClear(HttpServletRequest request, HttpServletResponse response)
-            throws IOException {
-
-        HttpSession session = request.getSession();
-        String userId = (String) session.getAttribute("user");
-
-        CartDAO dao = new CartDAO();
-        dao.clearCart(userId);
-
-        response.sendRedirect("CartController?action=viewCart");
-    }
-
-    // ================= PARSE INT =================
-    private int parseInt(String value) {
-        try { return Integer.parseInt(value); }
-        catch (Exception e) { return 0; }
-    }
-
+    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
+    /**
+     * Handles the HTTP <code>GET</code> method.
+     *
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
     }
 
+    /**
+     * Handles the HTTP <code>POST</code> method.
+     *
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
     }
+
+    /**
+     * Returns a short description of the servlet.
+     *
+     * @return a String containing servlet description
+     */
+    @Override
+    public String getServletInfo() {
+        return "Short description";
+    }// </editor-fold>
+
 }
