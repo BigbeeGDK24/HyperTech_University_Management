@@ -243,3 +243,16 @@ VALUES
 (N'Laptop gaming Lenovo Legion 5 15IRX10','i7-14700HX','RTX 5070','24 GB','1 TB','15.1 inch WQXGA OLED','165 Hz',49990000,45990000,'legion5.jpg'),
 (N'Laptop gaming Acer Nitro V 16S ProPanel','R7 260','RTX 4050','16 GB','1 TB','16 inch WUXGA','180 Hz',34990000,31990000,'nitro_v3.jpg'),
 (N'Laptop gaming HP VICTUS 15-fa2731TX','i5-13420H','RTX 3050','16 GB','512 GB','15.6 inch FHD','144 Hz',22990000,20990000,'victus.jpg');
+
+UPDATE laptops SET image_url = 'lab1.png' WHERE id = 1;
+UPDATE laptops SET image_url = 'lab2.png' WHERE id = 2;
+UPDATE laptops SET image_url = 'lab3.png' WHERE id = 3;
+UPDATE laptops SET image_url = 'lab4.png' WHERE id = 4;
+UPDATE laptops SET image_url = 'lab5.png' WHERE id = 5;
+UPDATE laptops SET image_url = 'lab6.png' WHERE id = 6;
+UPDATE laptops SET image_url = 'lab7.png' WHERE id = 7;
+UPDATE laptops SET image_url = 'lab8.png' WHERE id = 8;
+UPDATE laptops SET image_url = 'lab9.png' WHERE id = 9;
+UPDATE laptops SET image_url = 'lab10.png' WHERE id = 10;
+UPDATE laptops SET image_url = 'lab11.png' WHERE id = 11;
+UPDATE laptops SET image_url = 'lab12.png' WHERE id = 12;
