@@ -1,5 +1,11 @@
-﻿CREATE DATABASE banhang_db;
+﻿-- ================= RESET DATABASE =================
+IF DB_ID('banhang_db') IS NOT NULL
+DROP DATABASE banhang_db;
 GO
+
+CREATE DATABASE banhang_db;
+GO
+
 USE banhang_db;
 GO
 
@@ -9,13 +15,13 @@ CREATE TABLE users (
     email NVARCHAR(100) UNIQUE NOT NULL,
     username NVARCHAR(50) NOT NULL,
     password NVARCHAR(255) NOT NULL,
-    phone VARCHAR(10),
+    phone VARCHAR(15),
     address NVARCHAR(255),
     status BIT DEFAULT 1
 );
 
--- ================= ADMIN =================
-CREATE TABLE admin (
+-- ================= ADMINS =================
+CREATE TABLE admins (
     id INT IDENTITY(1,1) PRIMARY KEY,
     username NVARCHAR(50) NOT NULL,
     password NVARCHAR(255) NOT NULL
@@ -34,7 +40,7 @@ CREATE TABLE products (
     id INT IDENTITY(1,1) PRIMARY KEY,
     category_id INT NOT NULL,
     name NVARCHAR(150) NOT NULL,
-    price DECIMAL(12,2) NOT NULL,
+    price DECIMAL(12,0) NOT NULL,
     stock INT DEFAULT 0,
     description NVARCHAR(MAX),
     image VARCHAR(255),
@@ -47,11 +53,10 @@ CREATE TABLE products (
 
 -- ================= CART =================
 CREATE TABLE cart (
+    id INT IDENTITY(1,1) PRIMARY KEY,
     user_id INT,
     product_id INT,
     quantity INT DEFAULT 1,
-
-    PRIMARY KEY (user_id, product_id),
 
     FOREIGN KEY (user_id)
     REFERENCES users(id)
@@ -66,9 +71,9 @@ CREATE TABLE cart (
 CREATE TABLE orders (
     id INT IDENTITY(1,1) PRIMARY KEY,
     user_id INT NOT NULL,
-    total_price DECIMAL(12,2) NOT NULL,
+    total_price DECIMAL(12,0) NOT NULL,
     status VARCHAR(20)
-        CHECK (status IN ('confirmed','shipping','completed','cancelled','outstock')),
+        CHECK (status IN ('pending','confirmed','shipping','completed','cancelled','outstock')),
     created_at DATETIME DEFAULT GETDATE(),
 
     FOREIGN KEY (user_id)
@@ -81,7 +86,7 @@ CREATE TABLE order_items (
     id INT IDENTITY(1,1) PRIMARY KEY,
     order_id INT,
     product_id INT,
-    price DECIMAL(12,2),
+    price DECIMAL(12,0),
     quantity INT,
 
     FOREIGN KEY (order_id)
@@ -129,14 +134,9 @@ CREATE TABLE complaints (
         CHECK (status IN ('pending','processing','resolved','rejected'))
         DEFAULT 'pending',
 
-    FOREIGN KEY (user_id)
-    REFERENCES users(id),
-
-    FOREIGN KEY (order_id)
-    REFERENCES orders(id),
-
-    FOREIGN KEY (product_id)
-    REFERENCES products(id)
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    FOREIGN KEY (order_id) REFERENCES orders(id),
+    FOREIGN KEY (product_id) REFERENCES products(id)
 );
 
 -- ================= PAYMENTS =================
@@ -146,7 +146,7 @@ CREATE TABLE payments (
     user_id INT,
     payment_method VARCHAR(30)
         CHECK (payment_method IN ('COD','bank_transfer','momo','vnpay','paypal')),
-    amount DECIMAL(12,2),
+    amount DECIMAL(12,0),
     status VARCHAR(20)
         CHECK (status IN ('pending','paid','failed','refunded'))
         DEFAULT 'pending',
@@ -163,13 +163,13 @@ CREATE TABLE payments (
 
 -- ================= INSERT USERS =================
 INSERT INTO users (email, username, password, phone, address) VALUES
-('a@gmail.com', N'Nguyễn Văn A', '123456', '0900000001', N'Hà Nội'),
-('b@gmail.com', N'Trần Thị B', '123456', '0900000002', N'Hồ Chí Minh'),
-('c@gmail.com', N'Lê Văn C', '123456', '0900000003', N'Đà Nẵng'),
-('d@gmail.com', N'Phạm Thị D', '123456', '0900000004', N'Cần Thơ');
+('a@gmail.com',N'Nguyễn Văn A','123456','0900000001',N'Hà Nội'),
+('b@gmail.com',N'Trần Thị B','123456','0900000002',N'Hồ Chí Minh'),
+('c@gmail.com',N'Lê Văn C','123456','0900000003',N'Đà Nẵng'),
+('d@gmail.com',N'Phạm Thị D','123456','0900000004',N'Cần Thơ');
 
--- ================= INSERT ADMIN =================
-INSERT INTO admin (username,password) VALUES
+-- ================= INSERT ADMINS =================
+INSERT INTO admins (username,password) VALUES
 ('truong','admin123'),
 ('kiet','admin456'),
 ('trieu','admin789');
@@ -192,7 +192,7 @@ INSERT INTO products (category_id,name,price,stock,description,image) VALUES
 (4,N'SSD Kingston NV2 1TB',1800000,25,N'SSD NVMe PCIe Gen4','ssd.jpg');
 
 -- ================= INSERT CART =================
-INSERT INTO cart VALUES
+INSERT INTO cart (user_id,product_id,quantity) VALUES
 (1,1,1),
 (1,2,1),
 (2,3,2),
@@ -200,49 +200,20 @@ INSERT INTO cart VALUES
 
 -- ================= INSERT ORDERS =================
 INSERT INTO orders (user_id,total_price,status) VALUES
-(1,25000000,'confirmed'),
-(2,28000000,'shipping'),
+(1,22500000,'confirmed'),
+(2,3000000,'shipping'),
 (3,3000000,'completed'),
-(4,900000,'outstock');
+(4,5400000,'pending');
 
 -- ================= INSERT ORDER ITEMS =================
 INSERT INTO order_items (order_id,product_id,price,quantity) VALUES
-(1,1,25000000,1),
-(2,2,28000000,1),
+(1,1,18000000,1),
+(1,2,4500000,1),
+(2,3,1500000,2),
 (3,3,1500000,2),
-(4,4,300000,3);
+(4,4,1800000,3);
 
--- ================= INSERT DISCOUNTS =================
-INSERT INTO discounts (name,discount_percent,start_date,end_date) VALUES
-(N'Giảm 10%',10,'2026-01-01','2026-12-31'),
-(N'Giảm 20%',20,'2026-01-01','2026-06-30'),
-(N'Giảm 15%',15,'2026-03-01','2026-09-30'),
-(N'Giảm 5%',5,'2026-01-01','2026-04-30');
-
--- ================= INSERT PRODUCT DISCOUNTS =================
-INSERT INTO product_discounts VALUES
-(1,1),
-(2,2),
-(3,3),
-(4,4);
-
--- ================= INSERT COMPLAINTS =================
-INSERT INTO complaints (user_id,order_id,product_id,title,content,status) VALUES
-(1,1,1,N'Lỗi màn hình',N'Màn hình bị sọc','pending'),
-(2,2,2,N'Giao hàng chậm',N'Chậm 3 ngày','processing'),
-(3,3,3,N'Sản phẩm lỗi',N'Không hoạt động','resolved'),
-(4,4,4,N'Sai sản phẩm',N'Nhận sai hàng','rejected');
-
--- ================= INSERT PAYMENTS =================
-INSERT INTO payments
-(order_id,user_id,payment_method,amount,status,transaction_code,paid_at)
-VALUES
-(1,1,'vnpay',25000000,'paid','VNP001',GETDATE()),
-(2,2,'momo',28000000,'paid','MOMO002',GETDATE()),
-(3,3,'COD',3000000,'pending',NULL,NULL),
-(4,4,'paypal',900000,'failed','PAY004',NULL);
-
--- ================= Laptops =================
+-- ================= LAPTOPS =================
 CREATE TABLE laptops (
     id INT IDENTITY(1,1) PRIMARY KEY,
     name NVARCHAR(255),
@@ -252,7 +223,36 @@ CREATE TABLE laptops (
     ssd NVARCHAR(50),
     screen NVARCHAR(100),
     refresh_rate NVARCHAR(50),
-    old_price FLOAT,
-    new_price FLOAT,
+    old_price DECIMAL(12,0),
+    new_price DECIMAL(12,0),
     image_url NVARCHAR(255)
 );
+
+INSERT INTO laptops
+(name,cpu,gpu,ram,ssd,screen,refresh_rate,old_price,new_price,image_url)
+VALUES
+(N'Laptop gaming Gigabyte A16','i7-13620H','RTX 4050','16 GB','1 TB','16 inch WUXGA','165 Hz',29930000,28490000,'a16_1.jpg'),
+(N'Laptop gaming Gigabyte A16','i5-12500H','RTX 3050','16 GB','512 GB','15.6 inch','144 Hz',29490000,27990000,'a16_2.jpg'),
+(N'Laptop gaming Acer Nitro V ProPanel','R5-7535HS','RTX 3050','16 GB','512 GB','15.6 inch FHD','180 Hz',27990000,25990000,'nitro_v1.jpg'),
+(N'Laptop gaming Lenovo LOQ 15IAX9E','i5-12450HX','RTX 3050','16 GB','512 GB','15.6 inch FHD','144 Hz',24490000,23490000,'loq1.jpg'),
+(N'Laptop gaming Lenovo LOQ 15ARP10E','R7-7735HS','RTX 4050','16 GB','512 GB','15.6 inch FHD','144 Hz',28990000,24790000,'loq2.jpg'),
+(N'Laptop gaming MSI Cyborg 15 A13UC','i7-13620H','RTX 3050','16 GB','512 GB','15.6 inch FHD','144 Hz',32990000,29990000,'msi_cyborg.jpg'),
+(N'Laptop gaming Acer Nitro Lite 16 NL16 71','i5-13420H','RTX 3050','16 GB','512 GB','16 inch FHD+','165 Hz',23990000,21990000,'nitro_lite.jpg'),
+(N'Laptop gaming Gigabyte A16','i7-13620H','RTX 4050','16 GB','512 GB','16 inch FHD+ IPS','165 Hz',29990000,27990000,'a16_3.jpg'),
+(N'Laptop gaming Acer Nitro V ProPanel','i5-13420H','RTX 4050','32 GB','512 GB','15.6 inch FHD','180 Hz',31990000,29490000,'nitro_v2.jpg'),
+(N'Laptop gaming Lenovo Legion 5 15IRX10','i7-14700HX','RTX 5070','24 GB','1 TB','15.1 inch WQXGA OLED','165 Hz',49990000,45990000,'legion5.jpg'),
+(N'Laptop gaming Acer Nitro V 16S ProPanel','R7 260','RTX 4050','16 GB','1 TB','16 inch WUXGA','180 Hz',34990000,31990000,'nitro_v3.jpg'),
+(N'Laptop gaming HP VICTUS 15-fa2731TX','i5-13420H','RTX 3050','16 GB','512 GB','15.6 inch FHD','144 Hz',22990000,20990000,'victus.jpg');
+
+UPDATE laptops SET image_url = 'lab1.png' WHERE id = 1;
+UPDATE laptops SET image_url = 'lab2.png' WHERE id = 2;
+UPDATE laptops SET image_url = 'lab3.png' WHERE id = 3;
+UPDATE laptops SET image_url = 'lab4.png' WHERE id = 4;
+UPDATE laptops SET image_url = 'lab5.png' WHERE id = 5;
+UPDATE laptops SET image_url = 'lab6.png' WHERE id = 6;
+UPDATE laptops SET image_url = 'lab7.png' WHERE id = 7;
+UPDATE laptops SET image_url = 'lab8.png' WHERE id = 8;
+UPDATE laptops SET image_url = 'lab9.png' WHERE id = 9;
+UPDATE laptops SET image_url = 'lab10.png' WHERE id = 10;
+UPDATE laptops SET image_url = 'lab11.png' WHERE id = 11;
+UPDATE laptops SET image_url = 'lab12.png' WHERE id = 12;
