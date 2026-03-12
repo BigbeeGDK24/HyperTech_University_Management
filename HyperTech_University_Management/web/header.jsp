@@ -1,4 +1,5 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <link rel="stylesheet" href="css/header.css">
 <link rel="stylesheet" href="css/home.css">
@@ -186,7 +187,7 @@
         <!-- HEADER -->
         <div class="login-header">
             <h2>ĐĂNG NHẬP HOẶC TẠO TÀI KHOẢN</h2>
-            <span class="close-btn" id="closeModal">&times;</span>
+            <span class="close-btn" id="closeModal" style="cursor:pointer;">&times;</span>
         </div>
 
         <!-- FORM -->

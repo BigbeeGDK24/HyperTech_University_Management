@@ -30,7 +30,7 @@ public class MainController extends HttpServlet {
             throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
         String action = request.getParameter("action");
-        String url = "login.jsp"; // Trang mặc định
+        String url = "header.jsp"; // Trang mặc định
 
         if (action == null) {
             url = "login.jsp";
