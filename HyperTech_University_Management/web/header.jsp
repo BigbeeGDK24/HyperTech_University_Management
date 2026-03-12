@@ -47,26 +47,17 @@
         <div class="item account">
     <i class="fa-solid fa-user"></i>
 
-<%
-    Object user = session.getAttribute("User");
-    if(user != null){
-%>
+    <div>
+        <c:choose>
+            <c:when test="${sessionScope.LOGIN_USER != null}">
+                Xin chào ${sessionScope.LOGIN_USER.name}
+            </c:when>
 
-<div>
-    <%= ((model.UserDTO)user).getUsername()%>
-</div>
-
-<%
-    } else {
-%>
-
-<div id="openLoginBtn" style="cursor:pointer;">
-    Đăng nhập
-</div>
-
-<%
-    }
-%>
+            <c:otherwise>
+                Đăng nhập
+            </c:otherwise>
+        </c:choose>
+    </div>
 
                 <div class="account-divider"></div>
 
@@ -118,7 +109,7 @@
                 </a>
 
                 <div class="banner-row">
-                    <a href="BestSeller.jsp">
+                    <a href="LaptopController?action=list">
                         <img class="banner-small" src="images/laptopgaming.jpg">
                     </a>
                     <a href="BestSeller2.jsp">
