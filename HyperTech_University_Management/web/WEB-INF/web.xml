@@ -94,6 +94,6 @@
         </session-timeout>
     </session-config>
     <welcome-file-list>
-        <welcome-file>Admin.jsp</welcome-file>
+        <welcome-file>header.jsp</welcome-file>
     </welcome-file-list>
 </web-app>
