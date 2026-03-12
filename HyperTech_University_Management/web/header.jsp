@@ -1,4 +1,5 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <link rel="stylesheet" href="css/header.css">
 <link rel="stylesheet" href="css/home.css">
@@ -44,22 +45,28 @@
         </a>
 
         <div class="item account">
-            <i class="fa-solid fa-user"></i>
-            <div>Đăng nhập</div>
+    <i class="fa-solid fa-user"></i>
 
-            <div class="account-dropdown">
+<%
+    Object user = session.getAttribute("User");
+    if(user != null){
+%>
 
-                <div class="account-top">
-                    <i class="fa-regular fa-hand"></i>
-                    <span>Xin chào, vui lòng đăng nhập</span>
-                </div>
+<div>
+    <%= ((model.UserDTO)user).getUsername()%>
+</div>
 
-                <div class="account-buttons">
-                    <a href="#" class="btn-login" id="openLoginBtn">
-                        ĐĂNG NHẬP
-                    </a>
-                    <a href="#" class="btn-register" id="openRegisterBtn">ĐĂNG KÝ</a>
-                </div>
+<%
+    } else {
+%>
+
+<div id="openLoginBtn" style="cursor:pointer;">
+    Đăng nhập
+</div>
+
+<%
+    }
+%>
 
                 <div class="account-divider"></div>
 
@@ -189,7 +196,7 @@
         <!-- HEADER -->
         <div class="login-header">
             <h2>ĐĂNG NHẬP HOẶC TẠO TÀI KHOẢN</h2>
-            <span class="close-btn" id="closeModal">&times;</span>
+            <span class="close-btn" id="closeModal" style="cursor:pointer;">&times;</span>
         </div>
 
         <!-- FORM -->

@@ -9,8 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import model.AdminDAO;
 import model.AdminDTO;
-import model.UserDAO;
-import model.UserDTO;
+
 
 public class AdminController extends HttpServlet {
 
@@ -31,7 +30,7 @@ System.out.println(txtPassword);
  if (admin != null) {
 
         session.setAttribute("admin", admin);
-        url = "adminDashboard.jsp";
+        url = "Admin.jsp";
 
     } else {
 
