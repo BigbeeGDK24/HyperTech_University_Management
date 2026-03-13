@@ -1,11 +1,12 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@page import="java.util.Map"%>
 <%@page import="model.CartDTO"%>
 <%@page import="model.ProductDTO"%>
 
 <!DOCTYPE html>
 <html>
+
     <head>
+
         <meta charset="UTF-8">
         <title>Giỏ hàng</title>
 
@@ -14,97 +15,22 @@
 
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
-        <style>
-
-            .checkout-steps{
-                display:flex;
-                justify-content:center;
-                gap:40px;
-                margin-bottom:30px;
-                background:#f7dede;
-                padding:20px;
-                border-radius:10px;
-            }
-
-            .step{
-                text-align:center;
-            }
-
-            .circle{
-                width:35px;
-                height:35px;
-                border-radius:50%;
-                background:#ddd;
-                color:white;
-                display:flex;
-                align-items:center;
-                justify-content:center;
-                margin:auto;
-            }
-
-            .step.active .circle{
-                background:red;
-            }
-
-            .cart-table img{
-                width:80px;
-            }
-
-            .total-box{
-                font-size:20px;
-                font-weight:bold;
-                text-align:right;
-                margin-top:20px;
-            }
-
-        </style>
-
     </head>
 
     <body>
 
-        <!-- HEADER -->
         <jsp:include page="header.jsp"/>
 
         <div class="container mt-4">
 
-            <!-- STEP BAR -->
-            <div class="checkout-steps">
-
-                <div class="step active">
-                    <div class="circle">1</div>
-                    <span>Giỏ hàng</span>
-                </div>
-
-                <div class="step">
-                    <div class="circle">2</div>
-                    <span>Thông tin đặt hàng</span>
-                </div>
-
-                <div class="step">
-                    <div class="circle">3</div>
-                    <span>Thanh toán</span>
-                </div>
-
-                <div class="step">
-                    <div class="circle">4</div>
-                    <span>Hoàn tất</span>
-                </div>
-
-            </div>
-
-
             <%
-
                 CartDTO cart = (CartDTO) session.getAttribute("CART");
-
                 double total = 0;
-
             %>
 
             <h3>Giỏ hàng của bạn</h3>
 
-            <table class="table cart-table">
+            <table class="table table-bordered">
 
                 <tr>
                     <th>Product</th>
@@ -114,13 +40,13 @@
                     <th>Action</th>
                 </tr>
 
-                <%    if (cart != null && cart.getCart() != null) {
+                <%
+                    if (cart != null && cart.getCart() != null && !cart.getCart().isEmpty()) {
 
                         for (ProductDTO p : cart.getCart().values()) {
 
                             double itemTotal = p.getPrice() * p.getQuantity();
                             total += itemTotal;
-
                 %>
 
                 <tr>
@@ -130,38 +56,40 @@
                     </td>
 
                     <td>
-                        $ <%=p.getPrice()%>
+                        $ <%=String.format("%.0f", p.getPrice())%>
                     </td>
 
                     <td>
 
-                        <form action="MainController">
+                        <form action="MainController" method="post">
 
                             <input type="hidden" name="action" value="UpdateCart">
+                            <input type="hidden" name="productID" value="<%=p.getId()%>">
 
-                            <input type="hidden" name="productID" value="<%=p.getProductID()%>">
+                            <input type="number"
+                                   name="quantity"
+                                   value="<%=p.getQuantity()%>"
+                                   min="1"
+                                   class="form-control"
+                                   style="width:80px;display:inline-block">
 
-                            <input type="number" name="quantity" value="<%=p.getQuantity()%>" min="1">
-
-                            <button class="btn btn-sm btn-primary">Update</button>
+                            <button class="btn btn-primary btn-sm">
+                                Update
+                            </button>
 
                         </form>
 
                     </td>
 
                     <td>
-
-                        $ <%=itemTotal%>
-
+                        $ <%=String.format("%.0f", itemTotal)%>
                     </td>
 
                     <td>
 
-                        <a href="MainController?action=RemoveCart&productID=<%=p.getProductID()%>" 
+                        <a href="MainController?action=RemoveCart&productID=<%=p.getId()%>"
                            class="btn btn-danger btn-sm">
-
                             Remove
-
                         </a>
 
                     </td>
@@ -169,11 +97,9 @@
                 </tr>
 
                 <%
-
                     }
 
                 } else {
-
                 %>
 
                 <tr>
@@ -182,32 +108,30 @@
                     </td>
                 </tr>
 
-                <%    }
-
+                <%
+                    }
                 %>
 
             </table>
 
+            <div class="text-end mt-3">
 
-            <div class="total-box">
-
-                Total: $ <%=total%>
+                <h4>Total: $ <%=String.format("%.0f", total)%></h4>
 
             </div>
 
+            <div class="text-end mt-4">
 
-            <div style="text-align:right;margin-top:20px">
-
-                <a href="index.jsp" class="btn btn-secondary">
-
+                <a href="MainController" class="btn btn-secondary">
                     Tiếp tục mua hàng
-
                 </a>
 
-                <a href="checkout.jsp" class="btn btn-danger">
+                <a href="MainController?action=clearCart" class="btn btn-warning">
+                    Clear Cart
+                </a>
 
+                <a href="#" class="btn btn-danger">
                     Thanh toán
-
                 </a>
 
             </div>

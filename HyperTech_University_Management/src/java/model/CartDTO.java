@@ -1,36 +1,33 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package model;
 
-/**
- *
- * @author hasot
- */
+import java.util.HashMap;
+
 public class CartDTO {
 
-    private String username;
+    private String email;
     private int productId;
-    private int quality;
+    private int quantity;
+
+    private HashMap<Integer, ProductDTO> cart;
 
     public CartDTO() {
+        cart = new HashMap<>();
     }
 
-    public CartDTO( String username, int productId, int quality) {
-        this.username = username;
+    public CartDTO(String email, int productId, int quantity) {
+        this.email = email;
         this.productId = productId;
-        this.quality = quality;
+        this.quantity = quantity;
     }
 
-    public String getUsername() {
-        return username;
+    // ================= GET SET =================
+    public String getEmail() {
+        return email;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setEmail(String email) {
+        this.email = email;
     }
-
 
     public int getProductId() {
         return productId;
@@ -40,11 +37,69 @@ public class CartDTO {
         this.productId = productId;
     }
 
-    public int getQuality() {
-        return quality;
+    public int getQuantity() {
+        return quantity;
     }
 
-    public void setQuality(int quality) {
-        this.quality = quality;
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
+    public HashMap<Integer, ProductDTO> getCart() {
+        return cart;
+    }
+
+    public void setCart(HashMap<Integer, ProductDTO> cart) {
+        this.cart = cart;
+    }
+
+    // ================= ADD PRODUCT =================
+    public void add(ProductDTO product) {
+
+        if (cart == null) {
+            cart = new HashMap<>();
+        }
+
+        int id = product.getId();
+
+        if (cart.containsKey(id)) {
+
+            ProductDTO old = cart.get(id);
+            old.setQuantity(old.getQuantity() + 1);
+
+        } else {
+
+            product.setQuantity(1);
+            cart.put(id, product);
+        }
+    }
+
+    // ================= REMOVE PRODUCT =================
+    public void remove(int id) {
+
+        if (cart != null) {
+            cart.remove(id);
+        }
+    }
+
+    // ================= UPDATE QUANTITY =================
+    public void update(int id, int quantity) {
+
+        if (cart != null && cart.containsKey(id)) {
+
+            if (quantity <= 0) {
+                cart.remove(id);
+            } else {
+                cart.get(id).setQuantity(quantity);
+            }
+        }
+    }
+
+    // ================= CLEAR CART =================
+    public void clear() {
+
+        if (cart != null) {
+            cart.clear();
+        }
     }
 }

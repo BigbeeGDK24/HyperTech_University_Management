@@ -9,24 +9,30 @@ import util.DbUtil;
 public class CartDAO {
 
     // ==========================================
-    // 1. LẤY GIỎ HÀNG THEO USER
+    // 1. LẤY GIỎ HÀNG THEO EMAIL
     // ==========================================
-    public ArrayList<CartDTO> getByUserId(String userId) {
+    public ArrayList<CartDTO> getByUserEmail(String email) {
+
         ArrayList<CartDTO> list = new ArrayList<>();
-        String sql = "SELECT * FROM cart WHERE user_id = ?";
 
-        try (Connection conn = DbUtil.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+        String sql = "SELECT * FROM cart WHERE email = ?";
 
-            ps.setString(1, userId);
+        try (
+                 Connection conn = DbUtil.getConnection();  PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, email);
+
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {
-                list.add(new CartDTO(
-                        rs.getString("user_id"),
+
+                CartDTO cart = new CartDTO(
+                        rs.getString("email"),
                         rs.getInt("product_id"),
                         rs.getInt("quantity")
-                ));
+                );
+
+                list.add(cart);
             }
 
         } catch (Exception e) {
@@ -39,19 +45,22 @@ public class CartDAO {
     // ==========================================
     // 2. KIỂM TRA ITEM ĐÃ TỒN TẠI CHƯA
     // ==========================================
-    public CartDTO getItem(String userId, int productId) {
-        String sql = "SELECT * FROM cart WHERE user_id = ? AND product_id = ?";
+    public CartDTO getItem(String email, int productId) {
 
-        try (Connection conn = DbUtil.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+        String sql = "SELECT * FROM cart WHERE email = ? AND product_id = ?";
 
-            ps.setString(1, userId);
+        try (
+                 Connection conn = DbUtil.getConnection();  PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, email);
             ps.setInt(2, productId);
+
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
+
                 return new CartDTO(
-                        rs.getString("user_id"),
+                        rs.getString("email"),
                         rs.getInt("product_id"),
                         rs.getInt("quantity")
                 );
@@ -68,14 +77,15 @@ public class CartDAO {
     // 3. THÊM VÀO CART
     // ==========================================
     public boolean insert(CartDTO cart) {
-        String sql = "INSERT INTO cart (user_id, product_id, quantity) VALUES (?, ?, ?)";
 
-        try (Connection conn = DbUtil.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+        String sql = "INSERT INTO cart (email, product_id, quantity) VALUES (?, ?, ?)";
 
-            ps.setString(1, cart.getUsername());
+        try (
+                 Connection conn = DbUtil.getConnection();  PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, cart.getEmail());
             ps.setInt(2, cart.getProductId());
-            ps.setInt(3, cart.getQuality());
+            ps.setInt(3, cart.getQuantity());
 
             return ps.executeUpdate() > 0;
 
@@ -87,16 +97,17 @@ public class CartDAO {
     }
 
     // ==========================================
-    // 4. CẬP NHẬT SỐ LƯỢNG
+    // 4. UPDATE QUANTITY
     // ==========================================
-    public boolean updateQuantity(String userId, int productId, int quantity) {
-        String sql = "UPDATE cart SET quantity = ? WHERE user_id = ? AND product_id = ?";
+    public boolean updateQuantity(String email, int productId, int quantity) {
 
-        try (Connection conn = DbUtil.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+        String sql = "UPDATE cart SET quantity = ? WHERE email = ? AND product_id = ?";
+
+        try (
+                 Connection conn = DbUtil.getConnection();  PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setInt(1, quantity);
-            ps.setString(2, userId);
+            ps.setString(2, email);
             ps.setInt(3, productId);
 
             return ps.executeUpdate() > 0;
@@ -109,15 +120,16 @@ public class CartDAO {
     }
 
     // ==========================================
-    // 5. XÓA 1 ITEM
+    // 5. XÓA ITEM
     // ==========================================
-    public boolean deleteItem(String userId, int productId) {
-        String sql = "DELETE FROM cart WHERE user_id = ? AND product_id = ?";
+    public boolean deleteItem(String email, int productId) {
 
-        try (Connection conn = DbUtil.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+        String sql = "DELETE FROM cart WHERE email = ? AND product_id = ?";
 
-            ps.setString(1, userId);
+        try (
+                 Connection conn = DbUtil.getConnection();  PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, email);
             ps.setInt(2, productId);
 
             return ps.executeUpdate() > 0;
@@ -130,15 +142,17 @@ public class CartDAO {
     }
 
     // ==========================================
-    // 6. XÓA TOÀN BỘ CART (Sau khi checkout)
+    // 6. CLEAR CART
     // ==========================================
-    public boolean clearCart(String userId) {
-        String sql = "DELETE FROM cart WHERE user_id = ?";
+    public boolean clearCart(String email) {
 
-        try (Connection conn = DbUtil.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+        String sql = "DELETE FROM cart WHERE email = ?";
 
-            ps.setString(1, userId);
+        try (
+                 Connection conn = DbUtil.getConnection();  PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, email);
+
             return ps.executeUpdate() > 0;
 
         } catch (Exception e) {

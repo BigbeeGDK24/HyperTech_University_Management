@@ -4,30 +4,28 @@ import java.io.IOException;
 import java.util.ArrayList;
 import javax.servlet.ServletException;
 import javax.servlet.http.*;
+
 import model.CategoryDAO;
 import model.CategoryDTO;
 
 public class CategoryController extends HttpServlet {
 
-    // ================= CHECK ROLE =================
+    // ===== CHECK ADMIN =====
     private boolean isAdmin(HttpServletRequest request) {
         return request.getSession().getAttribute("admin") != null;
     }
 
-    private boolean isUser(HttpServletRequest request) {
-        return request.getSession().getAttribute("user") != null;
-    }
-
+    // ===== CHECK LOGIN =====
     private boolean isLoggedIn(HttpServletRequest request) {
-        return isAdmin(request) || isUser(request);
+        return request.getSession().getAttribute("user") != null
+                || request.getSession().getAttribute("admin") != null;
     }
 
-    // ================= MAIN PROCESS =================
+    // ===== MAIN PROCESS =====
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
         request.setCharacterEncoding("UTF-8");
-        response.setCharacterEncoding("UTF-8");
 
         if (!isLoggedIn(request)) {
             response.sendRedirect("login.jsp");
@@ -35,11 +33,13 @@ public class CategoryController extends HttpServlet {
         }
 
         String action = request.getParameter("action");
-        if (action == null) action = "searchCategory";
+
+        if (action == null) {
+            action = "searchCategory";
+        }
 
         switch (action) {
 
-            // ===== USER + ADMIN =====
             case "searchCategory":
                 doSearch(request, response);
                 break;
@@ -48,7 +48,6 @@ public class CategoryController extends HttpServlet {
                 doView(request, response);
                 break;
 
-            // ===== ADMIN =====
             case "showAddCategoryForm":
                 request.getRequestDispatcher("category-add.jsp").forward(request, response);
                 break;
@@ -58,18 +57,27 @@ public class CategoryController extends HttpServlet {
                 break;
 
             case "addCategory":
-                if (isAdmin(request)) doAdd(request, response);
-                else deny(response);
+                if (isAdmin(request)) {
+                    doAdd(request, response);
+                } else {
+                    deny(response);
+                }
                 break;
 
             case "updateCategory":
-                if (isAdmin(request)) doUpdate(request, response);
-                else deny(response);
+                if (isAdmin(request)) {
+                    doUpdate(request, response);
+                } else {
+                    deny(response);
+                }
                 break;
 
             case "deleteCategory":
-                if (isAdmin(request)) doDelete(request, response);
-                else deny(response);
+                if (isAdmin(request)) {
+                    doDelete(request, response);
+                } else {
+                    deny(response);
+                }
                 break;
 
             default:
@@ -77,12 +85,15 @@ public class CategoryController extends HttpServlet {
         }
     }
 
-    // ================= SEARCH =================
+    // ===== SEARCH CATEGORY =====
     private void doSearch(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
         String keyword = request.getParameter("keyword");
-        if (keyword == null) keyword = "";
+
+        if (keyword == null) {
+            keyword = "";
+        }
 
         CategoryDAO dao = new CategoryDAO();
         ArrayList<CategoryDTO> list;
@@ -99,7 +110,7 @@ public class CategoryController extends HttpServlet {
         request.getRequestDispatcher("category-search.jsp").forward(request, response);
     }
 
-    // ================= VIEW DETAIL =================
+    // ===== VIEW CATEGORY DETAIL =====
     private void doView(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
@@ -109,7 +120,7 @@ public class CategoryController extends HttpServlet {
         CategoryDTO category = dao.getById(id);
 
         if (category == null) {
-            response.sendRedirect("CategoryController?action=searchCategory");
+            response.sendRedirect("MainController?action=searchCategory");
             return;
         }
 
@@ -118,7 +129,7 @@ public class CategoryController extends HttpServlet {
         request.getRequestDispatcher("category-detail.jsp").forward(request, response);
     }
 
-    // ================= SHOW UPDATE FORM =================
+    // ===== SHOW UPDATE FORM =====
     private void showUpdateForm(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
@@ -127,40 +138,47 @@ public class CategoryController extends HttpServlet {
         CategoryDAO dao = new CategoryDAO();
         CategoryDTO category = dao.getById(id);
 
+        if (category == null) {
+            response.sendRedirect("MainController?action=searchCategory");
+            return;
+        }
+
         request.setAttribute("category", category);
 
         request.getRequestDispatcher("category-update.jsp").forward(request, response);
     }
 
-    // ================= ADD =================
+    // ===== ADD CATEGORY =====
     private void doAdd(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
 
         CategoryDTO c = extractCategory(request);
+
         CategoryDAO dao = new CategoryDAO();
 
         if (dao.insert(c)) {
-            response.sendRedirect("CategoryController?action=searchCategory");
+            response.sendRedirect("MainController?action=searchCategory");
         } else {
-            response.sendRedirect("CategoryController?action=searchCategory&error=addFail");
+            response.sendRedirect("MainController?action=searchCategory&error=addFail");
         }
     }
 
-    // ================= UPDATE =================
+    // ===== UPDATE CATEGORY =====
     private void doUpdate(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
 
         CategoryDTO c = extractCategory(request);
+
         CategoryDAO dao = new CategoryDAO();
 
         if (dao.update(c)) {
-            response.sendRedirect("CategoryController?action=searchCategory");
+            response.sendRedirect("MainController?action=searchCategory");
         } else {
-            response.sendRedirect("CategoryController?action=searchCategory&error=updateFail");
+            response.sendRedirect("MainController?action=searchCategory&error=updateFail");
         }
     }
 
-    // ================= DELETE (SOFT DELETE) =================
+    // ===== DELETE CATEGORY (SOFT DELETE) =====
     protected void doDelete(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
 
@@ -169,13 +187,13 @@ public class CategoryController extends HttpServlet {
         CategoryDAO dao = new CategoryDAO();
 
         if (dao.softDelete(id)) {
-            response.sendRedirect("CategoryController?action=searchCategory");
+            response.sendRedirect("MainController?action=searchCategory");
         } else {
-            response.sendRedirect("CategoryController?action=searchCategory&error=deleteFail");
+            response.sendRedirect("MainController?action=searchCategory&error=deleteFail");
         }
     }
 
-    // ================= EXTRACT CATEGORY =================
+    // ===== EXTRACT CATEGORY FROM REQUEST =====
     private CategoryDTO extractCategory(HttpServletRequest request) {
 
         int id = parseInt(request.getParameter("id"));
@@ -185,13 +203,16 @@ public class CategoryController extends HttpServlet {
         return new CategoryDTO(id, name, description, true);
     }
 
-    // ================= PARSE INT =================
+    // ===== PARSE INT SAFE =====
     private int parseInt(String value) {
-        try { return Integer.parseInt(value); }
-        catch (Exception e) { return 0; }
+        try {
+            return Integer.parseInt(value);
+        } catch (Exception e) {
+            return 0;
+        }
     }
 
-    // ================= ACCESS DENY =================
+    // ===== ACCESS DENIED =====
     private void deny(HttpServletResponse response) throws IOException {
         response.sendError(HttpServletResponse.SC_FORBIDDEN, "Admin only!");
     }
@@ -199,12 +220,14 @@ public class CategoryController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+
         processRequest(request, response);
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+
         processRequest(request, response);
     }
 }
