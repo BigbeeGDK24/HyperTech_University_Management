@@ -97,7 +97,7 @@
     <!-- SIDEBAR -->
     <div class="sidebar">
         <ul class="category-list">
-            <li><a href="LaptopController?action=list"><span>Laptop</span><span class="arrow">›</span></a></li>
+            <li><a href="ProductController?action=list"><span>Laptop</span><span class="arrow">›</span></a></li>
             <li><a href="#"><span>VGA</span><span class="arrow">›</span></a></li>
             <li><a href="#"><span>Case</span><span class="arrow">›</span></a></li>
             <li><a href="#"><span>RAM</span><span class="arrow">›</span></a></li>
@@ -119,7 +119,7 @@
                 </a>
 
                 <div class="banner-row">
-                    <a href="LaptopController?action=list">
+                    <a href="ProductController?action=list">
                         <img class="banner-small" src="images/laptopgaming.jpg">
                     </a>
                     <a href="BestSeller2.jsp">

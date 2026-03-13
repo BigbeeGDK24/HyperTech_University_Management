@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import javax.servlet.ServletException;
 import javax.servlet.http.*;
+import model.LaptopDAO;
+import model.LaptopDTO;
 import model.ProductDAO;
 import model.ProductDTO;
 
@@ -30,10 +32,7 @@ public class ProductController extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         response.setCharacterEncoding("UTF-8");
 
-        if (!isLoggedIn(request)) {
-            response.sendRedirect("index.jsp");
-            return;
-        }
+
 
         String action = request.getParameter("action");
         if (action == null) action = "searchProduct";
@@ -69,7 +68,11 @@ public class ProductController extends HttpServlet {
                 if (isAdmin(request)) doStatistic(request, response);
                 else deny(response);
                 break;
-
+            
+            case "list":
+                doShowLap(request, response);
+                break;
+                
             default:
                 doSearch(request, response);
         }
@@ -232,5 +235,31 @@ public class ProductController extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
+    }
+    protected void doShowLap(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        String action = request.getParameter("action");
+
+        if (action == null) {
+            action = "list";
+        }
+
+        if (action.equals("list")) {
+
+            ProductDAO dao = new ProductDAO();
+
+            ArrayList<ProductDTO> list = dao.getAllLaptop();
+            ArrayList<ProductDTO> listUnder25 = dao.getLaptopUnder25();
+            ArrayList<ProductDTO> listUnder30 = dao.getLaptopUnder30();
+            ArrayList<ProductDTO> listTop30 = dao.getLaptopTop30();
+
+            request.setAttribute("list", list);
+            request.setAttribute("listUnder25", listUnder25);
+            request.setAttribute("listUnder30", listUnder30);
+            request.setAttribute("listTop30", listTop30);
+
+            request.getRequestDispatcher("BestSeller.jsp").forward(request, response);
+        }
     }
 }
