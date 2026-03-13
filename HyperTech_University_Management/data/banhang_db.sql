@@ -128,7 +128,6 @@ CREATE TABLE product_discounts (
     REFERENCES discounts(id)
     ON DELETE CASCADE
 );
-
 -- ================= COMPLAINTS =================
 CREATE TABLE complaints (
     id INT IDENTITY(1,1) PRIMARY KEY,
