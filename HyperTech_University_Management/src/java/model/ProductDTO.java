@@ -5,7 +5,14 @@ public class ProductDTO {
     private int id;
     private int category_id;
     private String name;
-    private float price;
+    private String cpu;
+    private String gpu;
+    private String ram;
+    private String ssd;
+    private String screen;
+    private String refresh_rate;
+    private float old_price;
+    private float new_price;
     private int stock;
     private String description;
     private String image;
@@ -17,20 +24,24 @@ public class ProductDTO {
     public ProductDTO() {
     }
 
-    public ProductDTO(int id, int category_id, String name, float price,
-            int stock, String description, String image, Boolean status) {
-
+    public ProductDTO(int id, int category_id, String name, String cpu, String gpu, String ram, String ssd, String screen, String refresh_rate, float old_price, float new_price, int stock, String description, String image, Boolean status) {
         this.id = id;
         this.category_id = category_id;
         this.name = name;
-        this.price = price;
+        this.cpu = cpu;
+        this.gpu = gpu;
+        this.ram = ram;
+        this.ssd = ssd;
+        this.screen = screen;
+        this.refresh_rate = refresh_rate;
+        this.old_price = old_price;
+        this.new_price = new_price;
         this.stock = stock;
         this.description = description;
         this.image = image;
         this.status = status;
     }
 
-    // ===== ID =====
     public int getId() {
         return id;
     }
@@ -39,12 +50,6 @@ public class ProductDTO {
         this.id = id;
     }
 
-    // alias cho cart.jsp
-    public int getProductID() {
-        return id;
-    }
-
-    // ===== CATEGORY =====
     public int getCategory_id() {
         return category_id;
     }
@@ -53,12 +58,7 @@ public class ProductDTO {
         this.category_id = category_id;
     }
 
-    // ===== NAME =====
     public String getName() {
-        return name;
-    }
-
-    public String getProductName() {
         return name;
     }
 
@@ -66,16 +66,70 @@ public class ProductDTO {
         this.name = name;
     }
 
-    // ===== PRICE =====
-    public float getPrice() {
-        return price;
+    public String getCpu() {
+        return cpu;
     }
 
-    public void setPrice(float price) {
-        this.price = price;
+    public void setCpu(String cpu) {
+        this.cpu = cpu;
     }
 
-    // ===== STOCK =====
+    public String getGpu() {
+        return gpu;
+    }
+
+    public void setGpu(String gpu) {
+        this.gpu = gpu;
+    }
+
+    public String getRam() {
+        return ram;
+    }
+
+    public void setRam(String ram) {
+        this.ram = ram;
+    }
+
+    public String getSsd() {
+        return ssd;
+    }
+
+    public void setSsd(String ssd) {
+        this.ssd = ssd;
+    }
+
+    public String getScreen() {
+        return screen;
+    }
+
+    public void setScreen(String screen) {
+        this.screen = screen;
+    }
+
+    public String getRefresh_rate() {
+        return refresh_rate;
+    }
+
+    public void setRefresh_rate(String refresh_rate) {
+        this.refresh_rate = refresh_rate;
+    }
+
+    public float getOld_price() {
+        return old_price;
+    }
+
+    public void setOld_price(float old_price) {
+        this.old_price = old_price;
+    }
+
+    public float getNew_price() {
+        return new_price;
+    }
+
+    public void setNew_price(float new_price) {
+        this.new_price = new_price;
+    }
+
     public int getStock() {
         return stock;
     }
@@ -84,7 +138,6 @@ public class ProductDTO {
         this.stock = stock;
     }
 
-    // ===== DESCRIPTION =====
     public String getDescription() {
         return description;
     }
@@ -93,7 +146,6 @@ public class ProductDTO {
         this.description = description;
     }
 
-    // ===== IMAGE =====
     public String getImage() {
         return image;
     }
@@ -102,7 +154,6 @@ public class ProductDTO {
         this.image = image;
     }
 
-    // ===== STATUS =====
     public Boolean getStatus() {
         return status;
     }
@@ -111,7 +162,6 @@ public class ProductDTO {
         this.status = status;
     }
 
-    // ===== CART QUANTITY =====
     public int getQuantity() {
         return quantity;
     }
@@ -120,4 +170,5 @@ public class ProductDTO {
         this.quantity = quantity;
     }
 
+    
 }
