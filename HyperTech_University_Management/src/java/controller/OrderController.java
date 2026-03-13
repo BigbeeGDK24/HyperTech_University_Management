@@ -32,7 +32,7 @@ public class OrderController extends HttpServlet {
 
         // ===== CHƯA LOGIN =====
         if (!isLoggedIn(request)) {
-            response.sendRedirect("login.jsp");
+            response.sendRedirect("index.jsp");
             return;
         }
 

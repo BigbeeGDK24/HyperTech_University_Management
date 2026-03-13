@@ -35,7 +35,7 @@
             <div>Hệ Thống<br>Showroom</div>
         </a>
 
-        <a href="MainController?action=viewCart" class="item">
+        <a href="cart.jsp" class="item">
             <i class="fa-solid fa-cart-shopping"></i>
             <div>Giỏ hàng</div>
         </a>
