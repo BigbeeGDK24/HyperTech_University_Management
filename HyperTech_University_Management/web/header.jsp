@@ -95,13 +95,13 @@
     <!-- SIDEBAR -->
     <div class="sidebar">
         <ul class="category-list">
-            <li><a href="#"><span>Laptop</span><span class="arrow">›</span></a></li>
-            <li><a href="#"><span>Main, CPU, VGA</span><span class="arrow">›</span></a></li>
-            <li><a href="#"><span>Case, Nguồn, Tản</span><span class="arrow">›</span></a></li>
-            <li><a href="#"><span>Ổ cứng, RAM, Thẻ nhớ</span><span class="arrow">›</span></a></li>
+            <li><a href="LaptopController?action=list"><span>Laptop</span><span class="arrow">›</span></a></li>
+            <li><a href="#"><span>VGA</span><span class="arrow">›</span></a></li>
+            <li><a href="#"><span>Case</span><span class="arrow">›</span></a></li>
+            <li><a href="#"><span>RAM</span><span class="arrow">›</span></a></li>
             <li><a href="#"><span>Màn hình</span><span class="arrow">›</span></a></li>
             <li><a href="#"><span>Bàn phím</span><span class="arrow">›</span></a></li>
-            <li><a href="#"><span>Chuột + Lót chuột</span><span class="arrow">›</span></a></li>
+            <li><a href="#"><span>Chuột</span><span class="arrow">›</span></a></li>
         </ul>
     </div>
 
