@@ -10,70 +10,88 @@ import util.DbUtil;
 
 public class UserDAO {
 
-    // ================= SEARCH =================
+    // ================= SEARCH USER BY EMAIL =================
     public UserDTO searchByEmail(String email) {
+
         UserDTO user = null;
-        String sql = "SELECT * FROM users WHERE email =?";
-        System.out.println("EMAIL=" + email + "|");
-        System.out.println(sql);
-        try ( Connection con = DbUtil.getConnection();  PreparedStatement ps = con.prepareStatement(sql)) {
+        String sql = "SELECT * FROM users WHERE email = ?";
+
+        try (
+                 Connection con = DbUtil.getConnection();  PreparedStatement ps = con.prepareStatement(sql);) {
 
             ps.setString(1, email);
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
-                String Username = rs.getString("username");               
+
+                String username = rs.getString("username");
                 String password = rs.getString("password");
                 String phone = rs.getString("phone");
                 String address = rs.getString("address");
                 boolean status = rs.getBoolean("status");
-                user = new UserDTO(email, Username, password, phone, address, status);
-                }
+
+                user = new UserDTO(email, username, password, phone, address, status);
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
         }
+
         return user;
     }
 
-    public ArrayList<UserDTO> filterByColum(String column, String value) {
+    // ================= FILTER USER =================
+    public ArrayList<UserDTO> filterByColumn(String column, String value) {
+
         ArrayList<UserDTO> result = new ArrayList<>();
+
         try {
+
             Connection conn = DbUtil.getConnection();
+
             String sql = "SELECT * FROM users WHERE status = 1 AND " + column + " LIKE ?";
+
             PreparedStatement ps = conn.prepareStatement(sql);
+
             ps.setString(1, "%" + value + "%");
-            System.out.println(ps.toString());
+
             ResultSet rs = ps.executeQuery();
+
             while (rs.next()) {
-                String email = rs.getString("email");
-                String Username = rs.getString("username");               
-                String password = rs.getString("password");
-                String phone = rs.getString("phone");
-                String address = rs.getString("address");
-                boolean status = rs.getBoolean("status");
-                UserDTO u = new UserDTO(email, Username, password, phone, address, status);
+
+                UserDTO u = new UserDTO(
+                        rs.getString("email"),
+                        rs.getString("username"),
+                        rs.getString("password"),
+                        rs.getString("phone"),
+                        rs.getString("address"),
+                        rs.getBoolean("status")
+                );
+
                 result.add(u);
-                System.out.println(u);
             }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
+
         return result;
     }
 
+    // ================= GET ALL USERS =================
     public List<UserDTO> getAllUsers() {
 
         List<UserDTO> list = new ArrayList<>();
         String sql = "SELECT * FROM users";
 
-        try ( Connection con = DbUtil.getConnection();  PreparedStatement ps = con.prepareStatement(sql);  ResultSet rs = ps.executeQuery()) {
+        try (
+                 Connection con = DbUtil.getConnection();  PreparedStatement ps = con.prepareStatement(sql);  ResultSet rs = ps.executeQuery();) {
 
             while (rs.next()) {
 
                 UserDTO user = new UserDTO(
                         rs.getString("email"),
-                        rs.getString("username"),                        
+                        rs.getString("username"),
                         rs.getString("password"),
                         rs.getString("phone"),
                         rs.getString("address"),
@@ -91,27 +109,32 @@ public class UserDAO {
     }
 
     // ================= LOGIN =================
-    public UserDTO login(String email, String Password) {
+    public UserDTO login(String email, String passwordInput) {
+
         UserDTO user = searchByEmail(email);
 
-        if (user != null && Password.equals(user.getPassword())) {
-            if (user.isStatus()) {
-                return user;
-            } else {
-                return null;
+        if (user != null) {
+
+            if (BCrypt.checkpw(passwordInput, user.getPassword())) {
+
+                if (user.isStatus()) {
+                    return user;
+                }
             }
         }
+
         return null;
     }
 
-    // ================= ADD (REGISTER) =================
+    // ================= REGISTER USER =================
     public boolean add(UserDTO u) {
-        String sql = "INSERT INTO users (Username, email, password, phone, address, status) "
+
+        String sql = "INSERT INTO users (username, email, password, phone, address, status) "
                 + "VALUES (?, ?, ?, ?, ?, ?)";
 
-     try ( Connection conn = DbUtil.getConnection();  PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (
+                 Connection conn = DbUtil.getConnection();  PreparedStatement ps = conn.prepareStatement(sql);) {
 
-            // Hash mật khẩu trước khi lưu
             String hashedPassword = BCrypt.hashpw(u.getPassword(), BCrypt.gensalt());
 
             ps.setString(1, u.getUsername());
@@ -120,6 +143,7 @@ public class UserDAO {
             ps.setString(4, u.getPhone());
             ps.setString(5, u.getAddress());
             ps.setBoolean(6, true);
+
             return ps.executeUpdate() > 0;
 
         } catch (Exception e) {
@@ -128,36 +152,22 @@ public class UserDAO {
 
         return false;
     }
-//===============================================
-//                  cẬP NHẬT TRẠNG THÁI NG DÙNG
-//===============================================
-    public boolean updateUserStatus(String email, boolean status) {
-        boolean check = false;
-        String sql = "UPDATE users SET status = ? WHERE email = ?";
-        try ( Connection con = DbUtil.getConnection();
-                PreparedStatement ps = con.prepareStatement(sql)) {
 
-            ps.setBoolean(1, status);
-            ps.setString(2, email);
+    // ================= UPDATE USER =================
+    public boolean updateUser(UserDTO u) {
 
-            check = ps.executeUpdate() > 0;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return check;
-    }
-
-    public boolean UpdateU(UserDTO u) {
         int result = 0;
+
         try {
-           Connection conn = DbUtil.getConnection();
-            String sql = "UPDATE users"
-                    + "   SET username = ?"
-                    + "      ,password = ?"
-                    + "      ,phone = ?"
-                    + "      ,address = ?"
-                    + " WHERE email = ?";
+
+            Connection conn = DbUtil.getConnection();
+
+            String sql = "UPDATE users "
+                    + "SET username = ?, password = ?, phone = ?, address = ? "
+                    + "WHERE email = ?";
+
             PreparedStatement ps = conn.prepareStatement(sql);
+
             ps.setString(1, u.getUsername());
             ps.setString(2, u.getPassword());
             ps.setString(3, u.getPhone());
@@ -165,21 +175,44 @@ public class UserDAO {
             ps.setString(5, u.getEmail());
 
             result = ps.executeUpdate();
+
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            e.printStackTrace();
         }
+
         return result > 0;
     }
-//===============================================
-//                  ĐẾM SỐ NG DÙNG
-//===============================================
+
+    // ================= UPDATE STATUS =================
+    public boolean updateUserStatus(String email, boolean status) {
+
+        boolean check = false;
+        String sql = "UPDATE users SET status = ? WHERE email = ?";
+
+        try (
+                 Connection con = DbUtil.getConnection();  PreparedStatement ps = con.prepareStatement(sql);) {
+
+            ps.setBoolean(1, status);
+            ps.setString(2, email);
+
+            check = ps.executeUpdate() > 0;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return check;
+    }
+
+    // ================= COUNT USERS =================
     public int countUsers() {
+
         int count = 0;
+
         String sql = "SELECT COUNT(*) FROM users";
 
-        try ( Connection con = DbUtil.getConnection();
-                PreparedStatement ps = con.prepareStatement(sql);
-                ResultSet rs = ps.executeQuery()) {
+        try (
+                 Connection con = DbUtil.getConnection();  PreparedStatement ps = con.prepareStatement(sql);  ResultSet rs = ps.executeQuery();) {
 
             if (rs.next()) {
                 count = rs.getInt(1);
@@ -191,5 +224,4 @@ public class UserDAO {
 
         return count;
     }
-
 }

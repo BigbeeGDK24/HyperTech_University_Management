@@ -31,7 +31,7 @@ public class ProductController extends HttpServlet {
         response.setCharacterEncoding("UTF-8");
 
         if (!isLoggedIn(request)) {
-            response.sendRedirect("login.jsp");
+            response.sendRedirect("index.jsp");
             return;
         }
 
