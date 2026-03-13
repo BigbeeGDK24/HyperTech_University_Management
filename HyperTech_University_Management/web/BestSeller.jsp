@@ -68,7 +68,7 @@
                 <c:forEach items="${list}" var="p" begin="0" end="11">
                     <div class="product-card">
 
-                        <img src="images/${p.image_url}" alt="${p.name}">
+                        <img src="images/${p.image}" alt="${p.name}">
 
                         <h3>${p.name}</h3>
 
@@ -114,7 +114,7 @@
 
                 <c:forEach items="${listUnder25}" var="p">
                     <div class="product-card">
-                        <img src="images/${p.image_url}" alt="${p.name}">
+                        <img src="images/${p.image}" alt="${p.name}">
                         <h3>${p.name}</h3>
 
                         <div class="spec-box">
@@ -154,7 +154,7 @@
 
                 <c:forEach items="${listUnder30}" var="p">
                     <div class="product-card">
-                        <img src="images/${p.image_url}" alt="${p.name}">
+                        <img src="images/${p.image}" alt="${p.name}">
                         <h3>${p.name}</h3>
                         <div class="spec-box">
                             <span><i class="fa-solid fa-microchip"></i> ${p.cpu}</span>
