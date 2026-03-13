@@ -22,9 +22,16 @@ public class LaptopController extends HttpServlet {
         if (action.equals("list")) {
 
             LaptopDAO dao = new LaptopDAO();
+
             ArrayList<LaptopDTO> list = dao.getAllLaptop();
+            ArrayList<LaptopDTO> listUnder25 = dao.getLaptopUnder25();
+            ArrayList<LaptopDTO> listUnder30 = dao.getLaptopUnder30();
+            ArrayList<LaptopDTO> listTop30 = dao.getLaptopTop30();
 
             request.setAttribute("list", list);
+            request.setAttribute("listUnder25", listUnder25);
+            request.setAttribute("listUnder30", listUnder30);
+            request.setAttribute("listTop30", listTop30);
 
             request.getRequestDispatcher("BestSeller.jsp").forward(request, response);
         }

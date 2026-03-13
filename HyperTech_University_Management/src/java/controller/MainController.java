@@ -38,6 +38,7 @@ public class MainController extends HttpServlet {
             url = "index.jsp";
         } else if (action.equals("login") || action.equals("logout")) {
             url = "AdminController";
+            // ================= CART =================
         } else if (action.equals("viewCart")
                 || action.equals("AddCart")
                 || action.equals("UpdateCart")
@@ -45,6 +46,29 @@ public class MainController extends HttpServlet {
                 || action.equals("clearCart")) {
 
             url = "CartController";
+
+            // ================= ORDER =================
+        } else if (action.equals("createOrder")
+                || action.equals("searchOrder")
+                || action.equals("deleteOrder")
+                || action.equals("updateOrder")
+                || action.equals("saveUpdateOrder")
+                || action.equals("statisticsOrder")) {
+
+            url = "OrderController";
+
+            // ================= PAYMENT =================
+        } else if (action.equals("checkout")
+                || action.equals("searchPayment")
+                || action.equals("viewPayment")
+                || action.equals("viewUserPayments")
+                || action.equals("addPayment")
+                || action.equals("updatePayment")
+                || action.equals("deletePayment")
+                || action.equals("paymentStatistic")) {
+
+            url = "PaymentController";
+
         }
 
         request.getRequestDispatcher(url).forward(request, response);
