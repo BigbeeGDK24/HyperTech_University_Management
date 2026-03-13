@@ -11,8 +11,7 @@ GO
 
 -- ================= USERS =================
 CREATE TABLE users (
-    id INT IDENTITY(1,1) PRIMARY KEY,
-    email NVARCHAR(100) UNIQUE NOT NULL,
+    email NVARCHAR(100) PRIMARY KEY,
     username NVARCHAR(50) NOT NULL,
     password NVARCHAR(255) NOT NULL,
     phone VARCHAR(15),
@@ -53,13 +52,14 @@ CREATE TABLE products (
 
 -- ================= CART =================
 CREATE TABLE cart (
-    id INT IDENTITY(1,1) PRIMARY KEY,
-    user_id INT,
+    email NVARCHAR(100),
     product_id INT,
     quantity INT DEFAULT 1,
 
-    FOREIGN KEY (user_id)
-    REFERENCES users(id)
+    PRIMARY KEY (email, product_id),
+
+    FOREIGN KEY (email)
+    REFERENCES users(email)
     ON DELETE CASCADE,
 
     FOREIGN KEY (product_id)
@@ -70,14 +70,14 @@ CREATE TABLE cart (
 -- ================= ORDERS =================
 CREATE TABLE orders (
     id INT IDENTITY(1,1) PRIMARY KEY,
-    user_id INT NOT NULL,
+    email NVARCHAR(100)  NOT NULL,
     total_price DECIMAL(12,0) NOT NULL,
     status VARCHAR(20)
         CHECK (status IN ('pending','confirmed','shipping','completed','cancelled','outstock')),
     created_at DATETIME DEFAULT GETDATE(),
 
-    FOREIGN KEY (user_id)
-    REFERENCES users(id)
+    FOREIGN KEY (email)
+    REFERENCES users(email)
     ON DELETE CASCADE
 );
 
@@ -125,7 +125,7 @@ CREATE TABLE product_discounts (
 -- ================= COMPLAINTS =================
 CREATE TABLE complaints (
     id INT IDENTITY(1,1) PRIMARY KEY,
-    user_id INT,
+    email NVARCHAR(100),
     order_id INT,
     product_id INT,
     title NVARCHAR(200),
@@ -134,7 +134,7 @@ CREATE TABLE complaints (
         CHECK (status IN ('pending','processing','resolved','rejected'))
         DEFAULT 'pending',
 
-    FOREIGN KEY (user_id) REFERENCES users(id),
+    FOREIGN KEY (email) REFERENCES users(email),
     FOREIGN KEY (order_id) REFERENCES orders(id),
     FOREIGN KEY (product_id) REFERENCES products(id)
 );
@@ -143,7 +143,7 @@ CREATE TABLE complaints (
 CREATE TABLE payments (
     id INT IDENTITY(1,1) PRIMARY KEY,
     order_id INT,
-    user_id INT,
+    email NVARCHAR(100),
     payment_method VARCHAR(30)
         CHECK (payment_method IN ('COD','bank_transfer','momo','vnpay','paypal')),
     amount DECIMAL(12,0),
@@ -157,8 +157,8 @@ CREATE TABLE payments (
     REFERENCES orders(id)
     ON DELETE CASCADE,
 
-    FOREIGN KEY (user_id)
-    REFERENCES users(id)
+    FOREIGN KEY (email)
+    REFERENCES users(email)
 );
 
 -- ================= INSERT USERS =================
@@ -186,24 +186,31 @@ INSERT INTO categories (name,description) VALUES
 
 -- ================= INSERT PRODUCTS =================
 INSERT INTO products (category_id,name,price,stock,description,image) VALUES
-(1,N'Dell Inspiron 15',18000000,10,N'Laptop văn phòng 15.6 inch i5 RAM 8GB SSD 512GB','dell.jpg'),
-(2,N'Intel Core i5 12400F',4500000,15,N'CPU Intel thế hệ 12 socket LGA1700','i5.jpg'),
-(3,N'Corsair CV650',1500000,20,N'Nguồn 650W chuẩn 80 Plus Bronze','corsair.jpg'),
-(4,N'SSD Kingston NV2 1TB',1800000,25,N'SSD NVMe PCIe Gen4','ssd.jpg');
-
+(1,N'Laptop gaming Gigabyte A16 i7 RTX4050',28490000,10,N'Gigabyte A16 i7-13620H RTX4050 16GB RAM 1TB SSD','lab1.png'),
+(1,N'Laptop gaming Gigabyte A16 i5 RTX3050',27990000,10,N'Gigabyte A16 i5-12500H RTX3050 16GB RAM 512GB SSD','lab2.png'),
+(1,N'Acer Nitro V ProPanel R5 RTX3050',25990000,10,N'Acer Nitro V Ryzen5 7535HS RTX3050 16GB RAM','lab3.png'),
+(1,N'Lenovo LOQ 15IAX9E i5 RTX3050',23490000,10,N'Lenovo LOQ i5-12450HX RTX3050 16GB RAM','lab4.png'),
+(1,N'Lenovo LOQ 15ARP10E R7 RTX4050',24790000,10,N'Lenovo LOQ Ryzen7 7735HS RTX4050','lab5.png'),
+(1,N'MSI Cyborg 15 A13UC i7 RTX3050',29990000,10,N'MSI Cyborg i7-13620H RTX3050','lab6.png'),
+(1,N'Acer Nitro Lite 16 NL16 i5 RTX3050',21990000,10,N'Acer Nitro Lite i5-13420H RTX3050','lab7.png'),
+(1,N'Gigabyte A16 i7 RTX4050 512GB',27990000,10,N'Gigabyte A16 i7 RTX4050 512GB SSD','lab8.png'),
+(1,N'Acer Nitro V i5 RTX4050 32GB',29490000,10,N'Acer Nitro V i5 RTX4050 32GB RAM','lab9.png'),
+(1,N'Lenovo Legion 5 i7 RTX5070',45990000,10,N'Lenovo Legion 5 i7-14700HX RTX5070','lab10.png'),
+(1,N'Acer Nitro V 16S RTX4050',31990000,10,N'Acer Nitro V Ryzen7 RTX4050','lab11.png'),
+(1,N'HP Victus 15 i5 RTX3050',20990000,10,N'HP Victus 15 i5 RTX3050','lab12.png');
 -- ================= INSERT CART =================
-INSERT INTO cart (user_id,product_id,quantity) VALUES
-(1,1,1),
-(1,2,1),
-(2,3,2),
-(4,4,3);
+INSERT INTO cart (email,product_id,quantity) VALUES
+('a@gmail.com',1,1),
+('a@gmail.com',2,1),
+('a@gmail.com',3,2),
+('a@gmail.com',4,3);
 
 -- ================= INSERT ORDERS =================
-INSERT INTO orders (user_id,total_price,status) VALUES
-(1,22500000,'confirmed'),
-(2,3000000,'shipping'),
-(3,3000000,'completed'),
-(4,5400000,'pending');
+INSERT INTO orders (email,total_price,status) VALUES
+('a@gmail.com',22500000,'confirmed'),
+('a@gmail.com',3000000,'shipping'),
+('a@gmail.com',3000000,'completed'),
+('a@gmail.com',5400000,'pending');
 
 -- ================= INSERT ORDER ITEMS =================
 INSERT INTO order_items (order_id,product_id,price,quantity) VALUES
@@ -215,44 +222,30 @@ INSERT INTO order_items (order_id,product_id,price,quantity) VALUES
 
 -- ================= LAPTOPS =================
 CREATE TABLE laptops (
-    id INT IDENTITY(1,1) PRIMARY KEY,
-    name NVARCHAR(255),
+    product_id INT PRIMARY KEY,
     cpu NVARCHAR(100),
     gpu NVARCHAR(100),
     ram NVARCHAR(50),
     ssd NVARCHAR(50),
     screen NVARCHAR(100),
-    refresh_rate NVARCHAR(50),
-    old_price DECIMAL(12,0),
-    new_price DECIMAL(12,0),
-    image_url NVARCHAR(255)
+    refresh_rate NVARCHAR(50)
+   FOREIGN KEY (product_id)
+    REFERENCES products(id)
+    ON DELETE CASCADE
 );
 
 INSERT INTO laptops
-(name,cpu,gpu,ram,ssd,screen,refresh_rate,old_price,new_price,image_url)
+(product_id,cpu,gpu,ram,ssd,screen,refresh_rate)
 VALUES
-(N'Laptop gaming Gigabyte A16','i7-13620H','RTX 4050','16 GB','1 TB','16 inch WUXGA','165 Hz',29930000,28490000,'a16_1.jpg'),
-(N'Laptop gaming Gigabyte A16','i5-12500H','RTX 3050','16 GB','512 GB','15.6 inch','144 Hz',29490000,27990000,'a16_2.jpg'),
-(N'Laptop gaming Acer Nitro V ProPanel','R5-7535HS','RTX 3050','16 GB','512 GB','15.6 inch FHD','180 Hz',27990000,25990000,'nitro_v1.jpg'),
-(N'Laptop gaming Lenovo LOQ 15IAX9E','i5-12450HX','RTX 3050','16 GB','512 GB','15.6 inch FHD','144 Hz',24490000,23490000,'loq1.jpg'),
-(N'Laptop gaming Lenovo LOQ 15ARP10E','R7-7735HS','RTX 4050','16 GB','512 GB','15.6 inch FHD','144 Hz',28990000,24790000,'loq2.jpg'),
-(N'Laptop gaming MSI Cyborg 15 A13UC','i7-13620H','RTX 3050','16 GB','512 GB','15.6 inch FHD','144 Hz',32990000,29990000,'msi_cyborg.jpg'),
-(N'Laptop gaming Acer Nitro Lite 16 NL16 71','i5-13420H','RTX 3050','16 GB','512 GB','16 inch FHD+','165 Hz',23990000,21990000,'nitro_lite.jpg'),
-(N'Laptop gaming Gigabyte A16','i7-13620H','RTX 4050','16 GB','512 GB','16 inch FHD+ IPS','165 Hz',29990000,27990000,'a16_3.jpg'),
-(N'Laptop gaming Acer Nitro V ProPanel','i5-13420H','RTX 4050','32 GB','512 GB','15.6 inch FHD','180 Hz',31990000,29490000,'nitro_v2.jpg'),
-(N'Laptop gaming Lenovo Legion 5 15IRX10','i7-14700HX','RTX 5070','24 GB','1 TB','15.1 inch WQXGA OLED','165 Hz',49990000,45990000,'legion5.jpg'),
-(N'Laptop gaming Acer Nitro V 16S ProPanel','R7 260','RTX 4050','16 GB','1 TB','16 inch WUXGA','180 Hz',34990000,31990000,'nitro_v3.jpg'),
-(N'Laptop gaming HP VICTUS 15-fa2731TX','i5-13420H','RTX 3050','16 GB','512 GB','15.6 inch FHD','144 Hz',22990000,20990000,'victus.jpg');
-
-UPDATE laptops SET image_url = 'lab1.png' WHERE id = 1;
-UPDATE laptops SET image_url = 'lab2.png' WHERE id = 2;
-UPDATE laptops SET image_url = 'lab3.png' WHERE id = 3;
-UPDATE laptops SET image_url = 'lab4.png' WHERE id = 4;
-UPDATE laptops SET image_url = 'lab5.png' WHERE id = 5;
-UPDATE laptops SET image_url = 'lab6.png' WHERE id = 6;
-UPDATE laptops SET image_url = 'lab7.png' WHERE id = 7;
-UPDATE laptops SET image_url = 'lab8.png' WHERE id = 8;
-UPDATE laptops SET image_url = 'lab9.png' WHERE id = 9;
-UPDATE laptops SET image_url = 'lab10.png' WHERE id = 10;
-UPDATE laptops SET image_url = 'lab11.png' WHERE id = 11;
-UPDATE laptops SET image_url = 'lab12.png' WHERE id = 12;
+(1,'i7-13620H','RTX 4050','16 GB','1 TB','16 inch WUXGA','165 Hz'),
+(2,'i5-12500H','RTX 3050','16 GB','512 GB','15.6 inch','144 Hz'),
+(3,'R5-7535HS','RTX 3050','16 GB','512 GB','15.6 inch FHD','180 Hz'),
+(4,'i5-12450HX','RTX 3050','16 GB','512 GB','15.6 inch FHD','144 Hz'),
+(5,'R7-7735HS','RTX 4050','16 GB','512 GB','15.6 inch FHD','144 Hz'),
+(6,'i7-13620H','RTX 3050','16 GB','512 GB','15.6 inch FHD','144 Hz'),
+(7,'i5-13420H','RTX 3050','16 GB','512 GB','16 inch FHD+','165 Hz'),
+(8,'i7-13620H','RTX 4050','16 GB','512 GB','16 inch FHD+ IPS','165 Hz'),
+(9,'i5-13420H','RTX 4050','32 GB','512 GB','15.6 inch FHD','180 Hz'),
+(10,'i7-14700HX','RTX 5070','24 GB','1 TB','15.1 inch WQXGA OLED','165 Hz'),
+(11,'R7 260','RTX 4050','16 GB','1 TB','16 inch WUXGA','180 Hz'),
+(12,'i5-13420H','RTX 3050','16 GB','512 GB','15.6 inch FHD','144 Hz');
