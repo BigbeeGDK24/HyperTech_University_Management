@@ -203,8 +203,6 @@ VALUES
 (1,N'Acer Nitro Lite 16 NL16 71','i5-13420H','RTX 3050','16 GB','512 GB','16 inch FHD+','165 Hz',23990000,25190000,10,N'Acer Nitro Lite RTX3050','lab7.png'),
 (1,N'Gigabyte A16 i7 RTX4050 512GB','i7-13620H','RTX 4050','16 GB','512 GB','16 inch FHD+ IPS','165 Hz',29990000,27990000,10,N'Gigabyte A16 RTX4050','lab8.png'),
 (1,N'Acer Nitro V i5 RTX4050 32GB','i5-13420H','RTX 4050','32 GB','512 GB','15.6 inch FHD','180 Hz',31990000,29490000,10,N'Acer Nitro V RTX4050 32GB','lab9.png'),
-(1,N'Lenovo Legion 5 i7 RTX5070','i7-14700HX','RTX 5070','24 GB','1 TB','15.1 inch WQXGA OLED','165 Hz',49990000,45990000,10,N'Lenovo Legion 5 RTX5070','lab10.png'),
-(1,N'Acer Nitro V 16S RTX4050','R7 260','RTX 4050','16 GB','1 TB','16 inch WUXGA','180 Hz',34990000,31990000,10,N'Acer Nitro V Ryzen7 RTX4050','lab11.png'),
 (1,N'HP Victus 15 i5 RTX3050','i5-13420H','RTX 3050','16 GB','512 GB','15.6 inch FHD','144 Hz',22990000,20990000,10,N'HP Victus RTX3050','lab12.png'),
 (1,N'Laptop Gigabyte G5 MD 51S1123SH','i5-11400H','RTX 3050Ti','16 GB','512 GB','15.6 FHD','144 Hz',24490000,21990000,10,N'Gigabyte G5 RTX3050Ti','l2.png'),
 (1,N'Laptop gaming MSI Cyborg 15 A13VEK','i7-13620H','RTX 4050','16 GB','512 GB','15.6 FHD','144 Hz',26390000,24990000,10,N'MSI Cyborg RTX4050','l3.png'),
@@ -216,7 +214,60 @@ VALUES
 (1,N'Laptop gaming Gigabyte G6 MF','i7-13700H','RTX 4050','16 GB','1 TB','16 FHD+','165 Hz',25890000,23990000,10,N'Gigabyte G6 RTX4050','l9.png'),
 (1,N'Laptop gaming HP VICTUS 15 fb3116AX','R7-7445HS','RTX 3050','16 GB','512 GB','15.6 FHD','144 Hz',25990000,20990000,10,N'HP Victus Ryzen7 RTX3050','l10.png'),
 (1,N'Laptop gaming MSI Katana A15 AI B8VE','R7-8845HS','RTX 4050','16 GB','512 GB','15.6 FHD','144 Hz',28990000,23990000,10,N'MSI Katana RTX4050','l11.png'),
-(1,N'Laptop gaming Lenovo LOQ 15ARP9','R5-7235HS','RTX 3050','16 GB','1 TB','15.6 FHD','144 Hz',24490000,22290000,10,N'Lenovo LOQ RTX3050','l12.png');
+(1,N'Laptop gaming Lenovo LOQ 15ARP9','R5-7235HS','RTX 3050','16 GB','1 TB','15.6 FHD','144 Hz',24490000,22290000,10,N'Lenovo LOQ RTX3050','l12.png'),
+(1,N'Laptop gaming Acer Nitro ProPanel ANV15',
+N'R7-7735HS', N'RTX 4050', N'16 GB', N'512 GB',
+N'15.6 inch FHD', N'180 Hz',
+31990000,30490000,10,
+N'Laptop gaming Acer Nitro ProPanel ANV15','l17.png'),
+
+(1,N'Laptop gaming Acer Predator Helios Neo 16S AI',
+N'Ultra 9 275HX', N'RTX 5070Ti', N'64 GB', N'2 TB',
+N'16 inch WQXGA OLED', N'240 Hz',
+101990000,95990000,10,
+N'Laptop gaming Acer Predator Helios Neo 16S AI','l18.png'),
+
+(1,N'Laptop gaming MSI Stealth 18 HX AI',
+N'Ultra 9 275HX', N'RTX 5080', N'32 GB', N'2 TB',
+N'18 inch UHD+ MiniLED', N'120 Hz',
+107990000,102990000,10,
+N'Laptop gaming MSI Stealth 18 HX AI','l19.png'),
+
+(1,N'Laptop gaming Acer Gaming Nitro 16S AI',
+N'R7 AI 350', N'RTX 5060', N'16 GB', N'512 GB',
+N'16 inch FHD+', N'180 Hz',
+50990000,48790000,10,
+N'Laptop gaming Acer Gaming Nitro 16S AI','l20.png'),
+
+(1,N'Laptop gaming Acer Predator Triton 14 AI',
+N'Ultra 9 288V', N'RTX 5070', N'32 GB', N'2 TB',
+N'14.5 inch 2.8K OLED', N'120 Hz',
+93580000,90490000,10,
+N'Laptop gaming Acer Predator Triton 14 AI','l21.png'),
+
+(1,N'Laptop gaming Acer Predator Triton Neo 16',
+N'Ultra 7 155H', N'RTX 4060', N'32 GB', N'1 TB',
+N'16 inch 2.5K', N'240 Hz',
+52490000,49400000,10,
+N'Laptop gaming Acer Predator Triton Neo 16','l22.png'),
+
+(1,N'Laptop gaming MSI Sword 16 HX B14VEKG 856VN',
+N'Intel Core i7-14700HX', N'RTX 4050 6GB', N'16 GB', N'1 TB',
+N'16 inch', N'165 Hz',
+35990000,31190000,10,
+N'Laptop gaming MSI Sword 16 HX B14VEKG 856VN','l23.png'),
+
+(1,N'Laptop gaming HP OMEN 16-am0178TX BX8Y4PA',
+N'Intel Core Ultra 7 255H', N'RTX 5060 8GB', N'16 GB', N'512 GB',
+N'16 inch', N'165 Hz',
+40890000,39990000,10,
+N'Laptop gaming HP OMEN 16-am0178TX BX8Y4PA','l24.png'),
+
+(1,N'Laptop gaming ASUS ROG Strix SCAR 18 G835LW SA193W',
+N'Intel Core Ultra 9 275HX', N'RTX 5080 16GB', N'32 GB', N'1 TB',
+N'18 inch', N'240 Hz',
+88390000,84990000,10,
+N'Laptop gaming ASUS ROG Strix SCAR 18 G835LW SA193W','l25.png');
 
 INSERT INTO cart (email,product_id,quantity) VALUES
 ('a@gmail.com',1,1),
