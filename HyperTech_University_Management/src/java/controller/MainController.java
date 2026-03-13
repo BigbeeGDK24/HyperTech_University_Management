@@ -22,28 +22,57 @@ public class MainController extends HttpServlet {
      * methods.
      *
      * @param request servlet request
-     * @param response servlet response 
+     * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+
         request.setCharacterEncoding("UTF-8");
+
         String action = request.getParameter("action");
-        String url = "header.jsp"; // Trang mặc định
+        String url = "index.jsp";
 
         if (action == null) {
-            url = "login.jsp";
+            url = "index.jsp";
         } else if (action.equals("login") || action.equals("logout")) {
             url = "AdminController";
-        } else if (action.contains("University")) {
-            // Tất cả action có chữ "University" như: addUniversity, deleteUniversity...
-            url = "UniversityController";
+            // ================= CART =================
+        } else if (action.equals("viewCart")
+                || action.equals("AddCart")
+                || action.equals("UpdateCart")
+                || action.equals("RemoveCart")
+                || action.equals("clearCart")) {
+
+            url = "CartController";
+
+            // ================= ORDER =================
+        } else if (action.equals("createOrder")
+                || action.equals("searchOrder")
+                || action.equals("deleteOrder")
+                || action.equals("updateOrder")
+                || action.equals("saveUpdateOrder")
+                || action.equals("statisticsOrder")) {
+
+            url = "OrderController";
+
+            // ================= PAYMENT =================
+        } else if (action.equals("checkout")
+                || action.equals("searchPayment")
+                || action.equals("viewPayment")
+                || action.equals("viewUserPayments")
+                || action.equals("addPayment")
+                || action.equals("updatePayment")
+                || action.equals("deletePayment")
+                || action.equals("paymentStatistic")) {
+
+            url = "PaymentController";
+
         }
 
         request.getRequestDispatcher(url).forward(request, response);
     }
-    
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**

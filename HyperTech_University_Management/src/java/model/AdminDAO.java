@@ -24,7 +24,7 @@ public class AdminDAO {
         AdminDTO admin = null;
         try {
             Connection conn = DbUtil.getConnection();
-            String sql = "SELECT * FROM admin WHERE username=?";
+            String sql = "SELECT * FROM admins WHERE username=?";
             System.out.println(sql);
 
             PreparedStatement letter = conn.prepareStatement(sql);
@@ -62,7 +62,7 @@ public class AdminDAO {
         try {
 
             Connection conn = DbUtil.getConnection();
-            String sql = "INSERT INTO users (Username, password) VALUES (?,?)";
+            String sql = "INSERT INTO admins (username, password) VALUES (?,?)";
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, ad.getUsername());
             ps.setString(2, ad.getPassword());
@@ -78,7 +78,7 @@ public class AdminDAO {
         try {
 
             Connection conn = DbUtil.getConnection();
-            String sql = "UPDATE admin"
+            String sql = "UPDATE admins"
                     + "   SET adPass = ?"
                     + " WHERE admin = ?";
             PreparedStatement ps = conn.prepareStatement(sql);

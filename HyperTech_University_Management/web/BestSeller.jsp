@@ -189,7 +189,7 @@
             <div class="product-row">
                 <c:forEach items="${listTop30}" var="p">
                     <div class="product-card">
-                        <img src="images/${p.image_url}" alt="${p.name}">
+                        <img src="images/${p.image}" alt="${p.name}">
                         <h3>${p.name}</h3>
                         <div class="spec-box">
                             <span><i class="fa-solid fa-microchip"></i> ${p.cpu}</span>

@@ -2,123 +2,123 @@
 <!DOCTYPE html>
 <html>
 
-<head>
+    <head>
 
-<meta charset="UTF-8">
-<title>Case Management</title>
+        <meta charset="UTF-8">
+        <title>Case Management</title>
 
-<link rel="stylesheet" href="${pageContext.request.contextPath}/css/case.css">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/case.css">
 
-</head>
+    </head>
 
-<body>
+    <body>
 
-<div class="product-container">
+        <div class="product-container">
 
-<h1>Quản Lý Case</h1>
+            <h1>Quản Lý Case</h1>
 
-<!-- FORM -->
+            <!-- FORM -->
 
-<div class="product-form">
+            <div class="product-form">
 
-<form action="CaseController" method="post">
+                <form action="CaseController" method="post" enctype="multipart/form-data">
 
-<input type="hidden" name="id">
+                    <input type="hidden" name="id">
 
-<div class="form-row">
-<label>Description</label>
-<input type="text" name="description">
-</div>
+                    <div class="form-row">
+                        <label>Description</label>
+                        <input type="text" name="description">
+                    </div>
 
-<div class="form-row">
-<label>Price</label>
-<input type="number" name="price">
-</div>
+                    <div class="form-row">
+                        <label>Price</label>
+                        <input type="number" name="price">
+                    </div>
 
-<div class="form-row">
-<label>Image Link</label>
-<input type="text" name="image">
-</div>
+                    <div class="form-row">
+                        <label>Image</label>
+                        <input type="file" name="image" accept="image/png,image/jpeg">
+                    </div>
 
-<div class="form-buttons">
+                    <div class="form-buttons">
 
-<button type="submit" name="action" value="add" class="add-btn">
-Add
-</button>
+                        <button type="submit" name="action" value="add" class="add-btn">
+                            Add
+                        </button>
 
-<button type="submit" name="action" value="update" class="update-btn">
-Update
-</button>
+                        <button type="submit" name="action" value="update" class="update-btn">
+                            Update
+                        </button>
 
-</div>
+                    </div>
 
-</form>
+                </form>
 
-</div>
+            </div>
 
-<!-- SEARCH -->
+            <!-- SEARCH -->
 
-<div class="search-box">
+            <div class="search-box">
 
-<form action="CaseController" method="get">
+                <form action="CaseController" method="get">
 
-<input type="hidden" name="action" value="search">
+                    <input type="hidden" name="action" value="search">
 
-<input type="text" name="keyword" placeholder="Search Case...">
+                    <input type="text" name="keyword" placeholder="Search Case...">
 
-<button type="submit">Search</button>
+                    <button type="submit">Search</button>
 
-</form>
+                </form>
 
-</div>
+            </div>
 
-<!-- TABLE -->
+            <!-- TABLE -->
 
-<div class="product-table-box">
+            <div class="product-table-box">
 
-<table>
+                <table>
 
-<thead>
+                    <thead>
 
-<tr>
-<th>ID</th>
-<th>Description</th>
-<th>Price</th>
-<th>Image</th>
-<th>Action</th>
-</tr>
+                        <tr>
+                            <th>ID</th>
+                            <th>Description</th>
+                            <th>Price</th>
+                            <th>Image</th>
+                            <th>Action</th>
+                        </tr>
 
-</thead>
+                    </thead>
 
-<tbody>
+                    <tbody>
 
-<tr>
+                        <tr>
 
-<td>1</td>
-<td>Gaming Case RGB</td>
-<td>1500000</td>
+                            <td>1</td>
+                            <td>Gaming Case RGB</td>
+                            <td>1500000</td>
 
-<td>
-<img src="images/case.png" width="80">
-</td>
+                            <td>
+                                <img src="images/case.png" width="80">
+                            </td>
 
-<td>
+                            <td>
 
-<button class="edit-btn">Edit</button>
+                                <button class="edit-btn">Edit</button>
 
-<button class="delete-btn">Delete</button>
+                                <button class="delete-btn">Delete</button>
 
-</td>
+                            </td>
 
-</tr>
+                        </tr>
 
-</tbody>
+                    </tbody>
 
-</table>
+                </table>
 
-</div>
+            </div>
 
-</div>
+        </div>
 
-</body>
+    </body>
 </html>

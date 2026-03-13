@@ -1,6 +1,7 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
+
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <link rel="stylesheet" href="css/header.css">
 <link rel="stylesheet" href="css/home.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -45,39 +46,39 @@
         </a>
 
         <div class="item account">
-    <i class="fa-solid fa-user"></i>
+            <i class="fa-solid fa-user"></i>
 
-    <%
-    Object user = session.getAttribute("User");
-    if(user != null){
-%>
+            <%
+                Object user = session.getAttribute("User");
+                if (user != null) {
+            %>
 
-<div>
-    <%= ((model.UserDTO)user).getUsername()%>
-</div>
-
-<%
-    } else {
-%>
-
-<div id="openLoginBtn" style="cursor:pointer;">
-    Đăng nhập
-</div>
-
-<%
-    }
-%>
-
-                <div class="account-divider"></div>
-
-                <div class="account-help">
-                    <i class="fa-regular fa-circle-question"></i>
-                    <span>Trợ giúp</span>
-                </div>
-
+            <div>
+                <%= ((model.UserDTO) user).getUsername()%>
             </div>
+
+            <%
+            } else {
+            %>
+
+            <div id="openLoginBtn" style="cursor:pointer;">
+                Đăng nhập
+            </div>
+
+            <%
+                }
+            %>
+
+            <div class="account-divider"></div>
+
+            <div class="account-help">
+                <i class="fa-regular fa-circle-question"></i>
+                <span>Trợ giúp</span>
+            </div>
+
         </div>
     </div>
+</div>
 </header>
 
 <div class="sub-menu">
@@ -96,13 +97,13 @@
     <!-- SIDEBAR -->
     <div class="sidebar">
         <ul class="category-list">
-            <li><a href="#"><span>Laptop</span><span class="arrow">›</span></a></li>
-            <li><a href="#"><span>Main, CPU, VGA</span><span class="arrow">›</span></a></li>
-            <li><a href="#"><span>Case, Nguồn, Tản</span><span class="arrow">›</span></a></li>
-            <li><a href="#"><span>Ổ cứng, RAM, Thẻ nhớ</span><span class="arrow">›</span></a></li>
+            <li><a href="LaptopController?action=list"><span>Laptop</span><span class="arrow">›</span></a></li>
+            <li><a href="#"><span>VGA</span><span class="arrow">›</span></a></li>
+            <li><a href="#"><span>Case</span><span class="arrow">›</span></a></li>
+            <li><a href="#"><span>RAM</span><span class="arrow">›</span></a></li>
             <li><a href="#"><span>Màn hình</span><span class="arrow">›</span></a></li>
             <li><a href="#"><span>Bàn phím</span><span class="arrow">›</span></a></li>
-            <li><a href="#"><span>Chuột + Lót chuột</span><span class="arrow">›</span></a></li>
+            <li><a href="#"><span>Chuột</span><span class="arrow">›</span></a></li>
         </ul>
     </div>
 
@@ -237,11 +238,10 @@
 
         <!-- FOOTER -->
         <div class="login-footer">
-            Bạn chưa có tài khoản?
-            <a href="register.jsp">Đăng ký ngay!</a>
-        </div>
-
-    </div>
+    Bạn chưa có tài khoản?
+    <a href="#" id="openRegister">Đăng ký ngay!</a>
+</div>
+        </div> <!-- login-box -->
 </div>
 
 <div class="login-modal" id="registerModal">
@@ -300,71 +300,47 @@
 </div>
 
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", function () {
 
-        const modal = document.getElementById("loginModal");
-        const openBtn = document.getElementById("openLoginBtn");
-        const closeBtn = document.getElementById("closeModal");
-
-        openBtn.addEventListener("click", function (e) {
-            e.preventDefault();
-            modal.classList.add("show");
-            document.body.style.overflow = "hidden";
-        });
-
-        closeBtn.addEventListener("click", function () {
-            modal.classList.remove("show");
-            document.body.style.overflow = "auto";
-        });
-
-        window.addEventListener("click", function (e) {
-            if (e.target === modal) {
-                modal.classList.remove("show");
-                document.body.style.overflow = "auto";
-            }
-        });
-
-    });
-</script>
-
-
-<script>
+    const loginModal = document.getElementById("loginModal");
     const registerModal = document.getElementById("registerModal");
-    const openRegisterBtn = document.getElementById("openRegisterBtn");
+
+    const openLoginBtn = document.getElementById("openLoginBtn");
+    const closeModal = document.getElementById("closeModal");
+
+    const openRegister = document.getElementById("openRegister");
+    const switchToLogin = document.getElementById("switchToLogin");
     const closeRegister = document.getElementById("closeRegister");
 
-    openRegisterBtn.addEventListener("click", function (e) {
+    // mở bảng đăng nhập
+    openLoginBtn.addEventListener("click", function(e){
         e.preventDefault();
+        loginModal.classList.add("show");
+    });
+
+    // đóng bảng đăng nhập
+    closeModal.addEventListener("click", function(){
+        loginModal.classList.remove("show");
+    });
+
+    // đăng nhập -> đăng ký
+    openRegister.addEventListener("click", function(e){
+        e.preventDefault();
+        loginModal.classList.remove("show");
         registerModal.classList.add("show");
-        document.body.style.overflow = "hidden";
     });
 
-    closeRegister.addEventListener("click", function () {
-        registerModal.classList.remove("show");
-        document.body.style.overflow = "auto";
-    });
-</script>
-
-<script>
-    const switchToLogin = document.getElementById("switchToLogin");
-    const loginModal = document.getElementById("loginModal");
-
-    switchToLogin.addEventListener("click", function (e) {
+    // đăng ký -> đăng nhập
+    switchToLogin.addEventListener("click", function(e){
         e.preventDefault();
         registerModal.classList.remove("show");
         loginModal.classList.add("show");
     });
-</script>
-<script>
-document.addEventListener("DOMContentLoaded", function () {
 
-    <% if(request.getAttribute("message") != null){ %>
-
-        const modal = document.getElementById("loginModal");
-        modal.classList.add("show");
-        document.body.style.overflow = "hidden";
-
-    <% } %>
+    // đóng đăng ký
+    closeRegister.addEventListener("click", function(){
+        registerModal.classList.remove("show");
+    });
 
 });
 </script>

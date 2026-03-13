@@ -31,7 +31,7 @@ public class ProductController extends HttpServlet {
         response.setCharacterEncoding("UTF-8");
 
         if (!isLoggedIn(request)) {
-            response.sendRedirect("login.jsp");
+            response.sendRedirect("index.jsp");
             return;
         }
 
@@ -171,16 +171,42 @@ public class ProductController extends HttpServlet {
     // ================= EXTRACT =================
     private ProductDTO extractProduct(HttpServletRequest request) {
 
-        int id = parseInt(request.getParameter("id"));
-        int category_id = parseInt(request.getParameter("category_id"));
-        String name = request.getParameter("name");
-        float price = parseFloat(request.getParameter("price"));
-        int stock = parseInt(request.getParameter("stock"));
-        String description = request.getParameter("description");
-        String image = request.getParameter("image");
+    int id = parseInt(request.getParameter("id"));
+    int category_id = parseInt(request.getParameter("category_id"));
 
-        return new ProductDTO(id, category_id, name, price, stock, description, image, true);
-    }
+    String name = request.getParameter("name");
+    String cpu = request.getParameter("cpu");
+    String gpu = request.getParameter("gpu");
+    String ram = request.getParameter("ram");
+    String ssd = request.getParameter("ssd");
+    String screen = request.getParameter("screen");
+    String refresh = request.getParameter("refresh_rate");
+
+    float old_price = parseFloat(request.getParameter("old_price"));
+    float new_price = parseFloat(request.getParameter("new_price"));
+
+    int stock = parseInt(request.getParameter("stock"));
+    String description = request.getParameter("description");
+    String image = request.getParameter("image");
+
+    return new ProductDTO(
+        id,
+        category_id,
+        name,
+        cpu,
+        gpu,
+        ram,
+        ssd,
+        screen,
+        refresh,
+        old_price,
+        new_price,
+        stock,
+        description,
+        image,
+        true
+    );
+}
 
     private int parseInt(String value) {
         try { return Integer.parseInt(value); }

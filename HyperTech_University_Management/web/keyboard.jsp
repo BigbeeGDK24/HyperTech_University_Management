@@ -2,116 +2,131 @@
 <!DOCTYPE html>
 <html>
 
-<head>
+    <head>
 
-<meta charset="UTF-8">
-<title>Keyboard Management</title>
+        <meta charset="UTF-8">
+        <title>Keyboard Management</title>
 
-<link rel="stylesheet" href="${pageContext.request.contextPath}/css/keyboard.css">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/keyboard.css">
 
-</head>
+    </head>
 
-<body>
+    <body>
 
-<div class="product-container">
+        <div class="product-container">
 
-<h1>Quản Lý Bàn Phím</h1>
+            <h1>Quản Lý Bàn Phím</h1>
 
-<div class="product-form">
+            <div class="product-form">
 
-<form action="KeyboardController" method="post">
+                <form action="KeyboardController" method="post" enctype="multipart/form-data">
 
-<input type="hidden" name="id">
+                    <input type="hidden" name="id">
 
-<div class="form-row">
-<label>Description</label>
-<input type="text" name="description">
-</div>
+                    <div class="form-row">
+                        <label>Description</label>
+                        <input type="text" name="description">
+                    </div>
 
-<div class="form-row">
-<label>Price</label>
-<input type="number" name="price">
-</div>
+                    <div class="form-row">
+                        <label>Price</label>
+                        <input type="number" name="price">
+                    </div>
 
-<div class="form-row">
-<label>Image</label>
-<input type="text" name="image">
-</div>
+                    <div class="form-row">
+                        <label>Image</label>
+                        <input type="file" name="image" accept="image/png,image/jpeg">
+                    </div>
 
-<div class="form-buttons">
+                    <div class="form-buttons">
 
-<button type="submit" name="action" value="add" class="add-btn">
-Add
-</button>
+                        <button type="submit" name="action" value="add" class="add-btn">
+                            Add
+                        </button>
 
-<button type="submit" name="action" value="update" class="update-btn">
-Update
-</button>
+                        <button type="submit" name="action" value="update" class="update-btn">
+                            Update
+                        </button>
 
-</div>
+                    </div>
 
-</form>
+                </form>
 
-</div>
+            </div>
 
-<div class="search-box">
 
-<form action="KeyboardController" method="get">
+            <!-- SEARCH -->
 
-<input type="hidden" name="action" value="search">
+            <div class="search-box">
 
-<input type="text" name="keyword" placeholder="Search Keyboard">
+                <form action="KeyboardController" method="get">
 
-<button type="submit">Search</button>
+                    <input type="hidden" name="action" value="search">
 
-</form>
+                    <input type="text" name="keyword" placeholder="Search Keyboard">
 
-</div>
+                    <button type="submit">Search</button>
 
-<div class="product-table-box">
+                </form>
 
-<table>
+            </div>
 
-<thead>
 
-<tr>
-<th>ID</th>
-<th>Description</th>
-<th>Price</th>
-<th>Image</th>
-<th>Action</th>
-</tr>
+            <!-- TABLE -->
 
-</thead>
+            <div class="product-table-box">
 
-<tbody>
+                <table>
 
-<tr>
+                    <thead>
 
-<td>1</td>
-<td>Mechanical Keyboard RGB</td>
-<td>900000</td>
+                        <tr>
+                            <th>ID</th>
+                            <th>Description</th>
+                            <th>Price</th>
+                            <th>Image</th>
+                            <th>Action</th>
+                        </tr>
 
-<td>
-<img src="images/keyboard.png" width="80">
-</td>
+                    </thead>
 
-<td>
+                    <tbody>
 
-<button class="edit-btn">Edit</button>
-<button class="delete-btn">Delete</button>
+                    <c:forEach var="k" items="${keyboardList}">
 
-</td>
+                        <tr>
 
-</tr>
+                            <td>${k.id}</td>
+                            <td>${k.description}</td>
+                            <td>${k.price}</td>
 
-</tbody>
+                            <td>
+                                <img src="images/${k.image}" width="80">
+                            </td>
 
-</table>
+                            <td>
 
-</div>
+                                <a href="KeyboardController?action=edit&id=${k.id}">
+                                    <button class="edit-btn">Edit</button>
+                                </a>
 
-</div>
+                                <a href="KeyboardController?action=delete&id=${k.id}">
+                                    <button class="delete-btn">Delete</button>
+                                </a>
 
-</body>
+                            </td>
+
+                        </tr>
+
+                    </c:forEach>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </body>
 </html>
