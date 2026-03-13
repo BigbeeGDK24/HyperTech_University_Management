@@ -4,33 +4,129 @@
 
 <!DOCTYPE html>
 <html>
-
     <head>
 
         <meta charset="UTF-8">
         <title>Giỏ hàng</title>
 
-        <link rel="stylesheet" href="css/header.css">
-        <link rel="stylesheet" href="css/home.css">
-
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+        <style>
+
+            body{
+                background:#f5f6fa;
+            }
+
+            .cart-wrapper{
+                width:900px;
+                margin:auto;
+                margin-top:40px;
+                background:white;
+                padding:30px;
+                border-radius:10px;
+                box-shadow:0 3px 10px rgba(0,0,0,0.1);
+            }
+
+            /* STEP BAR */
+
+            .cart-steps{
+                display:flex;
+                justify-content:space-between;
+                background:#f8dede;
+                padding:20px;
+                border-radius:8px;
+                margin-bottom:30px;
+            }
+
+            .step{
+                text-align:center;
+                flex:1;
+                font-weight:500;
+                color:#555;
+            }
+
+            .step.active{
+                color:#e53935;
+                font-weight:bold;
+            }
+
+            /* TABLE */
+
+            .table thead{
+                background:#343a40;
+                color:white;
+            }
+
+            .product-name{
+                font-weight:600;
+            }
+
+            .price{
+                color:#e53935;
+                font-weight:bold;
+            }
+
+            /* EMPTY CART */
+
+            .empty-cart{
+                text-align:center;
+                padding:40px;
+                font-size:18px;
+                color:#666;
+            }
+
+            /* BUTTON */
+
+            .btn-continue{
+                background:#1976d2;
+                color:white;
+                padding:10px 25px;
+                font-weight:600;
+            }
+
+        </style>
 
     </head>
 
     <body>
 
-        <jsp:include page="header.jsp"/>
-
-        <div class="container mt-4">
+        <div class="cart-wrapper">
 
             <%
                 CartDTO cart = (CartDTO) session.getAttribute("CART");
                 double total = 0;
             %>
 
-            <h3>Giỏ hàng của bạn</h3>
+            <!-- STEP PROCESS -->
 
-            <table class="table table-bordered">
+            <div class="cart-steps">
+
+                <div class="step active">
+                    🛒<br>
+                    Giỏ hàng
+                </div>
+
+                <div class="step">
+                    📄<br>
+                    Thông tin đặt hàng
+                </div>
+
+                <div class="step">
+                    💳<br>
+                    Thanh toán
+                </div>
+
+                <div class="step">
+                    ✔<br>
+                    Hoàn tất
+                </div>
+
+            </div>
+
+
+            <h4>Giỏ hàng của bạn</h4>
+
+            <table class="table table-bordered mt-3">
 
                 <tr>
                     <th>Product</th>
@@ -47,21 +143,22 @@
 
                             double itemTotal = p.getPrice() * p.getQuantity();
                             total += itemTotal;
+
                 %>
 
                 <tr>
 
-                    <td>
-                        <b><%=p.getProductName()%></b>
+                    <td class="product-name">
+                        <%=p.getProductName()%>
                     </td>
 
-                    <td>
+                    <td class="price">
                         $ <%=String.format("%.0f", p.getPrice())%>
                     </td>
 
                     <td>
 
-                        <form action="MainController" method="post">
+                        <form action="MainController" method="post" style="display:flex;gap:5px">
 
                             <input type="hidden" name="action" value="UpdateCart">
                             <input type="hidden" name="productID" value="<%=p.getId()%>">
@@ -70,8 +167,8 @@
                                    name="quantity"
                                    value="<%=p.getQuantity()%>"
                                    min="1"
-                                   class="form-control"
-                                   style="width:80px;display:inline-block">
+                                   style="width:70px"
+                                   class="form-control">
 
                             <button class="btn btn-primary btn-sm">
                                 Update
@@ -103,8 +200,14 @@
                 %>
 
                 <tr>
-                    <td colspan="5" style="text-align:center">
-                        Giỏ hàng trống
+                    <td colspan="5" class="empty-cart">
+
+                        Giỏ hàng của bạn đang trống <br><br>
+
+                        <a href="MainController" class="btn btn-continue">
+                            TIẾP TỤC MUA HÀNG
+                        </a>
+
                     </td>
                 </tr>
 
@@ -114,23 +217,23 @@
 
             </table>
 
-            <div class="text-end mt-3">
+            <div style="text-align:right;margin-top:20px">
 
                 <h4>Total: $ <%=String.format("%.0f", total)%></h4>
 
             </div>
 
-            <div class="text-end mt-4">
+            <div style="text-align:right;margin-top:20px">
 
                 <a href="MainController" class="btn btn-secondary">
-                    Tiếp tục mua hàng
+                    Tiếp tục mua
                 </a>
 
                 <a href="MainController?action=clearCart" class="btn btn-warning">
                     Clear Cart
                 </a>
 
-                <a href="#" class="btn btn-danger">
+                <a href="PaymentController" class="btn btn-success">
                     Thanh toán
                 </a>
 

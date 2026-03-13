@@ -28,7 +28,7 @@ public class CategoryController extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
 
         if (!isLoggedIn(request)) {
-            response.sendRedirect("login.jsp");
+            response.sendRedirect("index.jsp");
             return;
         }
 
