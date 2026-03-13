@@ -4,9 +4,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 import javax.servlet.ServletException;
 import javax.servlet.http.*;
+
+import model.CartDTO;
+import model.ProductDTO;
+import model.UserDTO;
 import model.OrderDAO;
 import model.OrderDTO;
 import model.OrderItemDAO;
+import model.OrderItemDTO;
 
 public class OrderController extends HttpServlet {
 
@@ -28,28 +33,33 @@ public class OrderController extends HttpServlet {
             throws ServletException, IOException {
 
         request.setCharacterEncoding("UTF-8");
-        response.setCharacterEncoding("UTF-8");
 
-        // ===== CHƯA LOGIN =====
         if (!isLoggedIn(request)) {
             response.sendRedirect("index.jsp");
             return;
         }
 
         String action = request.getParameter("action");
-        if (action == null || action.isEmpty()) {
+
+        if (action == null) {
             action = "searchOrder";
         }
 
         try {
+
             switch (action) {
 
-                // ===== USER + ADMIN =====
+                // ===== USER CHECKOUT =====
+                case "createOrder":
+                    handleCreateOrder(request, response);
+                    break;
+
+                // ===== VIEW ORDER =====
                 case "searchOrder":
                     handleSearch(request, response);
                     break;
 
-                // ===== ADMIN ONLY =====
+                // ===== ADMIN =====
                 case "deleteOrder":
                     if (isAdmin(request)) {
                         handleDelete(request, response);
@@ -85,6 +95,7 @@ public class OrderController extends HttpServlet {
                 default:
                     handleSearch(request, response);
                     break;
+
             }
 
         } catch (Exception e) {
@@ -92,6 +103,70 @@ public class OrderController extends HttpServlet {
             request.setAttribute("error", "System error!");
             request.getRequestDispatcher("error.jsp").forward(request, response);
         }
+
+    }
+
+    // ================= CREATE ORDER FROM CART =================
+    private void handleCreateOrder(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
+
+        HttpSession session = request.getSession();
+
+        CartDTO cart = (CartDTO) session.getAttribute("CART");
+
+        if (cart == null || cart.getCart().isEmpty()) {
+            response.sendRedirect("cart.jsp");
+            return;
+        }
+
+        UserDTO user = (UserDTO) session.getAttribute("user");
+
+        double total = 0;
+
+        for (ProductDTO p : cart.getCart().values()) {
+            total += p.getPrice() * p.getQuantity();
+        }
+
+        OrderDAO orderDAO = new OrderDAO();
+
+        OrderDTO order = new OrderDTO(
+                0,
+                user.getEmail(),
+                total,
+                "pending",
+                null
+        );
+
+        int orderId = orderDAO.insert(order);
+
+        if (orderId > 0) {
+
+            OrderItemDAO itemDAO = new OrderItemDAO();
+
+            for (ProductDTO p : cart.getCart().values()) {
+
+                OrderItemDTO item = new OrderItemDTO(
+                        0,
+                        orderId,
+                        p.getId(),
+                        p.getPrice(),
+                        p.getQuantity()
+                );
+
+                itemDAO.insert(item);
+
+            }
+
+            session.removeAttribute("CART");
+
+            response.sendRedirect("payment.jsp");
+
+        } else {
+
+            response.sendRedirect("cart.jsp?error=orderFail");
+
+        }
+
     }
 
     // ================= SEARCH =================
@@ -99,10 +174,13 @@ public class OrderController extends HttpServlet {
             throws ServletException, IOException {
 
         OrderDAO dao = new OrderDAO();
+
         ArrayList<OrderDTO> list = dao.getAll();
 
         request.setAttribute("list", list);
+
         request.getRequestDispatcher("order-list.jsp").forward(request, response);
+
     }
 
     // ================= DELETE =================
@@ -110,6 +188,7 @@ public class OrderController extends HttpServlet {
             throws IOException {
 
         int id = parseInt(request.getParameter("id"));
+
         OrderDAO dao = new OrderDAO();
 
         if (dao.delete(id)) {
@@ -117,6 +196,7 @@ public class OrderController extends HttpServlet {
         } else {
             response.sendRedirect("MainController?action=searchOrder&error=deleteFail");
         }
+
     }
 
     // ================= LOAD UPDATE =================
@@ -124,17 +204,24 @@ public class OrderController extends HttpServlet {
             throws ServletException, IOException {
 
         int id = parseInt(request.getParameter("id"));
+
         OrderDAO dao = new OrderDAO();
 
-        ArrayList<OrderDTO> list = dao.searchByColumn("id", String.valueOf(id));
+        OrderDTO order = dao.getById(id);
 
-        if (!list.isEmpty()) {
-            request.setAttribute("order", list.get(0));
+        if (order != null) {
+
+            request.setAttribute("order", order);
             request.setAttribute("mode", "update");
+
             request.getRequestDispatcher("order-form.jsp").forward(request, response);
+
         } else {
+
             response.sendRedirect("MainController?action=searchOrder");
+
         }
+
     }
 
     // ================= SAVE UPDATE =================
@@ -142,11 +229,12 @@ public class OrderController extends HttpServlet {
             throws IOException {
 
         int id = parseInt(request.getParameter("id"));
-        String userID = request.getParameter("userID");
+        String email = request.getParameter("email");
         double totalPrice = parseDouble(request.getParameter("totalPrice"));
         String status = request.getParameter("status");
 
-        OrderDTO order = new OrderDTO(id, userID, totalPrice, status, null);
+        OrderDTO order = new OrderDTO(id, email, totalPrice, status, null);
+
         OrderDAO dao = new OrderDAO();
 
         if (dao.update(order)) {
@@ -154,6 +242,7 @@ public class OrderController extends HttpServlet {
         } else {
             response.sendRedirect("MainController?action=searchOrder&error=updateFail");
         }
+
     }
 
     // ================= STATISTICS =================
@@ -172,6 +261,7 @@ public class OrderController extends HttpServlet {
         request.setAttribute("totalSold", totalSold);
 
         request.getRequestDispatcher("statistics-order.jsp").forward(request, response);
+
     }
 
     // ================= SAFE PARSE =================
@@ -196,7 +286,6 @@ public class OrderController extends HttpServlet {
         response.sendError(HttpServletResponse.SC_FORBIDDEN, "Admin only!");
     }
 
-    // ================= GET / POST =================
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -208,4 +297,5 @@ public class OrderController extends HttpServlet {
             throws ServletException, IOException {
         processRequest(request, response);
     }
+
 }

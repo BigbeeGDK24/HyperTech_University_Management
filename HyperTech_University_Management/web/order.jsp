@@ -1,13 +1,14 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@page import="model.CartDTO"%>
 <%@page import="model.ProductDTO"%>
+<%@page import="model.UserDTO"%>
 
 <!DOCTYPE html>
 <html>
     <head>
 
         <meta charset="UTF-8">
-        <title>Thanh toán</title>
+        <title>Thông tin đặt hàng</title>
 
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
@@ -56,6 +57,7 @@
 
             <%
                 CartDTO cart = (CartDTO) session.getAttribute("CART");
+                UserDTO user = (UserDTO) session.getAttribute("user");
 
                 double total = 0;
             %>
@@ -65,37 +67,36 @@
             <div class="steps">
 
                 <div class="step">🛒<br>Giỏ hàng</div>
-                <div class="step">📄<br>Thông tin đặt hàng</div>
-                <div class="step active">💳<br>Thanh toán</div>
+                <div class="step active">📄<br>Thông tin đặt hàng</div>
+                <div class="step">💳<br>Thanh toán</div>
                 <div class="step">✔<br>Hoàn tất</div>
 
             </div>
 
-            <h4>Phương thức thanh toán</h4>
+            <h4>Thông tin người nhận</h4>
 
             <form action="MainController" method="post">
 
-                <input type="hidden" name="action" value="addPayment">
+                <input type="hidden" name="action" value="createOrder">
 
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="payment_method" value="COD" checked>
-                    <label class="form-check-label">
-                        Thanh toán khi nhận hàng (COD)
-                    </label>
+                <div class="row mb-3">
+
+                    <div class="col-md-6">
+                        <label>Email</label>
+                        <input type="text" class="form-control" name="email"
+                               value="<%=user != null ? user.getEmail() : ""%>" readonly>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label>Số điện thoại</label>
+                        <input type="text" class="form-control" name="phone" required>
+                    </div>
+
                 </div>
 
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="payment_method" value="Banking">
-                    <label class="form-check-label">
-                        Chuyển khoản ngân hàng
-                    </label>
-                </div>
-
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="payment_method" value="Momo">
-                    <label class="form-check-label">
-                        Ví MoMo
-                    </label>
+                <div class="mb-3">
+                    <label>Địa chỉ giao hàng</label>
+                    <input type="text" class="form-control" name="address" required>
                 </div>
 
                 <hr>
@@ -112,6 +113,7 @@
                     </tr>
 
                     <%
+
                         if (cart != null && cart.getCart() != null) {
 
                             for (ProductDTO p : cart.getCart().values()) {
@@ -148,12 +150,10 @@
 
                 <div style="text-align:right;margin-top:20px">
 
-                    <a href="order.jsp" class="btn btn-secondary">
-                        Quay lại
-                    </a>
+                    <a href="cart.jsp" class="btn btn-secondary">Quay lại</a>
 
                     <button class="btn btn-success">
-                        Xác nhận thanh toán
+                        Tiếp tục thanh toán
                     </button>
 
                 </div>
