@@ -2,32 +2,35 @@ package controller;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import javax.servlet.ServletException;
 import javax.servlet.http.*;
+
 import model.CartDAO;
 import model.CartDTO;
+import model.ProductDAO;
+import model.ProductDTO;
+import model.UserDTO;
+
 
 public class CartController extends HttpServlet {
 
-    // ================= CHECK LOGIN =================
-    private boolean isUser(HttpServletRequest request) {
-        return request.getSession().getAttribute("user") != null;
+    // ===== GET USER EMAIL =====
+    private String getUserEmail(HttpServletRequest request) {
+        UserDTO user = (UserDTO) request.getSession().getAttribute("user");
+        return user != null ? user.getEmail() : null;
     }
 
-    // ================= MAIN PROCESS =================
+    // ===== MAIN PROCESS =====
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
         request.setCharacterEncoding("UTF-8");
-        response.setCharacterEncoding("UTF-8");
-
-        if (!isUser(request)) {
-            response.sendRedirect("login.jsp");
-            return;
-        }
 
         String action = request.getParameter("action");
-        if (action == null) action = "viewCart";
+        if (action == null) {
+            action = "viewCart";
+        }
 
         switch (action) {
 
@@ -35,15 +38,15 @@ public class CartController extends HttpServlet {
                 doViewCart(request, response);
                 break;
 
-            case "addToCart":
+            case "AddCart":
                 doAdd(request, response);
                 break;
 
-            case "updateCart":
+            case "UpdateCart":
                 doUpdate(request, response);
                 break;
 
-            case "deleteCartItem":
+            case "RemoveCart":
                 doDelete(request, response);
                 break;
 
@@ -56,116 +59,167 @@ public class CartController extends HttpServlet {
         }
     }
 
-    // ================= VIEW CART =================
+    // ===== VIEW CART =====
     private void doViewCart(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
+        String email = getUserEmail(request);
+
+        if (email == null) {
+            response.sendRedirect("index.jsp");
+            return;
+        }
+
         HttpSession session = request.getSession();
-        String userId = (String) session.getAttribute("user");
 
-        CartDAO dao = new CartDAO();
-        ArrayList<CartDTO> list = dao.getByUserId(userId);
+        CartDAO cartDAO = new CartDAO();
+        ProductDAO productDAO = new ProductDAO();
 
-        request.setAttribute("cartList", list);
+        ArrayList<CartDTO> list = cartDAO.getByUserEmail(email);
+
+        HashMap<Integer, ProductDTO> cartMap = new HashMap<>();
+
+        for (CartDTO item : list) {
+
+            ProductDTO product = productDAO.getById(item.getProductId());
+
+            if (product != null) {
+
+                product.setQuantity(item.getQuantity());
+
+                cartMap.put(product.getId(), product);
+            }
+        }
+
+        CartDTO cart = new CartDTO();
+        cart.setCart(cartMap);
+
+        session.setAttribute("CART", cart);
 
         request.getRequestDispatcher("cart.jsp").forward(request, response);
     }
 
-    // ================= ADD TO CART =================
+    // ===== ADD TO CART =====
     private void doAdd(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
 
-        HttpSession session = request.getSession();
-        String userId = (String) session.getAttribute("user");
+        String email = getUserEmail(request);
 
-        int productId = parseInt(request.getParameter("product_id"));
+        if (email == null) {
+            response.sendRedirect("index.jsp");
+            return;
+        }
+
+        int productId = parseInt(request.getParameter("productID"));
         int quantity = parseInt(request.getParameter("quantity"));
 
-        if (quantity <= 0) quantity = 1;
+        if (quantity <= 0) {
+            quantity = 1;
+        }
 
         CartDAO dao = new CartDAO();
 
-        CartDTO existing = dao.getItem(userId, productId);
+        CartDTO existing = dao.getItem(email, productId);
 
         if (existing == null) {
 
-            CartDTO cart = new CartDTO(userId, productId, quantity);
-            dao.insert(cart);
+            dao.insert(new CartDTO(email, productId, quantity));
 
         } else {
 
-            int newQuantity = existing.getQuality() + quantity;
-            dao.updateQuantity(userId, productId, newQuantity);
+            int newQuantity = existing.getQuantity() + quantity;
 
+            dao.updateQuantity(email, productId, newQuantity);
         }
 
-        response.sendRedirect("CartController?action=viewCart");
+        response.sendRedirect("MainController?action=viewCart");
     }
 
-    // ================= UPDATE CART =================
+    // ===== UPDATE CART =====
     private void doUpdate(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
 
-        HttpSession session = request.getSession();
-        String userId = (String) session.getAttribute("user");
+        String email = getUserEmail(request);
 
-        int productId = parseInt(request.getParameter("product_id"));
+        if (email == null) {
+            response.sendRedirect("index.jsp");
+            return;
+        }
+
+        int productId = parseInt(request.getParameter("productID"));
         int quantity = parseInt(request.getParameter("quantity"));
 
         CartDAO dao = new CartDAO();
 
         if (quantity <= 0) {
-            dao.deleteItem(userId, productId);
+            dao.deleteItem(email, productId);
         } else {
-            dao.updateQuantity(userId, productId, quantity);
+            dao.updateQuantity(email, productId, quantity);
         }
 
-        response.sendRedirect("CartController?action=viewCart");
+        response.sendRedirect("MainController?action=viewCart");
     }
 
-    // ================= DELETE ITEM =================
+    // ===== REMOVE ITEM =====
     protected void doDelete(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
 
-        HttpSession session = request.getSession();
-        String userId = (String) session.getAttribute("user");
+        String email = getUserEmail(request);
 
-        int productId = parseInt(request.getParameter("product_id"));
+        if (email == null) {
+            response.sendRedirect("index.jsp");
+            return;
+        }
+
+        int productId = parseInt(request.getParameter("productID"));
 
         CartDAO dao = new CartDAO();
-        dao.deleteItem(userId, productId);
 
-        response.sendRedirect("CartController?action=viewCart");
+        dao.deleteItem(email, productId);
+
+        response.sendRedirect("MainController?action=viewCart");
     }
 
-    // ================= CLEAR CART =================
+    // ===== CLEAR CART =====
     private void doClear(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
 
-        HttpSession session = request.getSession();
-        String userId = (String) session.getAttribute("user");
+        String email = getUserEmail(request);
+
+        if (email == null) {
+            response.sendRedirect("index.jsp");
+            return;
+        }
 
         CartDAO dao = new CartDAO();
-        dao.clearCart(userId);
 
-        response.sendRedirect("CartController?action=viewCart");
+        dao.clearCart(email);
+
+        response.sendRedirect("MainController?action=viewCart");
     }
 
-    // ================= PARSE INT =================
+    // ===== PARSE INT =====
     private int parseInt(String value) {
-        try { return Integer.parseInt(value); }
-        catch (Exception e) { return 0; }
+
+        try {
+            return Integer.parseInt(value);
+        } catch (Exception e) {
+            return 0;
+        }
     }
 
+    // ===== HTTP METHODS =====
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+
         processRequest(request, response);
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+
         processRequest(request, response);
     }
 }

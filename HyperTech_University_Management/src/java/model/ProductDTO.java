@@ -1,13 +1,5 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package model;
 
-/**
- *
- * @author truon
- */
 public class ProductDTO {
 
     private int id;
@@ -17,12 +9,17 @@ public class ProductDTO {
     private int stock;
     private String description;
     private String image;
-     private Boolean status;
+    private Boolean status;
+
+    // dùng cho cart
+    private int quantity = 1;
 
     public ProductDTO() {
     }
 
-    public ProductDTO(int id, int category_id, String name, float price, int stock, String description, String image, Boolean status) {
+    public ProductDTO(int id, int category_id, String name, float price,
+            int stock, String description, String image, Boolean status) {
+
         this.id = id;
         this.category_id = category_id;
         this.name = name;
@@ -33,6 +30,7 @@ public class ProductDTO {
         this.status = status;
     }
 
+    // ===== ID =====
     public int getId() {
         return id;
     }
@@ -41,6 +39,12 @@ public class ProductDTO {
         this.id = id;
     }
 
+    // alias cho cart.jsp
+    public int getProductID() {
+        return id;
+    }
+
+    // ===== CATEGORY =====
     public int getCategory_id() {
         return category_id;
     }
@@ -49,7 +53,12 @@ public class ProductDTO {
         this.category_id = category_id;
     }
 
+    // ===== NAME =====
     public String getName() {
+        return name;
+    }
+
+    public String getProductName() {
         return name;
     }
 
@@ -57,6 +66,7 @@ public class ProductDTO {
         this.name = name;
     }
 
+    // ===== PRICE =====
     public float getPrice() {
         return price;
     }
@@ -65,6 +75,7 @@ public class ProductDTO {
         this.price = price;
     }
 
+    // ===== STOCK =====
     public int getStock() {
         return stock;
     }
@@ -73,6 +84,7 @@ public class ProductDTO {
         this.stock = stock;
     }
 
+    // ===== DESCRIPTION =====
     public String getDescription() {
         return description;
     }
@@ -81,6 +93,7 @@ public class ProductDTO {
         this.description = description;
     }
 
+    // ===== IMAGE =====
     public String getImage() {
         return image;
     }
@@ -89,6 +102,7 @@ public class ProductDTO {
         this.image = image;
     }
 
+    // ===== STATUS =====
     public Boolean getStatus() {
         return status;
     }
@@ -97,8 +111,13 @@ public class ProductDTO {
         this.status = status;
     }
 
-   
+    // ===== CART QUANTITY =====
+    public int getQuantity() {
+        return quantity;
+    }
 
-   
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
 
 }
