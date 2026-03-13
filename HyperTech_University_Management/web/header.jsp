@@ -1,4 +1,6 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+
+
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <link rel="stylesheet" href="css/header.css">
 <link rel="stylesheet" href="css/home.css">
@@ -33,7 +35,7 @@
             <div>Hệ Thống<br>Showroom</div>
         </a>
 
-        <a href="cart.jsp" class="item">
+        <a href="MainController?action=viewCart" class="item">
             <i class="fa-solid fa-cart-shopping"></i>
             <div>Giỏ hàng</div>
         </a>
