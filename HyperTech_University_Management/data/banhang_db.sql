@@ -121,7 +121,6 @@ CREATE TABLE product_discounts (
     REFERENCES discounts(id)
     ON DELETE CASCADE
 );
-
 -- ================= COMPLAINTS =================
 CREATE TABLE complaints (
     id INT IDENTITY(1,1) PRIMARY KEY,
@@ -233,7 +232,7 @@ INSERT INTO laptops
 VALUES
 (N'Laptop gaming Gigabyte A16','i7-13620H','RTX 4050','16 GB','1 TB','16 inch WUXGA','165 Hz',29930000,28490000,'a16_1.jpg'),
 (N'Laptop gaming Gigabyte A16','i5-12500H','RTX 3050','16 GB','512 GB','15.6 inch','144 Hz',29490000,27990000,'a16_2.jpg'),
-(N'Laptop gaming Acer Nitro V ProPanel','R5-7535HS','RTX 3050','16 GB','512 GB','15.6 inch FHD','180 Hz',27990000,25990000,'nitro_v1.jpg'),
+(N'Laptop gaming Acer Nitro V ProPanel','R5-7535HS','RTX 3050','16 GB','512 GB','15.6 inch FHD','180 Hz',27990000,25990000,'nitro_v1.png'),
 (N'Laptop gaming Lenovo LOQ 15IAX9E','i5-12450HX','RTX 3050','16 GB','512 GB','15.6 inch FHD','144 Hz',24490000,23490000,'loq1.jpg'),
 (N'Laptop gaming Lenovo LOQ 15ARP10E','R7-7735HS','RTX 4050','16 GB','512 GB','15.6 inch FHD','144 Hz',28990000,24790000,'loq2.jpg'),
 (N'Laptop gaming MSI Cyborg 15 A13UC','i7-13620H','RTX 3050','16 GB','512 GB','15.6 inch FHD','144 Hz',32990000,29990000,'msi_cyborg.jpg'),
@@ -246,7 +245,7 @@ VALUES
 
 UPDATE laptops SET image_url = 'lab1.png' WHERE id = 1;
 UPDATE laptops SET image_url = 'lab2.png' WHERE id = 2;
-UPDATE laptops SET image_url = 'lab3.png' WHERE id = 3;
+UPDATE laptops SET image_url = 'lab3.jpg' WHERE id = 3;
 UPDATE laptops SET image_url = 'lab4.png' WHERE id = 4;
 UPDATE laptops SET image_url = 'lab5.png' WHERE id = 5;
 UPDATE laptops SET image_url = 'lab6.png' WHERE id = 6;
@@ -256,3 +255,158 @@ UPDATE laptops SET image_url = 'lab9.png' WHERE id = 9;
 UPDATE laptops SET image_url = 'lab10.png' WHERE id = 10;
 UPDATE laptops SET image_url = 'lab11.png' WHERE id = 11;
 UPDATE laptops SET image_url = 'lab12.png' WHERE id = 12;
+
+UPDATE laptops
+SET new_price = 25490000
+WHERE name = 'Laptop gaming Lenovo LOQ 15IAX9E';
+
+UPDATE laptops
+SET new_price = 26990000
+WHERE name = 'Laptop gaming Lenovo LOQ 15ARP10E';
+
+UPDATE laptops
+SET new_price = 25190000
+WHERE name = 'Laptop gaming Acer Nitro Lite 16 NL16 71';
+
+
+
+
+INSERT INTO laptops 
+( name, cpu, gpu, ram, ssd, screen, refresh_rate, old_price, new_price, image_url)
+VALUES
+
+('Laptop Gigabyte G5 MD 51S1123SH','i5-11400H','RTX 3050Ti','16 GB','512 GB','15.6 FHD','144 Hz','24490000','21990000','l2.png'),
+
+('Laptop gaming MSI Cyborg 15 A13VEK','i7-13620H','RTX 4050','16 GB','512 GB','15.6 FHD','144 Hz','26390000','24990000','l3.png'),
+
+('Laptop gaming ASUS V16 K3607VJ RP106W','Core 7 240H','RTX 3050','16 GB','512 GB','16 WUXGA','144 Hz','24490000','22490000','l4.png'),
+
+('Laptop gaming HP Victus 16 s0142AX','R5-7640HS','RTX 4060','32 GB','512 GB','16.1 FHD','144 Hz','34490000','24990000','l5.png'),
+
+('Laptop gaming Gigabyte G5 MF5','i7-13620H','RTX 4050','16 GB','512 GB','15.6 FHD','144 Hz','25490000','21990000','l6.png'),
+
+('Laptop gaming MSI Thin 15 B13VE 2824VN','i5-13420H','RTX 4050','16 GB','512 GB','15.6 FHD','144 Hz','22990000','20990000','l7.png'),
+
+('Laptop gaming ASUS V16 V3607VU RP290W','Core 5 210H','RTX 4050','16 GB','512 GB','16 WUXGA','144 Hz','25490000','23990000','l8.png'),
+
+('Laptop gaming Gigabyte G6 MF','i7-13700H','RTX 4050','16 GB','1 TB','16 FHD+','165 Hz','25890000','23990000','l9.png'),
+
+('Laptop gaming HP VICTUS 15 fb3116AX','R7-7445HS','RTX 3050','16 GB','512 GB','15.6 FHD','144 Hz','25990000','20990000','l10.png'),
+
+('Laptop gaming MSI Katana A15 AI B8VE','R7-8845HS','RTX 4050','16 GB','512 GB','15.6 FHD','144 Hz','28990000','23990000','l11.png'),
+
+('Laptop gaming Lenovo LOQ 15ARP9','R5-7235HS','RTX 3050','16 GB','1 TB','15.6 FHD','144 Hz','24490000','22290000','l12.png');
+
+INSERT INTO laptops
+(name,cpu,gpu,ram,ssd,screen,refresh_rate,old_price,new_price,image_url)
+VALUES
+(N'Laptop gaming Gigabyte A16','i7-13620H','RTX 4050','16 GB','1 TB','16 inch WUXGA','165 Hz',29930000,28490000,'a16_1.jpg'),
+(N'Laptop gaming Gigabyte A16','i5-12500H','RTX 3050','16 GB','512 GB','15.6 inch','144 Hz',29490000,27990000,'a16_2.jpg'),
+(N'Laptop gaming Acer Nitro V ProPanel','R5-7535HS','RTX 3050','16 GB','512 GB','15.6 inch FHD','180 Hz',27990000,25990000,'nitro_v1.png');
+
+TRUNCATE TABLE laptops;
+
+INSERT INTO laptops
+(name,cpu,gpu,ram,ssd,screen,refresh_rate,old_price,new_price,image_url)
+VALUES
+(N'Laptop gaming MSI Cyborg 15 B2RWFKG 047VN','Intel Core i5-12450H','RTX 4050','16 GB','512GB','15 inch','165 Hz',33290000,27990000,'l13.png'),
+
+INSERT INTO laptops
+(name, cpu, gpu, ram, ssd, screen, refresh_rate, old_price, new_price, image_url)
+VALUES
+(N'Laptop gaming Gigabyte A16','i7-13620H','RTX 4050','16 GB','512 GB','16 inch FHD+ IPS','165 Hz',29990000,27990000,'lab8.png');
+
+INSERT INTO laptops
+(name,cpu,gpu,ram,ssd,screen,refresh_rate,old_price,new_price,image_url)
+VALUES
+(N'
+Laptop gaming ASUS V16 V3607VH RP024W','i5- Processor 210H 2.2 GHz','RTX 5050 ','16 GB','512 GB','16  inch','144 Hz',28490000,27100000,'l15.png');
+
+INSERT INTO laptops
+(name, cpu, gpu, ram, ssd, screen, refresh_rate, old_price, new_price, image_url)
+VALUES
+(N'Laptop gaming Acer Predator Helios PHN',
+N'Ultra 7 255HX', N'RTX 5060', N'32 GB', N'1 TB',
+N'16 inch 2K+', N'240 Hz',
+56990000, 56990000, 'l16.png'),
+
+(N'Laptop gaming Acer Nitro ProPanel ANV15',
+N'R7-7735HS', N'RTX 4050', N'16 GB', N'512 GB',
+N'15.6 inch FHD', N'180 Hz',
+31990000, 30490000, 'l17.jpg'),
+
+(N'Laptop gaming Acer Predator Helios Neo 16S AI',
+N'Ultra 9 275HX', N'RTX 5070Ti', N'64 GB', N'2 TB',
+N'16 inch WQXGA OLED', N'240 Hz',
+101990000, 95990000, 'l18.png'),
+
+(N'Laptop gaming MSI Stealth 18 HX AI',
+N'Ultra 9 275HX', N'RTX 5080', N'32 GB', N'2 TB',
+N'18 inch UHD+ MiniLED', N'120 Hz',
+107990000, 102990000, 'l19.png'),
+
+(N'Laptop gaming Acer Gaming Nitro 16S AI',
+N'R7 AI 350', N'RTX 5060', N'16 GB', N'512 GB',
+N'16 inch FHD+', N'180 Hz',
+50990000, 48790000, 'l20.png'),
+
+(N'Laptop gaming Acer Predator Triton 14 AI',
+N'Ultra 9 288V', N'RTX 5070', N'32 GB', N'2 TB',
+N'14.5 inch 2.8K OLED', N'120 Hz',
+93580000, 90490000, 'l21.jpg');
+
+INSERT INTO laptops
+(name, cpu, gpu, ram, ssd, screen, refresh_rate, old_price, new_price, image_url)
+VALUES
+(N'Laptop gaming Acer Predator Triton Neo 16',
+N'Ultra 7 155H',
+N'RTX 4060',
+N'32 GB',
+N'1 TB',
+N'16 inch 2.5K',
+N'240 Hz',
+52490000,
+49400000,
+'l22.png');
+
+INSERT INTO laptops
+(name, cpu, gpu, ram, ssd, screen, refresh_rate, old_price, new_price, image_url)
+VALUES
+(N'Laptop gaming MSI Sword 16 HX B14VEKG 856VN',
+N'Intel Core i7-14700HX',
+N'RTX 4050 6GB',
+N'16 GB',
+N'1 TB',
+N'16 inch',
+N'165 Hz',
+35990000,
+31190000,
+'l23.png');
+
+INSERT INTO laptops
+(name, cpu, gpu, ram, ssd, screen, refresh_rate, old_price, new_price, image_url)
+VALUES
+(N'Laptop gaming HP OMEN 16-am0178TX BX8Y4PA',
+N'Intel Core Ultra 7 255H',
+N'RTX 5060 8GB',
+N'16 GB',
+N'512 GB',
+N'16 inch',
+N'165 Hz',
+40890000,
+39990000,
+'l24.png');
+
+INSERT INTO laptops
+(name, cpu, gpu, ram, ssd, screen, refresh_rate, old_price, new_price, image_url)
+VALUES
+(N'Laptop gaming ASUS ROG Strix SCAR 18 G835LW SA193W',
+N'Intel Core Ultra 9 275HX',
+N'RTX 5080 16GB',
+N'32 GB',
+N'1 TB',
+N'18 inch',
+N'240 Hz',
+88390000,
+84990000,
+'l25.png');
