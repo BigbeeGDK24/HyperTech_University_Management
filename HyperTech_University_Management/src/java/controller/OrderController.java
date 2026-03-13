@@ -124,7 +124,7 @@ public class OrderController extends HttpServlet {
         double total = 0;
 
         for (ProductDTO p : cart.getCart().values()) {
-            total += p.getPrice() * p.getQuantity();
+            total += p.getNew_price()* p.getQuantity();
         }
 
         OrderDAO orderDAO = new OrderDAO();
@@ -149,7 +149,7 @@ public class OrderController extends HttpServlet {
                         0,
                         orderId,
                         p.getId(),
-                        p.getPrice(),
+                        p.getNew_price(),
                         p.getQuantity()
                 );
 
