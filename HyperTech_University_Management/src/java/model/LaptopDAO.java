@@ -80,4 +80,117 @@ public class LaptopDAO {
 
         return list;
     }
+
+    public ArrayList<LaptopDTO> getLaptopUnder25() {
+
+        ArrayList<LaptopDTO> list = new ArrayList<>();
+
+        try {
+            Connection con = DbUtil.getConnection();
+            String sql = "SELECT * FROM laptops WHERE new_price <= 25000000";
+            PreparedStatement ps = con.prepareStatement(sql);
+
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+
+                LaptopDTO l = new LaptopDTO(
+                        rs.getInt("id"),
+                        rs.getString("name"),
+                        rs.getString("cpu"),
+                        rs.getString("gpu"),
+                        rs.getString("ram"),
+                        rs.getString("ssd"),
+                        rs.getString("screen"),
+                        rs.getString("refresh_rate"),
+                        rs.getFloat("old_price"),
+                        rs.getFloat("new_price"),
+                        rs.getString("image_url")
+                );
+
+                list.add(l);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return list;
+    }
+
+    public ArrayList<LaptopDTO> getLaptopUnder30() {
+
+        ArrayList<LaptopDTO> list = new ArrayList<>();
+
+        try {
+            Connection con = DbUtil.getConnection();
+            String sql = "SELECT * FROM laptops WHERE new_price > 25000000 AND new_price <= 30000000";
+            PreparedStatement ps = con.prepareStatement(sql);
+
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+
+                LaptopDTO l = new LaptopDTO(
+                        rs.getInt("id"),
+                        rs.getString("name"),
+                        rs.getString("cpu"),
+                        rs.getString("gpu"),
+                        rs.getString("ram"),
+                        rs.getString("ssd"),
+                        rs.getString("screen"),
+                        rs.getString("refresh_rate"),
+                        rs.getFloat("old_price"),
+                        rs.getFloat("new_price"),
+                        rs.getString("image_url")
+                );
+
+                list.add(l);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return list;
+    }
+
+    public ArrayList<LaptopDTO> getLaptopTop30() {
+
+        ArrayList<LaptopDTO> list = new ArrayList<>();
+
+        try {
+            Connection con = DbUtil.getConnection();
+            String sql = "SELECT * FROM laptops WHERE new_price > 30000000";
+            PreparedStatement ps = con.prepareStatement(sql);
+
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+
+                LaptopDTO l = new LaptopDTO(
+                        rs.getInt("id"),
+                        rs.getString("name"),
+                        rs.getString("cpu"),
+                        rs.getString("gpu"),
+                        rs.getString("ram"),
+                        rs.getString("ssd"),
+                        rs.getString("screen"),
+                        rs.getString("refresh_rate"),
+                        rs.getFloat("old_price"),
+                        rs.getFloat("new_price"),
+                        rs.getString("image_url")
+                );
+
+                list.add(l);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return list;
+    }
+    
+    
 }
