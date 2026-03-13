@@ -44,39 +44,39 @@
         </a>
 
         <div class="item account">
-    <i class="fa-solid fa-user"></i>
+            <i class="fa-solid fa-user"></i>
 
-    <%
-    Object user = session.getAttribute("User");
-    if(user != null){
-%>
+            <%
+                Object user = session.getAttribute("User");
+                if (user != null) {
+            %>
 
-<div>
-    <%= ((model.UserDTO)user).getUsername()%>
-</div>
-
-<%
-    } else {
-%>
-
-<div id="openLoginBtn" style="cursor:pointer;">
-    Đăng nhập
-</div>
-
-<%
-    }
-%>
-
-                <div class="account-divider"></div>
-
-                <div class="account-help">
-                    <i class="fa-regular fa-circle-question"></i>
-                    <span>Trợ giúp</span>
-                </div>
-
+            <div>
+                <%= ((model.UserDTO) user).getUsername()%>
             </div>
+
+            <%
+            } else {
+            %>
+
+            <div id="openLoginBtn" style="cursor:pointer;">
+                Đăng nhập
+            </div>
+
+            <%
+                }
+            %>
+
+            <div class="account-divider"></div>
+
+            <div class="account-help">
+                <i class="fa-regular fa-circle-question"></i>
+                <span>Trợ giúp</span>
+            </div>
+
         </div>
     </div>
+</div>
 </header>
 
 <div class="sub-menu">
@@ -236,11 +236,10 @@
 
         <!-- FOOTER -->
         <div class="login-footer">
-            Bạn chưa có tài khoản?
-            <a href="register.jsp">Đăng ký ngay!</a>
-        </div>
-
-    </div>
+    Bạn chưa có tài khoản?
+    <a href="#" id="openRegister">Đăng ký ngay!</a>
+</div>
+        </div> <!-- login-box -->
 </div>
 
 <div class="login-modal" id="registerModal">
@@ -299,71 +298,47 @@
 </div>
 
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", function () {
 
-        const modal = document.getElementById("loginModal");
-        const openBtn = document.getElementById("openLoginBtn");
-        const closeBtn = document.getElementById("closeModal");
-
-        openBtn.addEventListener("click", function (e) {
-            e.preventDefault();
-            modal.classList.add("show");
-            document.body.style.overflow = "hidden";
-        });
-
-        closeBtn.addEventListener("click", function () {
-            modal.classList.remove("show");
-            document.body.style.overflow = "auto";
-        });
-
-        window.addEventListener("click", function (e) {
-            if (e.target === modal) {
-                modal.classList.remove("show");
-                document.body.style.overflow = "auto";
-            }
-        });
-
-    });
-</script>
-
-
-<script>
+    const loginModal = document.getElementById("loginModal");
     const registerModal = document.getElementById("registerModal");
-    const openRegisterBtn = document.getElementById("openRegisterBtn");
+
+    const openLoginBtn = document.getElementById("openLoginBtn");
+    const closeModal = document.getElementById("closeModal");
+
+    const openRegister = document.getElementById("openRegister");
+    const switchToLogin = document.getElementById("switchToLogin");
     const closeRegister = document.getElementById("closeRegister");
 
-    openRegisterBtn.addEventListener("click", function (e) {
+    // mở bảng đăng nhập
+    openLoginBtn.addEventListener("click", function(e){
         e.preventDefault();
+        loginModal.classList.add("show");
+    });
+
+    // đóng bảng đăng nhập
+    closeModal.addEventListener("click", function(){
+        loginModal.classList.remove("show");
+    });
+
+    // đăng nhập -> đăng ký
+    openRegister.addEventListener("click", function(e){
+        e.preventDefault();
+        loginModal.classList.remove("show");
         registerModal.classList.add("show");
-        document.body.style.overflow = "hidden";
     });
 
-    closeRegister.addEventListener("click", function () {
-        registerModal.classList.remove("show");
-        document.body.style.overflow = "auto";
-    });
-</script>
-
-<script>
-    const switchToLogin = document.getElementById("switchToLogin");
-    const loginModal = document.getElementById("loginModal");
-
-    switchToLogin.addEventListener("click", function (e) {
+    // đăng ký -> đăng nhập
+    switchToLogin.addEventListener("click", function(e){
         e.preventDefault();
         registerModal.classList.remove("show");
         loginModal.classList.add("show");
     });
-</script>
-<script>
-document.addEventListener("DOMContentLoaded", function () {
 
-    <% if(request.getAttribute("message") != null){ %>
-
-        const modal = document.getElementById("loginModal");
-        modal.classList.add("show");
-        document.body.style.overflow = "hidden";
-
-    <% } %>
+    // đóng đăng ký
+    closeRegister.addEventListener("click", function(){
+        registerModal.classList.remove("show");
+    });
 
 });
 </script>

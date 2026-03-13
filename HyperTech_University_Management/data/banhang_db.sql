@@ -220,7 +220,7 @@ INSERT INTO order_items (order_id,product_id,price,quantity) VALUES
 (3,3,1500000,2),
 (4,4,1800000,3);
 
-
+dro
 -- ================= LAPTOPS =================
 CREATE TABLE laptops (
     id INT IDENTITY(1,1) PRIMARY KEY,
@@ -313,4 +313,4 @@ VALUES
 (N'Laptop gaming Gigabyte A16','i5-12500H','RTX 3050','16 GB','512 GB','15.6 inch','144 Hz',29490000,27990000,'a16_2.jpg'),
 (N'Laptop gaming Acer Nitro V ProPanel','R5-7535HS','RTX 3050','16 GB','512 GB','15.6 inch FHD','180 Hz',27990000,25990000,'nitro_v1.png');
 
-TRUNCATE TABLE laptops;
+
