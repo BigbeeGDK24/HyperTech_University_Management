@@ -70,9 +70,14 @@
 
             .empty-cart{
                 text-align:center;
-                padding:40px;
-                font-size:18px;
+                padding:50px;
                 color:#666;
+            }
+
+            .empty-cart img{
+                width:120px;
+                margin-bottom:15px;
+                opacity:0.7;
             }
 
             /* BUTTON */
@@ -95,6 +100,7 @@
             <%
                 CartDTO cart = (CartDTO) session.getAttribute("CART");
                 double total = 0;
+                boolean isEmpty = (cart == null || cart.getCart() == null || cart.getCart().isEmpty());
             %>
 
             <!-- STEP PROCESS -->
@@ -137,7 +143,7 @@
                 </tr>
 
                 <%
-                    if (cart != null && cart.getCart() != null && !cart.getCart().isEmpty()) {
+                    if (!isEmpty) {
 
                         for (ProductDTO p : cart.getCart().values()) {
 
@@ -202,7 +208,11 @@
                 <tr>
                     <td colspan="5" class="empty-cart">
 
-                        Giỏ hàng của bạn đang trống <br><br>
+                        <img src="https://cdn-icons-png.flaticon.com/512/2038/2038854.png">
+
+                        <h5>Giỏ hàng của bạn đang trống</h5>
+
+                        <p>Hãy thêm sản phẩm vào giỏ hàng để tiếp tục mua sắm</p>
 
                         <a href="MainController" class="btn btn-continue">
                             TIẾP TỤC MUA HÀNG
@@ -223,6 +233,8 @@
 
             </div>
 
+            <% if (!isEmpty) { %>
+
             <div style="text-align:right;margin-top:20px">
 
                 <a href="MainController" class="btn btn-secondary">
@@ -238,6 +250,8 @@
                 </a>
 
             </div>
+
+            <% }%>
 
         </div>
 
