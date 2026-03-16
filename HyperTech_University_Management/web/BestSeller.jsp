@@ -97,7 +97,8 @@
                         <form action="MainController" method="post">
 
                             <input type="hidden" name="action" value="AddCart">
-                            <input type="hidden" name="proid" value="${p.id}">
+                            <input type="hidden" name="productID" value="${p.id}">
+                            <input type="hidden" name="quantity" value="1">
 
                             <button class="buy-btn">Mua ngay</button>
 
@@ -146,8 +147,9 @@
                         </div>
                         <form action="MainController" method="post">
 
-                            <input type="hidden" name="action" value="AddToCart">
-                            <input type="hidden" name="proid" value="${p.id}">
+                            <input type="hidden" name="action" value="AddCart">
+                            <input type="hidden" name="productID" value="${p.id}">
+                            <input type="hidden" name="quantity" value="1">
 
                             <button class="buy-btn">Mua ngay</button>
 
@@ -190,8 +192,9 @@
                         </div>
                         <form action="MainController" method="post">
 
-                            <input type="hidden" name="action" value="AddToCart">
-                            <input type="hidden" name="proid" value="${p.id}">
+                            <input type="hidden" name="action" value="AddCart">
+                            <input type="hidden" name="productID" value="${p.id}">
+                            <input type="hidden" name="quantity" value="1">
 
                             <button class="buy-btn">Mua ngay</button>
 
@@ -233,8 +236,9 @@
                         </div>
                         <form action="MainController" method="post">
 
-                            <input type="hidden" name="action" value="AddToCart">
-                            <input type="hidden" name="proid" value="${p.id}">
+                            <input type="hidden" name="action" value="AddCart">
+                            <input type="hidden" name="productID" value="${p.id}">
+                            <input type="hidden" name="quantity" value="1">
 
                             <button class="buy-btn">Mua ngay</button>
 
