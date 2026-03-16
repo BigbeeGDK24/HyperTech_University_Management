@@ -22,8 +22,6 @@ public class AdminController extends HttpServlet {
         String url = "header.jsp";
         String txtUsername = request.getParameter("txtUsername");
         String txtPassword = request.getParameter("txtPassword");
-        System.out.println(txtUsername);
-        System.out.println(txtPassword);
         AdminDAO adao = new AdminDAO();
         AdminDTO admin = adao.adLogin(txtUsername, txtPassword);
         if (admin != null) {
@@ -36,7 +34,6 @@ public class AdminController extends HttpServlet {
             // ================= CHECK USER =================
             // ===== KHÔNG PHẢI ADMIN → CHUYỂN QUA USERCONTROLLER =====
             url = "UserController?action=login&txtUsername=" + txtUsername + "&txtPassword=" + txtPassword;
-            System.out.println(url);
             response.sendRedirect(url);
             return;
         }
@@ -64,7 +61,6 @@ public class AdminController extends HttpServlet {
         response.setCharacterEncoding("UTF-8");
 
         String action = request.getParameter("action");
-        System.out.println("ACTION = " + action);
 
         if (action == null || action.isEmpty()) {
             response.sendRedirect("login.jsp");
