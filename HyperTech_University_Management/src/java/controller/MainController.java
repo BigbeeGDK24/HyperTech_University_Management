@@ -33,11 +33,15 @@ public class MainController extends HttpServlet {
 
         String action = request.getParameter("action");
         String url = "index.jsp";
+        System.out.println("main"+ action);
 
         if (action == null) {
             url = "index.jsp";
         } else if (action.equals("login") || action.equals("logout")) {
             url = "AdminController";
+            
+        } else if (action.equals("addUser")) {
+            url = "UserController";
             // ================= CART =================
         } else if (action.equals("viewCart")
                 || action.equals("AddCart")
@@ -70,7 +74,7 @@ public class MainController extends HttpServlet {
             url = "PaymentController";
 
         }
-
+        System.out.println("Forward to: " + url);
         request.getRequestDispatcher(url).forward(request, response);
     }
 
