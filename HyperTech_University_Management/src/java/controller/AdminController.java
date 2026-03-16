@@ -10,7 +10,6 @@ import javax.servlet.http.HttpSession;
 import model.AdminDAO;
 import model.AdminDTO;
 
-
 public class AdminController extends HttpServlet {
 
     protected void doLogin(HttpServletRequest request, HttpServletResponse response)
@@ -21,26 +20,26 @@ public class AdminController extends HttpServlet {
 
         HttpSession session = request.getSession();
         String url = "header.jsp";
-            String txtUsername = request.getParameter("txtUsername");
-            String txtPassword = request.getParameter("txtPassword");
-            System.out.println(txtUsername);
-System.out.println(txtPassword);
-            AdminDAO adao = new AdminDAO();
-            AdminDTO admin = adao.adLogin(txtUsername, txtPassword);
- if (admin != null) {
+        String txtUsername = request.getParameter("txtUsername");
+        String txtPassword = request.getParameter("txtPassword");
+        System.out.println(txtUsername);
+        System.out.println(txtPassword);
+        AdminDAO adao = new AdminDAO();
+        AdminDTO admin = adao.adLogin(txtUsername, txtPassword);
+        if (admin != null) {
 
-        session.setAttribute("admin", admin);
-        url = "Admin.jsp";
+            session.setAttribute("admin", admin);
+            url = "Admin.jsp";
 
-    } else {
+        } else {
 
-        // ================= CHECK USER =================
-        // ===== KHÔNG PHẢI ADMIN → CHUYỂN QUA USERCONTROLLER =====
-        url = "UserController?action=login&txtUsername=" + txtUsername + "&txtPassword=" + txtPassword;
-        response.sendRedirect(url);
-        return;
-    }
-
+            // ================= CHECK USER =================
+            // ===== KHÔNG PHẢI ADMIN → CHUYỂN QUA USERCONTROLLER =====
+            url = "UserController?action=login&txtUsername=" + txtUsername + "&txtPassword=" + txtPassword;
+            System.out.println(url);
+            response.sendRedirect(url);
+            return;
+        }
 
         RequestDispatcher rd = request.getRequestDispatcher(url);
         rd.forward(request, response);

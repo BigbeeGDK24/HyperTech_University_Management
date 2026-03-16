@@ -22,7 +22,6 @@ public class UserController extends HttpServlet {
 
         UserDAO dao = new UserDAO();
         UserDTO user = dao.login(email, password);
-
         HttpSession session = request.getSession();
 
         if (user != null) {
@@ -142,6 +141,13 @@ public class UserController extends HttpServlet {
         return new UserDTO(email, username, password, phone, address, status);
     }
 
+    private boolean checkpass(HttpServletRequest request) {
+        String password = request.getParameter("password");
+        String passcom = request.getParameter("password");
+
+        return password.equalsIgnoreCase(passcom);
+    }
+
     // ================= VALIDATE =================
     private String validateUser(UserDTO u, boolean isUpdate) {
 
@@ -169,30 +175,42 @@ public class UserController extends HttpServlet {
 
     // ================= ADD USER =================
     protected void doAdd(HttpServletRequest request, HttpServletResponse response)
-        throws ServletException, IOException {
+            throws ServletException, IOException {
+        UserDTO u = extractUserFromRequest(request);
+        String error = validateUser(u, false);
+        String msg = "";
+        
+        if (checkpass(request)) {
 
-    UserDTO u = extractUserFromRequest(request);
+            System.out.println(u);
+            if (error.isEmpty()) {
 
-    String error = validateUser(u, false);
-    String msg = "";
-        System.out.println(u);
-    if (error.isEmpty()) {
+                UserDAO dao = new UserDAO();
 
-        UserDAO dao = new UserDAO();
+                if (dao.add(u)) {
+                    msg = "Thêm user thành công!";
+                } else {
+                    error = "Không thể thêm user!";
+                }
+            }
 
-        if (dao.add(u)) {
-            msg = "Thêm user thành công!";
         } else {
-            error = "Không thể thêm user!";
+            error = "Password is incorrect!";
         }
+
+        System.out.println(msg);
+        System.out.println(u.getUsername());
+        System.out.println(u.getEmail());
+        System.out.println(u.getPassword());
+
+        System.out.println();
+
+        request.setAttribute("u", u);
+        request.setAttribute("msg", msg);
+        request.setAttribute("error", error);
+
+        request.getRequestDispatcher("index.jsp").forward(request, response);
     }
-
-    request.setAttribute("u", u);
-    request.setAttribute("msg", msg);
-    request.setAttribute("error", error);
-
-    request.getRequestDispatcher("index.jsp").forward(request, response);
-}
 
     // ================= SAVE UPDATE =================
     protected void doSaveUpdate(HttpServletRequest request, HttpServletResponse response)
