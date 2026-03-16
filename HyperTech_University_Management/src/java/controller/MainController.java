@@ -33,7 +33,7 @@ public class MainController extends HttpServlet {
 
         String action = request.getParameter("action");
         String url = "index.jsp";
-        System.out.println("main"+ action);
+
 
         if (action == null) {
             url = "index.jsp";
@@ -74,7 +74,6 @@ public class MainController extends HttpServlet {
             url = "PaymentController";
 
         }
-        System.out.println("Forward to: " + url);
         request.getRequestDispatcher(url).forward(request, response);
     }
 

@@ -181,8 +181,6 @@ public class UserController extends HttpServlet {
         String msg = "";
         
         if (checkpass(request)) {
-
-            System.out.println(u);
             if (error.isEmpty()) {
 
                 UserDAO dao = new UserDAO();
@@ -197,13 +195,6 @@ public class UserController extends HttpServlet {
         } else {
             error = "Password is incorrect!";
         }
-
-        System.out.println(msg);
-        System.out.println(u.getUsername());
-        System.out.println(u.getEmail());
-        System.out.println(u.getPassword());
-
-        System.out.println();
 
         request.setAttribute("u", u);
         request.setAttribute("msg", msg);

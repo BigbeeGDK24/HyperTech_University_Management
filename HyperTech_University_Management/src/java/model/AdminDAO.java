@@ -50,7 +50,6 @@ public class AdminDAO {
     public AdminDTO adLogin(String Username, String Password) {
         AdminDTO admin = searchByAdminName(Username);
         if (admin != null && Password.equals(admin.getPassword())) {
-            System.out.println("amin: " + admin);
                     
             return admin;
         }
