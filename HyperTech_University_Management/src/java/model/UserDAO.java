@@ -112,15 +112,14 @@ public class UserDAO {
     public UserDTO login(String email, String passwordInput) {
 
         UserDTO user = searchByEmail(email);
-
         if (user != null) {
-
+            
             if (BCrypt.checkpw(passwordInput, user.getPassword())) {
-
                 if (user.isStatus()) {
                     return user;
                 }
             }
+            return null;
         }
 
         return null;
