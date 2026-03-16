@@ -13,6 +13,7 @@
 
             body{
                 background:#f5f6fa;
+                font-family:Segoe UI;
             }
 
             .wrapper{
@@ -21,26 +22,27 @@
                 margin-top:60px;
                 background:white;
                 padding:40px;
-                border-radius:10px;
-                box-shadow:0 3px 10px rgba(0,0,0,0.1);
+                border-radius:12px;
+                box-shadow:0 5px 15px rgba(0,0,0,0.1);
                 text-align:center;
             }
 
             .steps{
                 display:flex;
                 justify-content:space-between;
-                background:#f8dede;
-                padding:20px;
-                border-radius:8px;
+                background:#fdeaea;
+                padding:18px;
+                border-radius:10px;
                 margin-bottom:30px;
             }
 
             .step{
-                text-align:center;
                 flex:1;
+                text-align:center;
+                color:#666;
             }
 
-            .active{
+            .step.active{
                 color:green;
                 font-weight:bold;
             }
@@ -57,8 +59,6 @@
     <body>
 
         <div class="wrapper">
-
-            <!-- STEP BAR -->
 
             <div class="steps">
 

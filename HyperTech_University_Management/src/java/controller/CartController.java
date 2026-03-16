@@ -12,7 +12,6 @@ import model.ProductDAO;
 import model.ProductDTO;
 import model.UserDTO;
 
-
 public class CartController extends HttpServlet {
 
     // ===== GET USER EMAIL =====
@@ -28,11 +27,11 @@ public class CartController extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
 
         String action = request.getParameter("action");
-                System.out.println("cart"+ action);
+        System.out.println("cart" + action);
         if (action == null) {
             action = "viewCart";
         }
-        System.out.println("cart"+ action);
+        System.out.println("cart" + action);
 
         switch (action) {
 
@@ -68,10 +67,15 @@ public class CartController extends HttpServlet {
         String email = getUserEmail(request);
 
         if (email == null) {
+
+            request.getSession().setAttribute("message",
+                    "Bạn cần đăng nhập trước khi mua hàng!");
+
+            request.getSession().setAttribute("showLoginModal", true);
+
             response.sendRedirect("index.jsp");
             return;
         }
-
         HttpSession session = request.getSession();
 
         CartDAO cartDAO = new CartDAO();
@@ -105,12 +109,7 @@ public class CartController extends HttpServlet {
     private void doAdd(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
 
-        String email = getUserEmail(request);
-
-        if (email == null) {
-            response.sendRedirect("index.jsp");
-            return;
-        }
+        HttpSession session = request.getSession();
 
         int productId = parseInt(request.getParameter("productID"));
         int quantity = parseInt(request.getParameter("quantity"));
@@ -119,22 +118,28 @@ public class CartController extends HttpServlet {
             quantity = 1;
         }
 
-        CartDAO dao = new CartDAO();
+        ProductDAO productDAO = new ProductDAO();
+        ProductDTO product = productDAO.getById(productId);
 
-        CartDTO existing = dao.getItem(email, productId);
-
-        if (existing == null) {
-
-            dao.insert(new CartDTO(email, productId, quantity));
-
-        } else {
-
-            int newQuantity = existing.getQuantity() + quantity;
-
-            dao.updateQuantity(email, productId, newQuantity);
+        if (product == null) {
+            response.sendRedirect("index.jsp");
+            return;
         }
 
-response.sendRedirect("MainController?action=viewCart");    }
+        CartDTO cart = (CartDTO) session.getAttribute("CART");
+
+        if (cart == null) {
+            cart = new CartDTO();
+        }
+
+        product.setQuantity(quantity);
+
+        cart.add(product);
+
+        session.setAttribute("CART", cart);
+
+        response.sendRedirect("MainController?action=viewCart");
+    }
 
     // ===== UPDATE CART =====
     private void doUpdate(HttpServletRequest request, HttpServletResponse response)
