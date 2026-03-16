@@ -119,6 +119,41 @@
                 color:white;
             }
 
+            /* ===== EMPTY CART ANIMATION ===== */
+
+            .empty-cart-box{
+                text-align:center;
+                padding:60px;
+                animation:fadeIn 0.6s ease;
+            }
+
+            .empty-cart-box img{
+                width:120px;
+                margin-bottom:15px;
+                animation:bounce 1.5s infinite;
+            }
+
+            @keyframes bounce{
+                0%{
+                    transform:translateY(0);
+                }
+                50%{
+                    transform:translateY(-12px);
+                }
+                100%{
+                    transform:translateY(0);
+                }
+            }
+
+            @keyframes fadeIn{
+                from{
+                    opacity:0;
+                }
+                to{
+                    opacity:1;
+                }
+            }
+
         </style>
 
     </head>
@@ -225,13 +260,29 @@
                     Tiếp tục mua
                 </a>
 
-                <a href="MainController?action=clearCart" class="btn btn-clear">
-                    Clear Cart
+                <a href="MainController?action=clearCart" id="clearCartBtn" class="btn btn-clear">
+                    🗑 Xóa toàn bộ giỏ hàng
                 </a>
 
                 <a href="PaymentController" class="btn btn-checkout">
                     Thanh toán
                 </a>
+
+            </div>
+
+            <% } %>
+
+            <!-- EMPTY CART -->
+
+            <% if (isEmpty) { %>
+
+            <div class="empty-cart-box">
+
+                <img src="https://cdn-icons-png.flaticon.com/512/2038/2038854.png">
+
+                <h4>Giỏ hàng của bạn đang trống</h4>
+
+                <p>Hãy thêm sản phẩm để tiếp tục mua sắm</p>
 
             </div>
 
