@@ -281,7 +281,7 @@
 
             <div class="login-body">
 
-                <input type="text" name="fullname" placeholder="Họ và Tên" required>
+                <input type="text" name="username" placeholder="Họ và Tên" required>
 
                 <input type="email" name="email" placeholder="Email" required>
 
