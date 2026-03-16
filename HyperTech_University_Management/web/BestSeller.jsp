@@ -94,7 +94,14 @@
 
                         </div>
 
-                        <button class="buy-btn">Mua ngay</button>
+                        <form action="MainController" method="post">
+
+                            <input type="hidden" name="action" value="AddCart">
+                            <input type="hidden" name="proid" value="${p.id}">
+
+                            <button class="buy-btn">Mua ngay</button>
+
+                        </form>
 
                     </div>
                 </c:forEach>
@@ -137,7 +144,14 @@
                                 <span class="discount">-5%</span>
                             </div>
                         </div>
-                        <button class="buy-btn">Mua ngay</button>
+                        <form action="MainController" method="post">
+
+                            <input type="hidden" name="action" value="AddToCart">
+                            <input type="hidden" name="proid" value="${p.id}">
+
+                            <button class="buy-btn">Mua ngay</button>
+
+                        </form>
                     </div>
                 </c:forEach>
 
@@ -174,7 +188,14 @@
                                 <span class="discount">-5%</span>
                             </div>
                         </div>
-                        <button class="buy-btn">Mua ngay</button>
+                        <form action="MainController" method="post">
+
+                            <input type="hidden" name="action" value="AddToCart">
+                            <input type="hidden" name="proid" value="${p.id}">
+
+                            <button class="buy-btn">Mua ngay</button>
+
+                        </form>
                     </div>
                 </c:forEach>
 
@@ -210,7 +231,14 @@
                                 <span class="discount">-5%</span>
                             </div>
                         </div>
-                        <button class="buy-btn">Mua ngay</button>
+                        <form action="MainController" method="post">
+
+                            <input type="hidden" name="action" value="AddToCart">
+                            <input type="hidden" name="proid" value="${p.id}">
+
+                            <button class="buy-btn">Mua ngay</button>
+
+                        </form>
                     </div>
                 </c:forEach>
             </div>

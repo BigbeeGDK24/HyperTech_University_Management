@@ -147,7 +147,7 @@
 
                         for (ProductDTO p : cart.getCart().values()) {
 
-                            double itemTotal = p.getPrice() * p.getQuantity();
+                            double itemTotal = p.getNew_price() * p.getQuantity();
                             total += itemTotal;
 
                 %>
@@ -155,11 +155,11 @@
                 <tr>
 
                     <td class="product-name">
-                        <%=p.getProductName()%>
+                        <%=p.getName()%>
                     </td>
 
                     <td class="price">
-                        $ <%=String.format("%.0f", p.getPrice())%>
+                        $ <%=String.format("%.0f", p.getNew_price())%>
                     </td>
 
                     <td>

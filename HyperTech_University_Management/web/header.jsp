@@ -211,7 +211,7 @@
                 <div class="forgot">
                     <a href="#">Quên mật khẩu?</a>
                 </div>
-                <c:if test="not empty message">
+                <c:if test="${not empty message}">
                     <span style="color:red"> ${message}</span>
                 </c:if>
 
@@ -261,14 +261,23 @@
         </div>
 
         <!-- FORM -->
-        <div class="login-body">
-            <input type="text" placeholder="Email">
-            <input type="text" placeholder="Họ">
-            <input type="text" placeholder="Tên">
-            <input type="password" placeholder="Mật khẩu">
+     <form action="MainController" method="post">
+<input type="hidden" name="action" value="addUser">
 
-            <button class="login-submit">TẠO TÀI KHOẢN</button>
-        </div>
+<div class="login-body">
+
+    <input type="text" name="fullname" placeholder="Họ và Tên" required>
+
+    <input type="email" name="email" placeholder="Email" required>
+
+    <input type="password" name="password" placeholder="Mật khẩu" required>
+
+    <input type="password" name="confirm_password" placeholder="Nhập lại mật khẩu" required>
+
+    <button type="submit" class="login-submit">ĐĂNG KÝ</button>
+
+</div>
+</form>
 
         <!-- DIVIDER -->
         <div class="divider">
@@ -312,35 +321,53 @@
         const switchToLogin = document.getElementById("switchToLogin");
         const closeRegister = document.getElementById("closeRegister");
 
-        // mở bảng đăng nhập
-        openLoginBtn.addEventListener("click", function (e) {
+    // mở bảng đăng nhập
+    if(openLoginBtn){
+        openLoginBtn.addEventListener("click", function(e){
             e.preventDefault();
             loginModal.classList.add("show");
         });
+    }
 
-        // đóng bảng đăng nhập
-        closeModal.addEventListener("click", function () {
+    // đóng bảng đăng nhập
+    if(closeModal){
+        closeModal.addEventListener("click", function(){
             loginModal.classList.remove("show");
         });
+    }
 
-        // đăng nhập -> đăng ký
-        openRegister.addEventListener("click", function (e) {
+    // đăng nhập -> đăng ký
+    if(openRegister){
+        openRegister.addEventListener("click", function(e){
             e.preventDefault();
             loginModal.classList.remove("show");
             registerModal.classList.add("show");
         });
+    }
 
-        // đăng ký -> đăng nhập
-        switchToLogin.addEventListener("click", function (e) {
+    // đăng ký -> đăng nhập
+    if(switchToLogin){
+        switchToLogin.addEventListener("click", function(e){
             e.preventDefault();
             registerModal.classList.remove("show");
             loginModal.classList.add("show");
         });
+    }
 
-        // đóng đăng ký
-        closeRegister.addEventListener("click", function () {
+    // đóng đăng ký
+    if(closeRegister){
+        closeRegister.addEventListener("click", function(){
             registerModal.classList.remove("show");
         });
+    }
 
-    });
+});
 </script>
+
+<c:if test="${showLoginModal}">
+<script>
+document.addEventListener("DOMContentLoaded", function(){
+    document.getElementById("loginModal").classList.add("show");
+});
+</script>
+</c:if>
