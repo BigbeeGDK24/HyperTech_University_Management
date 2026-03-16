@@ -133,10 +133,25 @@ public class CartController extends HttpServlet {
         }
 
         product.setQuantity(quantity);
-
         cart.add(product);
 
         session.setAttribute("CART", cart);
+
+        String email = getUserEmail(request);
+
+        if (email != null) {
+
+            CartDAO dao = new CartDAO();
+
+            CartDTO existing = dao.getItem(email, productId);
+
+            if (existing == null) {
+                dao.insert(new CartDTO(email, productId, quantity));
+            } else {
+                dao.updateQuantity(email, productId, existing.getQuantity() + quantity);
+            }
+
+        }
 
         response.sendRedirect("MainController?action=viewCart");
     }
@@ -163,7 +178,7 @@ public class CartController extends HttpServlet {
             dao.updateQuantity(email, productId, quantity);
         }
 
-        response.sendRedirect("MainController?action=viewCart");
+        response.setStatus(HttpServletResponse.SC_OK);
     }
 
     // ===== REMOVE ITEM =====
@@ -180,10 +195,16 @@ public class CartController extends HttpServlet {
         int productId = parseInt(request.getParameter("productID"));
 
         CartDAO dao = new CartDAO();
-
         dao.deleteItem(email, productId);
 
-        response.sendRedirect("MainController?action=viewCart");
+        HttpSession session = request.getSession();
+        CartDTO cart = (CartDTO) session.getAttribute("CART");
+
+        if (cart != null && cart.getCart() != null) {
+            cart.remove(productId);
+        }
+
+        response.setStatus(HttpServletResponse.SC_OK);
     }
 
     // ===== CLEAR CART =====
@@ -201,7 +222,7 @@ public class CartController extends HttpServlet {
 
         dao.clearCart(email);
 
-        response.sendRedirect("MainController?action=viewCart");
+        response.setStatus(HttpServletResponse.SC_OK);
     }
 
     // ===== PARSE INT =====
