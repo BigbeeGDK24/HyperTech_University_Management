@@ -297,3 +297,80 @@ select * from products
 select * from users
 select * from admins
 
+INSERT INTO products
+(category_id,name,cpu,gpu,ram,ssd,screen,refresh_rate,old_price,new_price,stock,description,image)
+VALUES
+(1,N'Laptop gaming Acer Predator Helios PHN',N'Ultra 7 255HX', N'RTX 5060', N'32 GB', N'1 TB',N'16 inch 2K+', N'240 Hz',56990000, 56990000,10,'Acer Predator Helios PHN', 'l16.png'),
+(1,N'Laptop gaming Lenovo Legion 5 15AHP10 83M0002XVN',
+N'AMD Ryzen 7 260', N'RTX 5050', N'24 GB', N'512 GB',
+N'15 inch', N'180 Hz',
+39490000,36990000,10,
+N'Laptop gaming Lenovo Legion 5 15AHP10 83M0002XVN','l26.png'),
+
+(1,N'Laptop gaming ASUS ROG Zephyrus G14 GA403WM QS058WS',
+N'AMD Ryzen 9 8945HS', N'RTX 4070', N'32 GB', N'1 TB',
+N'14 inch', N'180 Hz',
+58990000,55990000,10,
+N'Laptop gaming ASUS ROG Zephyrus G14 GA403WM QS058WS','l27.png');
+
+
+
+
+
+INSERT INTO products (category_id, name, old_price, new_price, image)
+VALUES 
+(7, N'Chuột Logitech G502 Hero Gaming', 1090000, 890000, 'm1.png');
+
+SELECT * FROM products
+
+DELETE FROM products
+WHERE name = N'Chuột Logitech G502 Hero Gaming';
+
+INSERT INTO products (category_id, name, old_price, new_price, image)
+VALUES 
+(7, N'Chuột gaming có dây Rapoo V260 Pro', 499000, 329000, 'm13.jpg');
+
+INSERT INTO products (category_id, name, old_price, new_price, image)
+VALUES 
+(7, N'Chuột DareU Không dây EM911T RGB Đen', 690000, 400000, 'm14.jpg'),
+(7, N'Chuột ATK A9 SE Tri-mode Nearlink Wireless Black', 590000, 490000, 'm15.jpg');
+
+INSERT INTO products (category_id, name, old_price, new_price, image)
+VALUES 
+(7, N'Chuột ASUS ROG Strix Impact III', 1090000, 990000, 'm16.jpg'),
+(7, N'Chuột DareU Không dây EM911T RGB Trắng', 690000, 400000, 'm17.jpg'),
+(7, N'Chuột Razer DeathAdder Essential White', 790000, 410000, 'm18.png'),
+(7, N'Chuột Razer Cobra', 1049000, 990000, 'm19.jpg');
+
+INSERT INTO products (category_id, name, old_price, new_price, image)
+VALUES 
+(7, N'Chuột Razer Basilisk V3 Pro 35K Black', 4490000, 4190000, 'm20.png'),
+(7, N'Chuột Razer Basilisk V3 Pro White', 4090000, 3390000, 'm21.gif'),
+(7, N'Chuột Logitech G502 X Plus LightSpeed Black', 3590000, 3100000, 'm22.png'),
+(7, N'Chuột không dây Corsair Nightsabre RGB', 3990000, 3590000, 'm23.png'),
+(7, N'Chuột không dây Corsair Darkstar RGB', 3990000, 3590000, 'm24.png');
+
+INSERT INTO products (category_id, name, old_price, new_price, image)
+VALUES
+(7, N'Chuột văn phòng Logitech M331 Silent Black', 349000, 340000, 'm25.png'),
+(7, N'Chuột văn phòng Logitech M331 Silent Blue', 400000, 340000, 'm26.png'),
+(7, N'Chuột văn phòng Logitech M331 Silent Red', 490000, 340000, 'm27.jpg'),
+(7, N'Chuột văn phòng Logitech Pebble Mouse 2 M350S Rose', 699000, 450000, 'm28.jpg'),
+(7, N'Chuột văn phòng Logitech Pebble Mouse 2 M350S White', 699000, 450000, 'm29.png'),
+(7, N'Chuột văn phòng Logitech MX Anywhere 3S Rose', 1750000, 1550000, 'm30.png'),
+(7, N'Chuột văn phòng Logitech MX Anywhere 3S Pale Grey', 1750000, 1550000, 'm31.png'),
+(7, N'Chuột văn phòng Rapoo M20 Wireless', 150000, 90000, 'm32.png'),
+(7, N'Chuột văn phòng Logitech M650 Signature Graphite', 849000, 645000, 'm33.png'),
+(7, N'Chuột văn phòng Logitech M650 Off White', 800000, 645000, 'm34.png');
+
+INSERT INTO products (category_id, name, old_price, new_price, image)
+VALUES 
+(7, N'Chuột văn phòng Rapoo M20 Wireless', 150000, 90000, 'm32.jpg');
+
+INSERT INTO products (category_id, name, old_price, new_price, image)
+VALUES
+(7, N'Chuột văn phòng MonsGeek D1 Pink', 299000, 120000, 'm35.png');
+
+INSERT INTO products (category_id, name, old_price, new_price, image)
+VALUES
+(7, N'Chuột văn phòng MonsGeek D1 Black', 299000, 150000, 'm36.png');

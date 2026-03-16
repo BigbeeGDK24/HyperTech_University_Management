@@ -122,7 +122,7 @@
                     <a href="ProductController?action=list">
                         <img class="banner-small" src="images/laptopgaming.jpg">
                     </a>
-                    <a href="BestSeller2.jsp">
+                    <a href="ProductController?action=searchProduct&category=2">
                         <img class="banner-small" src="images/chuotgaming.jpg">
                     </a>
                 </div>
@@ -238,10 +238,10 @@
 
         <!-- FOOTER -->
         <div class="login-footer">
-    Bạn chưa có tài khoản?
-    <a href="#" id="openRegister">Đăng ký ngay!</a>
-</div>
-        </div> <!-- login-box -->
+            Bạn chưa có tài khoản?
+            <a href="#" id="openRegister">Đăng ký ngay!</a>
+        </div>
+    </div> <!-- login-box -->
 </div>
 
 <div class="login-modal" id="registerModal">
@@ -300,47 +300,47 @@
 </div>
 
 <script>
-document.addEventListener("DOMContentLoaded", function () {
+    document.addEventListener("DOMContentLoaded", function () {
 
-    const loginModal = document.getElementById("loginModal");
-    const registerModal = document.getElementById("registerModal");
+        const loginModal = document.getElementById("loginModal");
+        const registerModal = document.getElementById("registerModal");
 
-    const openLoginBtn = document.getElementById("openLoginBtn");
-    const closeModal = document.getElementById("closeModal");
+        const openLoginBtn = document.getElementById("openLoginBtn");
+        const closeModal = document.getElementById("closeModal");
 
-    const openRegister = document.getElementById("openRegister");
-    const switchToLogin = document.getElementById("switchToLogin");
-    const closeRegister = document.getElementById("closeRegister");
+        const openRegister = document.getElementById("openRegister");
+        const switchToLogin = document.getElementById("switchToLogin");
+        const closeRegister = document.getElementById("closeRegister");
 
-    // mở bảng đăng nhập
-    openLoginBtn.addEventListener("click", function(e){
-        e.preventDefault();
-        loginModal.classList.add("show");
+        // mở bảng đăng nhập
+        openLoginBtn.addEventListener("click", function (e) {
+            e.preventDefault();
+            loginModal.classList.add("show");
+        });
+
+        // đóng bảng đăng nhập
+        closeModal.addEventListener("click", function () {
+            loginModal.classList.remove("show");
+        });
+
+        // đăng nhập -> đăng ký
+        openRegister.addEventListener("click", function (e) {
+            e.preventDefault();
+            loginModal.classList.remove("show");
+            registerModal.classList.add("show");
+        });
+
+        // đăng ký -> đăng nhập
+        switchToLogin.addEventListener("click", function (e) {
+            e.preventDefault();
+            registerModal.classList.remove("show");
+            loginModal.classList.add("show");
+        });
+
+        // đóng đăng ký
+        closeRegister.addEventListener("click", function () {
+            registerModal.classList.remove("show");
+        });
+
     });
-
-    // đóng bảng đăng nhập
-    closeModal.addEventListener("click", function(){
-        loginModal.classList.remove("show");
-    });
-
-    // đăng nhập -> đăng ký
-    openRegister.addEventListener("click", function(e){
-        e.preventDefault();
-        loginModal.classList.remove("show");
-        registerModal.classList.add("show");
-    });
-
-    // đăng ký -> đăng nhập
-    switchToLogin.addEventListener("click", function(e){
-        e.preventDefault();
-        registerModal.classList.remove("show");
-        loginModal.classList.add("show");
-    });
-
-    // đóng đăng ký
-    closeRegister.addEventListener("click", function(){
-        registerModal.classList.remove("show");
-    });
-
-});
 </script>
