@@ -49,7 +49,7 @@
             <i class="fa-solid fa-user"></i>
 
             <%
-                Object user = session.getAttribute("User");
+                Object user = session.getAttribute("user");
                 if (user != null) {
             %>
 
@@ -266,7 +266,7 @@
 
 <div class="login-body">
 
-    <input type="text" name="fullname" placeholder="Họ và Tên" required>
+    <input type="text" name="username" placeholder="Họ và Tên" required>
 
     <input type="email" name="email" placeholder="Email" required>
 
