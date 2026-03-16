@@ -37,7 +37,19 @@
 
         <a href="cart.jsp" class="item">
             <i class="fa-solid fa-cart-shopping"></i>
-            <div>Giỏ hàng</div>
+
+            <%
+                model.CartDTO cart = (model.CartDTO) session.getAttribute("CART");
+
+                int count = 0;
+
+                if (cart != null && cart.getCart() != null) {
+                    count = cart.getCart().size();
+                }
+            %>
+
+            <div>Giỏ hàng (<%=count%>)</div>
+
         </a>
 
         <a href="order-lookup.jsp" class="item">
@@ -211,10 +223,13 @@
                 <div class="forgot">
                     <a href="#">Quên mật khẩu?</a>
                 </div>
-                <c:if test="${not empty message}">
-                    <span style="color:red"> ${message}</span>
+                <c:if test="${not empty sessionScope.message}">
+                    <span style="color:red">${sessionScope.message}</span>
                 </c:if>
-
+                <%
+                    session.removeAttribute("message");
+                    session.removeAttribute("showLoginModal");
+                %>
                 <button class="login-submit">ĐĂNG NHẬP</button>
             </div>
         </form>
@@ -261,23 +276,23 @@
         </div>
 
         <!-- FORM -->
-     <form action="MainController" method="post">
-<input type="hidden" name="action" value="addUser">
+        <form action="MainController" method="post">
+            <input type="hidden" name="action" value="addUser">
 
-<div class="login-body">
+            <div class="login-body">
 
-    <input type="text" name="username" placeholder="Họ và Tên" required>
+                <input type="text" name="fullname" placeholder="Họ và Tên" required>
 
-    <input type="email" name="email" placeholder="Email" required>
+                <input type="email" name="email" placeholder="Email" required>
 
-    <input type="password" name="password" placeholder="Mật khẩu" required>
+                <input type="password" name="password" placeholder="Mật khẩu" required>
 
-    <input type="password" name="confirm_password" placeholder="Nhập lại mật khẩu" required>
+                <input type="password" name="confirm_password" placeholder="Nhập lại mật khẩu" required>
 
-    <button type="submit" class="login-submit">ĐĂNG KÝ</button>
+                <button type="submit" class="login-submit">ĐĂNG KÝ</button>
 
-</div>
-</form>
+            </div>
+        </form>
 
         <!-- DIVIDER -->
         <div class="divider">
@@ -321,53 +336,60 @@
         const switchToLogin = document.getElementById("switchToLogin");
         const closeRegister = document.getElementById("closeRegister");
 
-    // mở bảng đăng nhập
-    if(openLoginBtn){
-        openLoginBtn.addEventListener("click", function(e){
-            e.preventDefault();
-            loginModal.classList.add("show");
-        });
-    }
+        // mở bảng đăng nhập
+        if (openLoginBtn) {
+            openLoginBtn.addEventListener("click", function (e) {
+                e.preventDefault();
+                loginModal.classList.add("show");
+            });
+        }
 
-    // đóng bảng đăng nhập
-    if(closeModal){
-        closeModal.addEventListener("click", function(){
-            loginModal.classList.remove("show");
-        });
-    }
+        // đóng bảng đăng nhập
+        if (closeModal) {
+            closeModal.addEventListener("click", function () {
+                loginModal.classList.remove("show");
+            });
+        }
 
-    // đăng nhập -> đăng ký
-    if(openRegister){
-        openRegister.addEventListener("click", function(e){
-            e.preventDefault();
-            loginModal.classList.remove("show");
-            registerModal.classList.add("show");
-        });
-    }
+        // đăng nhập -> đăng ký
+        if (openRegister) {
+            openRegister.addEventListener("click", function (e) {
+                e.preventDefault();
+                loginModal.classList.remove("show");
+                registerModal.classList.add("show");
+            });
+        }
 
-    // đăng ký -> đăng nhập
-    if(switchToLogin){
-        switchToLogin.addEventListener("click", function(e){
-            e.preventDefault();
-            registerModal.classList.remove("show");
-            loginModal.classList.add("show");
-        });
-    }
+        // đăng ký -> đăng nhập
+        if (switchToLogin) {
+            switchToLogin.addEventListener("click", function (e) {
+                e.preventDefault();
+                registerModal.classList.remove("show");
+                loginModal.classList.add("show");
+            });
+        }
 
-    // đóng đăng ký
-    if(closeRegister){
-        closeRegister.addEventListener("click", function(){
-            registerModal.classList.remove("show");
-        });
-    }
+        // đóng đăng ký
+        if (closeRegister) {
+            closeRegister.addEventListener("click", function () {
+                registerModal.classList.remove("show");
+            });
+        }
 
-});
+    });
 </script>
 
-<c:if test="${showLoginModal}">
-<script>
-document.addEventListener("DOMContentLoaded", function(){
-    document.getElementById("loginModal").classList.add("show");
-});
-</script>
+<c:if test="${sessionScope.showLoginModal}">
+    <script>
+
+        document.addEventListener("DOMContentLoaded", function () {
+
+            let toastEl = document.getElementById("loginToast");
+            let toast = new bootstrap.Toast(toastEl);
+
+            toast.show();
+
+        });
+
+    </script>
 </c:if>

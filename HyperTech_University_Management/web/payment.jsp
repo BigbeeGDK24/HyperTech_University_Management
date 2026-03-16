@@ -15,6 +15,7 @@
 
             body{
                 background:#f5f6fa;
+                font-family:Segoe UI;
             }
 
             .wrapper{
@@ -23,27 +24,49 @@
                 margin-top:40px;
                 background:white;
                 padding:30px;
-                border-radius:10px;
-                box-shadow:0 3px 10px rgba(0,0,0,0.1);
+                border-radius:12px;
+                box-shadow:0 5px 15px rgba(0,0,0,0.1);
             }
 
             .steps{
                 display:flex;
                 justify-content:space-between;
-                background:#f8dede;
-                padding:20px;
-                border-radius:8px;
-                margin-bottom:30px;
+                background:#fdeaea;
+                padding:18px;
+                border-radius:10px;
+                margin-bottom:25px;
             }
 
             .step{
-                text-align:center;
                 flex:1;
+                text-align:center;
+                color:#666;
+                font-weight:500;
             }
 
-            .active{
-                color:red;
+            .step.active{
+                color:#e53935;
                 font-weight:bold;
+            }
+
+            .table thead{
+                background:#343a40;
+                color:white;
+            }
+
+            .payment-box{
+                background:#fafafa;
+                padding:15px;
+                border-radius:8px;
+                border:1px solid #eee;
+                margin-bottom:20px;
+            }
+
+            .total-box{
+                text-align:right;
+                font-size:20px;
+                font-weight:bold;
+                margin-top:20px;
             }
 
         </style>
@@ -56,11 +79,8 @@
 
             <%
                 CartDTO cart = (CartDTO) session.getAttribute("CART");
-
                 double total = 0;
             %>
-
-            <!-- STEP BAR -->
 
             <div class="steps">
 
@@ -77,28 +97,30 @@
 
                 <input type="hidden" name="action" value="addPayment">
 
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="payment_method" value="COD" checked>
-                    <label class="form-check-label">
-                        Thanh toán khi nhận hàng (COD)
-                    </label>
-                </div>
+                <div class="payment-box">
 
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="payment_method" value="Banking">
-                    <label class="form-check-label">
-                        Chuyển khoản ngân hàng
-                    </label>
-                </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="payment_method" value="COD" checked>
+                        <label class="form-check-label">
+                            Thanh toán khi nhận hàng (COD)
+                        </label>
+                    </div>
 
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="payment_method" value="Momo">
-                    <label class="form-check-label">
-                        Ví MoMo
-                    </label>
-                </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="payment_method" value="Banking">
+                        <label class="form-check-label">
+                            Chuyển khoản ngân hàng
+                        </label>
+                    </div>
 
-                <hr>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="payment_method" value="Momo">
+                        <label class="form-check-label">
+                            Ví MoMo
+                        </label>
+                    </div>
+
+                </div>
 
                 <h4>Sản phẩm trong đơn</h4>
 
@@ -118,7 +140,6 @@
 
                                 double itemTotal = p.getPrice() * p.getQuantity();
                                 total += itemTotal;
-
                     %>
 
                     <tr>
@@ -140,15 +161,13 @@
 
                 </table>
 
-                <div style="text-align:right">
-
-                    <h4>Total: $ <%=total%></h4>
-
+                <div class="total-box">
+                    Total: $ <%=total%>
                 </div>
 
                 <div style="text-align:right;margin-top:20px">
 
-                    <a href="order.jsp" class="btn btn-secondary">
+                    <a href="cart.jsp" class="btn btn-secondary">
                         Quay lại
                     </a>
 
