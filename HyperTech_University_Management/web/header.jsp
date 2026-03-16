@@ -97,7 +97,7 @@
     <!-- SIDEBAR -->
     <div class="sidebar">
         <ul class="category-list">
-            <li><a href="LaptopController?action=list"><span>Laptop</span><span class="arrow">›</span></a></li>
+            <li><a href="ProductController?action=list"><span>Laptop</span><span class="arrow">›</span></a></li>
             <li><a href="#"><span>VGA</span><span class="arrow">›</span></a></li>
             <li><a href="#"><span>Case</span><span class="arrow">›</span></a></li>
             <li><a href="#"><span>RAM</span><span class="arrow">›</span></a></li>
@@ -119,10 +119,10 @@
                 </a>
 
                 <div class="banner-row">
-                    <a href="LaptopController?action=list">
+                    <a href="ProductController?action=list">
                         <img class="banner-small" src="images/laptopgaming.jpg">
                     </a>
-                    <a href="BestSeller2.jsp">
+                    <a href="ProductController?action=searchProduct&category=2">
                         <img class="banner-small" src="images/chuotgaming.jpg">
                     </a>
                 </div>
@@ -211,7 +211,7 @@
                 <div class="forgot">
                     <a href="#">Quên mật khẩu?</a>
                 </div>
-                <c:if test="not empty message">
+                <c:if test="${not empty message}">
                     <span style="color:red"> ${message}</span>
                 </c:if>
 
@@ -238,10 +238,10 @@
 
         <!-- FOOTER -->
         <div class="login-footer">
-    Bạn chưa có tài khoản?
-    <a href="#" id="openRegister">Đăng ký ngay!</a>
-</div>
-        </div> <!-- login-box -->
+            Bạn chưa có tài khoản?
+            <a href="#" id="openRegister">Đăng ký ngay!</a>
+        </div>
+    </div> <!-- login-box -->
 </div>
 
 <div class="login-modal" id="registerModal">
@@ -261,14 +261,23 @@
         </div>
 
         <!-- FORM -->
-        <div class="login-body">
-            <input type="text" placeholder="Email">
-            <input type="text" placeholder="Họ">
-            <input type="text" placeholder="Tên">
-            <input type="password" placeholder="Mật khẩu">
+     <form action="MainController" method="post">
+<input type="hidden" name="action" value="addUser">
 
-            <button class="login-submit">TẠO TÀI KHOẢN</button>
-        </div>
+<div class="login-body">
+
+    <input type="text" name="fullname" placeholder="Họ và Tên" required>
+
+    <input type="email" name="email" placeholder="Email" required>
+
+    <input type="password" name="password" placeholder="Mật khẩu" required>
+
+    <input type="password" name="confirm_password" placeholder="Nhập lại mật khẩu" required>
+
+    <button type="submit" class="login-submit">ĐĂNG KÝ</button>
+
+</div>
+</form>
 
         <!-- DIVIDER -->
         <div class="divider">
@@ -300,47 +309,65 @@
 </div>
 
 <script>
-document.addEventListener("DOMContentLoaded", function () {
+    document.addEventListener("DOMContentLoaded", function () {
 
-    const loginModal = document.getElementById("loginModal");
-    const registerModal = document.getElementById("registerModal");
+        const loginModal = document.getElementById("loginModal");
+        const registerModal = document.getElementById("registerModal");
 
-    const openLoginBtn = document.getElementById("openLoginBtn");
-    const closeModal = document.getElementById("closeModal");
+        const openLoginBtn = document.getElementById("openLoginBtn");
+        const closeModal = document.getElementById("closeModal");
 
-    const openRegister = document.getElementById("openRegister");
-    const switchToLogin = document.getElementById("switchToLogin");
-    const closeRegister = document.getElementById("closeRegister");
+        const openRegister = document.getElementById("openRegister");
+        const switchToLogin = document.getElementById("switchToLogin");
+        const closeRegister = document.getElementById("closeRegister");
 
     // mở bảng đăng nhập
-    openLoginBtn.addEventListener("click", function(e){
-        e.preventDefault();
-        loginModal.classList.add("show");
-    });
+    if(openLoginBtn){
+        openLoginBtn.addEventListener("click", function(e){
+            e.preventDefault();
+            loginModal.classList.add("show");
+        });
+    }
 
     // đóng bảng đăng nhập
-    closeModal.addEventListener("click", function(){
-        loginModal.classList.remove("show");
-    });
+    if(closeModal){
+        closeModal.addEventListener("click", function(){
+            loginModal.classList.remove("show");
+        });
+    }
 
     // đăng nhập -> đăng ký
-    openRegister.addEventListener("click", function(e){
-        e.preventDefault();
-        loginModal.classList.remove("show");
-        registerModal.classList.add("show");
-    });
+    if(openRegister){
+        openRegister.addEventListener("click", function(e){
+            e.preventDefault();
+            loginModal.classList.remove("show");
+            registerModal.classList.add("show");
+        });
+    }
 
     // đăng ký -> đăng nhập
-    switchToLogin.addEventListener("click", function(e){
-        e.preventDefault();
-        registerModal.classList.remove("show");
-        loginModal.classList.add("show");
-    });
+    if(switchToLogin){
+        switchToLogin.addEventListener("click", function(e){
+            e.preventDefault();
+            registerModal.classList.remove("show");
+            loginModal.classList.add("show");
+        });
+    }
 
     // đóng đăng ký
-    closeRegister.addEventListener("click", function(){
-        registerModal.classList.remove("show");
-    });
+    if(closeRegister){
+        closeRegister.addEventListener("click", function(){
+            registerModal.classList.remove("show");
+        });
+    }
 
 });
 </script>
+
+<c:if test="${showLoginModal}">
+<script>
+document.addEventListener("DOMContentLoaded", function(){
+    document.getElementById("loginModal").classList.add("show");
+});
+</script>
+</c:if>

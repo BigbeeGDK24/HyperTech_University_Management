@@ -7,6 +7,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.*;
 import model.UserDAO;
 import model.UserDTO;
+import org.mindrot.jbcrypt.BCrypt;
 
 public class UserController extends HttpServlet {
 
@@ -34,7 +35,7 @@ public class UserController extends HttpServlet {
             request.setAttribute("message", "Sai email hoặc mật khẩu");
             request.setAttribute("showLoginModal", true);
 
-            request.getRequestDispatcher("header.jsp").forward(request, response);
+            request.getRequestDispatcher("index.jsp").forward(request, response);
         }
     }
 
@@ -168,30 +169,30 @@ public class UserController extends HttpServlet {
 
     // ================= ADD USER =================
     protected void doAdd(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+        throws ServletException, IOException {
 
-        UserDTO u = extractUserFromRequest(request);
+    UserDTO u = extractUserFromRequest(request);
 
-        String error = validateUser(u, false);
-        String msg = "";
+    String error = validateUser(u, false);
+    String msg = "";
+        System.out.println(u);
+    if (error.isEmpty()) {
 
-        if (error.isEmpty()) {
+        UserDAO dao = new UserDAO();
 
-            UserDAO dao = new UserDAO();
-
-            if (dao.add(u)) {
-                msg = "Thêm user thành công!";
-            } else {
-                error = "Không thể thêm user!";
-            }
+        if (dao.add(u)) {
+            msg = "Thêm user thành công!";
+        } else {
+            error = "Không thể thêm user!";
         }
-
-        request.setAttribute("u", u);
-        request.setAttribute("msg", msg);
-        request.setAttribute("error", error);
-
-        request.getRequestDispatcher("university-form.jsp").forward(request, response);
     }
+
+    request.setAttribute("u", u);
+    request.setAttribute("msg", msg);
+    request.setAttribute("error", error);
+
+    request.getRequestDispatcher("index.jsp").forward(request, response);
+}
 
     // ================= SAVE UPDATE =================
     protected void doSaveUpdate(HttpServletRequest request, HttpServletResponse response)

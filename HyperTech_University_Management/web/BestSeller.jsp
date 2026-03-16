@@ -68,7 +68,7 @@
                 <c:forEach items="${list}" var="p" begin="0" end="11">
                     <div class="product-card">
 
-                        <img src="images/${p.image_url}" alt="${p.name}">
+                        <img src="images/${p.image}" alt="${p.name}">
 
                         <h3>${p.name}</h3>
 
@@ -94,7 +94,14 @@
 
                         </div>
 
-                        <button class="buy-btn">Mua ngay</button>
+                        <form action="MainController" method="post">
+
+                            <input type="hidden" name="action" value="AddCart">
+                            <input type="hidden" name="proid" value="${p.id}">
+
+                            <button class="buy-btn">Mua ngay</button>
+
+                        </form>
 
                     </div>
                 </c:forEach>
@@ -114,7 +121,7 @@
 
                 <c:forEach items="${listUnder25}" var="p">
                     <div class="product-card">
-                        <img src="images/${p.image_url}" alt="${p.name}">
+                        <img src="images/${p.image}" alt="${p.name}">
                         <h3>${p.name}</h3>
 
                         <div class="spec-box">
@@ -137,7 +144,14 @@
                                 <span class="discount">-5%</span>
                             </div>
                         </div>
-                        <button class="buy-btn">Mua ngay</button>
+                        <form action="MainController" method="post">
+
+                            <input type="hidden" name="action" value="AddToCart">
+                            <input type="hidden" name="proid" value="${p.id}">
+
+                            <button class="buy-btn">Mua ngay</button>
+
+                        </form>
                     </div>
                 </c:forEach>
 
@@ -154,7 +168,7 @@
 
                 <c:forEach items="${listUnder30}" var="p">
                     <div class="product-card">
-                        <img src="images/${p.image_url}" alt="${p.name}">
+                        <img src="images/${p.image}" alt="${p.name}">
                         <h3>${p.name}</h3>
                         <div class="spec-box">
                             <span><i class="fa-solid fa-microchip"></i> ${p.cpu}</span>
@@ -174,7 +188,14 @@
                                 <span class="discount">-5%</span>
                             </div>
                         </div>
-                        <button class="buy-btn">Mua ngay</button>
+                        <form action="MainController" method="post">
+
+                            <input type="hidden" name="action" value="AddToCart">
+                            <input type="hidden" name="proid" value="${p.id}">
+
+                            <button class="buy-btn">Mua ngay</button>
+
+                        </form>
                     </div>
                 </c:forEach>
 
@@ -210,7 +231,14 @@
                                 <span class="discount">-5%</span>
                             </div>
                         </div>
-                        <button class="buy-btn">Mua ngay</button>
+                        <form action="MainController" method="post">
+
+                            <input type="hidden" name="action" value="AddToCart">
+                            <input type="hidden" name="proid" value="${p.id}">
+
+                            <button class="buy-btn">Mua ngay</button>
+
+                        </form>
                     </div>
                 </c:forEach>
             </div>

@@ -1,12 +1,15 @@
 package controller;
 
 import java.io.IOException;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import javax.servlet.ServletException;
 import javax.servlet.http.*;
+import model.LaptopDAO;
+import model.LaptopDTO;
 import model.ProductDAO;
 import model.ProductDTO;
-
 
 public class ProductController extends HttpServlet {
 
@@ -30,13 +33,10 @@ public class ProductController extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         response.setCharacterEncoding("UTF-8");
 
-        if (!isLoggedIn(request)) {
-            response.sendRedirect("index.jsp");
-            return;
-        }
-
         String action = request.getParameter("action");
-        if (action == null) action = "searchProduct";
+        if (action == null) {
+            action = "searchProduct";
+        }
 
         switch (action) {
 
@@ -51,23 +51,39 @@ public class ProductController extends HttpServlet {
 
             // ================= ADMIN ONLY =================
             case "addProduct":
-                if (isAdmin(request)) doAdd(request, response);
-                else deny(response);
+                if (isAdmin(request)) {
+                    doAdd(request, response);
+                } else {
+                    deny(response);
+                }
                 break;
 
             case "updateProduct":
-                if (isAdmin(request)) doUpdate(request, response);
-                else deny(response);
+                if (isAdmin(request)) {
+                    doUpdate(request, response);
+                } else {
+                    deny(response);
+                }
                 break;
 
             case "deleteProduct":
-                if (isAdmin(request)) doSoftDelete(request, response);
-                else deny(response);
+                if (isAdmin(request)) {
+                    doSoftDelete(request, response);
+                } else {
+                    deny(response);
+                }
                 break;
 
             case "ProductStatistic":
-                if (isAdmin(request)) doStatistic(request, response);
-                else deny(response);
+                if (isAdmin(request)) {
+                    doStatistic(request, response);
+                } else {
+                    deny(response);
+                }
+                break;
+
+            case "list":
+                doShowLap(request, response);
                 break;
 
             default:
@@ -78,29 +94,40 @@ public class ProductController extends HttpServlet {
     // ================= SEARCH =================
     private void doSearch(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
- String keywords = request.getParameter("keywords");
-    String category = request.getParameter("category");
 
-    if (keywords == null) keywords = "";
+        String keywords = request.getParameter("keywords");
+        String category = request.getParameter("category");
 
-    ProductDAO dao = new ProductDAO();
-    ArrayList<ProductDTO> list;
+        if (keywords == null) {
+            keywords = "";
+        }
 
-    if (category != null) {
-        int category_id = Integer.parseInt(category);
-        list = dao.getByCategory(category_id);
-    } 
-    else if (!keywords.trim().isEmpty()) {
-        list = dao.searchByName(keywords);
-    } 
-    else {
-        list = dao.getAll();
-    }
+        ProductDAO dao = new ProductDAO();
 
-    request.setAttribute("list", list);
-    request.setAttribute("keywords", keywords);
+        ArrayList<ProductDTO> list;
+        ArrayList<ProductDTO> dealMouse = dao.getDealMouse();
+        ArrayList<ProductDTO> gamingMouse = dao.getGamingMouse();
+        ArrayList<ProductDTO> officeMouse = dao.getOfficeMouse();
 
-    request.getRequestDispatcher("BestSeller.jsp").forward(request, response);
+        if (category != null) {
+            int category_id = Integer.parseInt(category);
+            list = dao.getByCategory(category_id);
+        } else if (!keywords.trim().isEmpty()) {
+            list = dao.searchByName(keywords);
+        } else {
+            list = dao.getAll();
+        }
+
+        request.setAttribute("productList", list);
+
+        // ===== thêm 2 list chuột =====
+        request.setAttribute("dealMouse", dealMouse);
+        request.setAttribute("gamingMouse", gamingMouse);
+        request.setAttribute("officeMouse", officeMouse);
+
+        request.setAttribute("keywords", keywords);
+
+        request.getRequestDispatcher("BestSeller2.jsp").forward(request, response);
     }
 
     // ================= VIEW DETAIL =================
@@ -171,51 +198,57 @@ public class ProductController extends HttpServlet {
     // ================= EXTRACT =================
     private ProductDTO extractProduct(HttpServletRequest request) {
 
-    int id = parseInt(request.getParameter("id"));
-    int category_id = parseInt(request.getParameter("category_id"));
+        int id = parseInt(request.getParameter("id"));
+        int category_id = parseInt(request.getParameter("category_id"));
 
-    String name = request.getParameter("name");
-    String cpu = request.getParameter("cpu");
-    String gpu = request.getParameter("gpu");
-    String ram = request.getParameter("ram");
-    String ssd = request.getParameter("ssd");
-    String screen = request.getParameter("screen");
-    String refresh = request.getParameter("refresh_rate");
+        String name = request.getParameter("name");
+        String cpu = request.getParameter("cpu");
+        String gpu = request.getParameter("gpu");
+        String ram = request.getParameter("ram");
+        String ssd = request.getParameter("ssd");
+        String screen = request.getParameter("screen");
+        String refresh = request.getParameter("refresh_rate");
 
-    float old_price = parseFloat(request.getParameter("old_price"));
-    float new_price = parseFloat(request.getParameter("new_price"));
+        float old_price = parseFloat(request.getParameter("old_price"));
+        float new_price = parseFloat(request.getParameter("new_price"));
 
-    int stock = parseInt(request.getParameter("stock"));
-    String description = request.getParameter("description");
-    String image = request.getParameter("image");
+        int stock = parseInt(request.getParameter("stock"));
+        String description = request.getParameter("description");
+        String image = request.getParameter("image");
 
-    return new ProductDTO(
-        id,
-        category_id,
-        name,
-        cpu,
-        gpu,
-        ram,
-        ssd,
-        screen,
-        refresh,
-        old_price,
-        new_price,
-        stock,
-        description,
-        image,
-        true
-    );
-}
+        return new ProductDTO(
+                id,
+                category_id,
+                name,
+                cpu,
+                gpu,
+                ram,
+                ssd,
+                screen,
+                refresh,
+                old_price,
+                new_price,
+                stock,
+                description,
+                image,
+                true
+        );
+    }
 
     private int parseInt(String value) {
-        try { return Integer.parseInt(value); }
-        catch (Exception e) { return 0; }
+        try {
+            return Integer.parseInt(value);
+        } catch (Exception e) {
+            return 0;
+        }
     }
 
     private float parseFloat(String value) {
-        try { return Float.parseFloat(value); }
-        catch (Exception e) { return 0; }
+        try {
+            return Float.parseFloat(value);
+        } catch (Exception e) {
+            return 0;
+        }
     }
 
     private void deny(HttpServletResponse response) throws IOException {
@@ -233,4 +266,32 @@ public class ProductController extends HttpServlet {
             throws ServletException, IOException {
         processRequest(request, response);
     }
+
+    protected void doShowLap(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        String action = request.getParameter("action");
+
+        if (action == null) {
+            action = "list";
+        }
+
+        if (action.equals("list")) {
+
+            ProductDAO dao = new ProductDAO();
+
+            ArrayList<ProductDTO> list = dao.getAllLaptop();
+            ArrayList<ProductDTO> listUnder25 = dao.getLaptopUnder25();
+            ArrayList<ProductDTO> listUnder30 = dao.getLaptopUnder30();
+            ArrayList<ProductDTO> listTop30 = dao.getLaptopTop30();
+
+            request.setAttribute("list", list);
+            request.setAttribute("listUnder25", listUnder25);
+            request.setAttribute("listUnder30", listUnder30);
+            request.setAttribute("listTop30", listTop30);
+
+            request.getRequestDispatcher("BestSeller.jsp").forward(request, response);
+        }
+    }
+
 }

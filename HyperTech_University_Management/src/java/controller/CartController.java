@@ -28,9 +28,11 @@ public class CartController extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
 
         String action = request.getParameter("action");
+                System.out.println("cart"+ action);
         if (action == null) {
             action = "viewCart";
         }
+        System.out.println("cart"+ action);
 
         switch (action) {
 
@@ -132,8 +134,7 @@ public class CartController extends HttpServlet {
             dao.updateQuantity(email, productId, newQuantity);
         }
 
-        response.sendRedirect("MainController?action=viewCart");
-    }
+response.sendRedirect("MainController?action=viewCart");    }
 
     // ===== UPDATE CART =====
     private void doUpdate(HttpServletRequest request, HttpServletResponse response)

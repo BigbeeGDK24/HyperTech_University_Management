@@ -297,4 +297,336 @@ public class ProductDAO {
 
         return list;
     }
+
+    public boolean addLaptop(ProductDTO l) {
+
+        String sql = "INSERT INTO products(name,cpu,gpu,ram,ssd,screen,refresh_rate,old_price,new_price,image_url) VALUES(?,?,?,?,?,?,?,?,?,?)";
+
+        try {
+            Connection con = DbUtil.getConnection();
+            PreparedStatement ps = con.prepareStatement(sql);
+
+            ps.setString(1, l.getName());
+            ps.setString(2, l.getCpu());
+            ps.setString(3, l.getGpu());
+            ps.setString(4, l.getRam());
+            ps.setString(5, l.getSsd());
+            ps.setString(6, l.getScreen());
+            ps.setString(7, l.getRefresh_rate());
+            ps.setFloat(8, l.getOld_price());
+            ps.setFloat(9, l.getNew_price());
+            ps.setString(10, l.getImage());
+
+            return ps.executeUpdate() > 0;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    public ArrayList<ProductDTO> getAllLaptop() {
+
+        ArrayList<ProductDTO> list = new ArrayList<>();
+
+        try {
+            Connection con = DbUtil.getConnection();
+            String sql = "SELECT * FROM products";
+            PreparedStatement ps = con.prepareStatement(sql);
+
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+
+                ProductDTO l = new ProductDTO(
+                        rs.getInt("id"),
+                        rs.getInt("category_id"),
+                        rs.getString("name"),
+                        rs.getString("cpu"),
+                        rs.getString("gpu"),
+                        rs.getString("ram"),
+                        rs.getString("ssd"),
+                        rs.getString("screen"),
+                        rs.getString("refresh_rate"),
+                        rs.getFloat("old_price"),
+                        rs.getFloat("new_price"),
+                        rs.getInt("stock"),
+                        rs.getString("description"),
+                        rs.getString("image"),
+                        rs.getBoolean("status"));
+
+                list.add(l);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return list;
+    }
+
+    public ArrayList<ProductDTO> getLaptopUnder25() {
+
+        ArrayList<ProductDTO> list = new ArrayList<>();
+
+        try {
+            Connection con = DbUtil.getConnection();
+            String sql = "SELECT * FROM products WHERE new_price <= 25000000";
+            PreparedStatement ps = con.prepareStatement(sql);
+
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+
+                ProductDTO l = new ProductDTO(
+                        rs.getInt("id"),
+                        rs.getInt("category_id"),
+                        rs.getString("name"),
+                        rs.getString("cpu"),
+                        rs.getString("gpu"),
+                        rs.getString("ram"),
+                        rs.getString("ssd"),
+                        rs.getString("screen"),
+                        rs.getString("refresh_rate"),
+                        rs.getFloat("old_price"),
+                        rs.getFloat("new_price"),
+                        rs.getInt("stock"),
+                        rs.getString("description"),
+                        rs.getString("image"),
+                        rs.getBoolean("status"));
+
+                list.add(l);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return list;
+    }
+
+    public ArrayList<ProductDTO> getLaptopUnder30() {
+
+        ArrayList<ProductDTO> list = new ArrayList<>();
+
+        try {
+            Connection con = DbUtil.getConnection();
+            String sql = "SELECT * FROM products WHERE new_price > 25000000 AND new_price <= 30000000";
+            PreparedStatement ps = con.prepareStatement(sql);
+
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+
+                ProductDTO l = new ProductDTO(
+                        rs.getInt("id"),
+                        rs.getInt("category_id"),
+                        rs.getString("name"),
+                        rs.getString("cpu"),
+                        rs.getString("gpu"),
+                        rs.getString("ram"),
+                        rs.getString("ssd"),
+                        rs.getString("screen"),
+                        rs.getString("refresh_rate"),
+                        rs.getFloat("old_price"),
+                        rs.getFloat("new_price"),
+                        rs.getInt("stock"),
+                        rs.getString("description"),
+                        rs.getString("image"),
+                        rs.getBoolean("status"));
+
+                list.add(l);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return list;
+    }
+
+    public ArrayList<ProductDTO> getLaptopTop30() {
+
+        ArrayList<ProductDTO> list = new ArrayList<>();
+
+        try {
+            Connection con = DbUtil.getConnection();
+            String sql = "SELECT * FROM products WHERE new_price > 30000000";
+            PreparedStatement ps = con.prepareStatement(sql);
+
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+
+                ProductDTO l = new ProductDTO(
+                        rs.getInt("id"),
+                        rs.getInt("category_id"),
+                        rs.getString("name"),
+                        rs.getString("cpu"),
+                        rs.getString("gpu"),
+                        rs.getString("ram"),
+                        rs.getString("ssd"),
+                        rs.getString("screen"),
+                        rs.getString("refresh_rate"),
+                        rs.getFloat("old_price"),
+                        rs.getFloat("new_price"),
+                        rs.getInt("stock"),
+                        rs.getString("description"),
+                        rs.getString("image"),
+                        rs.getBoolean("status"));
+
+                list.add(l);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return list;
+    }
+
+    public ArrayList<ProductDTO> getDealMouse() {
+
+        ArrayList<ProductDTO> list = new ArrayList<>();
+
+        try {
+            Connection conn = DbUtil.getConnection();
+
+            String sql = "SELECT TOP 12 * FROM products "
+                    + "WHERE category_id = 7 "
+                    + "AND new_price < 1000000 "
+                    + "AND name NOT LIKE N'%Chuột văn phòng%' "
+                    + "ORDER BY new_price ASC";
+
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+
+                float oldPrice = rs.getFloat("old_price");   // lấy giá cũ
+
+                double newPrice = oldPrice * 0.8;            // giảm 20% cho Deal hời
+
+                ProductDTO p = new ProductDTO(
+                        rs.getInt("id"),
+                        rs.getInt("category_id"),
+                        rs.getString("name"),
+                        rs.getString("cpu"),
+                        rs.getString("gpu"),
+                        rs.getString("ram"),
+                        rs.getString("ssd"),
+                        rs.getString("screen"),
+                        rs.getString("refresh_rate"),
+                        oldPrice, // giá cũ
+                        (float) newPrice, // giá mới sau khi giảm
+                        rs.getInt("stock"),
+                        rs.getString("description"),
+                        rs.getString("image"),
+                        rs.getBoolean("status")
+                );
+
+                list.add(p);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return list;
+    }
+
+    public ArrayList<ProductDTO> getGamingMouse() {
+
+        ArrayList<ProductDTO> list = new ArrayList<>();
+
+        try {
+            Connection conn = DbUtil.getConnection();
+
+            String sql = "SELECT TOP 12 * FROM products "
+                    + "WHERE category_id = 7 AND new_price > 1000000 "
+                    + "ORDER BY new_price ASC";
+
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+
+                float oldPrice = rs.getFloat("old_price");
+                double newPrice = oldPrice * 0.95;   // giảm 5%
+
+                ProductDTO p = new ProductDTO(
+                        rs.getInt("id"),
+                        rs.getInt("category_id"),
+                        rs.getString("name"),
+                        rs.getString("cpu"),
+                        rs.getString("gpu"),
+                        rs.getString("ram"),
+                        rs.getString("ssd"),
+                        rs.getString("screen"),
+                        rs.getString("refresh_rate"),
+                        oldPrice,
+                        (float) newPrice,
+                        rs.getInt("stock"),
+                        rs.getString("description"),
+                        rs.getString("image"),
+                        rs.getBoolean("status")
+                );
+
+                list.add(p);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return list;
+    }
+
+    public ArrayList<ProductDTO> getOfficeMouse() {
+
+        ArrayList<ProductDTO> list = new ArrayList<>();
+
+        try {
+            Connection conn = DbUtil.getConnection();
+
+            String sql = "SELECT TOP 12 * FROM products "
+                    + "WHERE category_id = 7 "
+                    + "AND name LIKE N'%Chuột văn phòng%' "
+                    + "ORDER BY new_price ASC";
+
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+
+                float oldPrice = rs.getFloat("old_price");
+                double newPrice = oldPrice * 0.98;   // giảm 2%
+
+                ProductDTO p = new ProductDTO(
+                        rs.getInt("id"),
+                        rs.getInt("category_id"),
+                        rs.getString("name"),
+                        rs.getString("cpu"),
+                        rs.getString("gpu"),
+                        rs.getString("ram"),
+                        rs.getString("ssd"),
+                        rs.getString("screen"),
+                        rs.getString("refresh_rate"),
+                        oldPrice,
+                        (float) newPrice,
+                        rs.getInt("stock"),
+                        rs.getString("description"),
+                        rs.getString("image"),
+                        rs.getBoolean("status")
+                );
+
+                list.add(p);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return list;
+    }
+
 }
