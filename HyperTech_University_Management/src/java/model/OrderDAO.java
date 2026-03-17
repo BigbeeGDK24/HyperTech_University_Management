@@ -15,21 +15,19 @@ public class OrderDAO {
 
         String sql = "INSERT INTO orders(email, total_price, status) VALUES (?, ?, ?)";
 
-        try (Connection conn = DbUtil.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
+        try ( Connection conn = DbUtil.getConnection();  PreparedStatement ps = conn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
 
-            ps.setString(1, order.getUserID());
+            // 🔥 FIX: userID -> email
+            ps.setString(1, order.getEmail());
             ps.setDouble(2, order.getTotalPrice());
             ps.setString(3, order.getStatus());
 
             int rows = ps.executeUpdate();
 
             if (rows > 0) {
-
                 ResultSet rs = ps.getGeneratedKeys();
-
                 if (rs.next()) {
-                    return rs.getInt(1); // ID của order vừa tạo
+                    return rs.getInt(1);
                 }
             }
 
@@ -49,9 +47,7 @@ public class OrderDAO {
 
         String sql = "SELECT * FROM orders ORDER BY created_at DESC";
 
-        try (Connection conn = DbUtil.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
+        try ( Connection conn = DbUtil.getConnection();  PreparedStatement ps = conn.prepareStatement(sql);  ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {
                 list.add(extractOrder(rs));
@@ -71,8 +67,7 @@ public class OrderDAO {
 
         String sql = "SELECT * FROM orders WHERE id=?";
 
-        try (Connection conn = DbUtil.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+        try ( Connection conn = DbUtil.getConnection();  PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setInt(1, id);
 
@@ -98,8 +93,7 @@ public class OrderDAO {
 
         String sql = "SELECT * FROM orders WHERE email=? ORDER BY created_at DESC";
 
-        try (Connection conn = DbUtil.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+        try ( Connection conn = DbUtil.getConnection();  PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setString(1, email);
 
@@ -131,8 +125,7 @@ public class OrderDAO {
 
         String sql = "SELECT * FROM orders WHERE " + column + " = ?";
 
-        try (Connection conn = DbUtil.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+        try ( Connection conn = DbUtil.getConnection();  PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setString(1, value);
 
@@ -156,10 +149,10 @@ public class OrderDAO {
 
         String sql = "UPDATE orders SET email=?, total_price=?, status=? WHERE id=?";
 
-        try (Connection conn = DbUtil.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+        try ( Connection conn = DbUtil.getConnection();  PreparedStatement ps = conn.prepareStatement(sql)) {
 
-            ps.setString(1, order.getUserID());
+            // 🔥 FIX
+            ps.setString(1, order.getEmail());
             ps.setDouble(2, order.getTotalPrice());
             ps.setString(3, order.getStatus());
             ps.setInt(4, order.getId());
@@ -180,8 +173,7 @@ public class OrderDAO {
 
         String sql = "UPDATE orders SET status=? WHERE id=?";
 
-        try (Connection conn = DbUtil.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+        try ( Connection conn = DbUtil.getConnection();  PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setString(1, status);
             ps.setInt(2, id);
@@ -202,8 +194,7 @@ public class OrderDAO {
 
         String sql = "DELETE FROM orders WHERE id=?";
 
-        try (Connection conn = DbUtil.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+        try ( Connection conn = DbUtil.getConnection();  PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setInt(1, id);
 
@@ -225,9 +216,7 @@ public class OrderDAO {
 
         String sql = "SELECT SUM(total_price) AS total FROM orders WHERE status='completed'";
 
-        try (Connection conn = DbUtil.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
+        try ( Connection conn = DbUtil.getConnection();  PreparedStatement ps = conn.prepareStatement(sql);  ResultSet rs = ps.executeQuery()) {
 
             if (rs.next()) {
                 total = rs.getDouble("total");
@@ -249,9 +238,7 @@ public class OrderDAO {
 
         String sql = "SELECT COUNT(*) AS total FROM orders";
 
-        try (Connection conn = DbUtil.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
+        try ( Connection conn = DbUtil.getConnection();  PreparedStatement ps = conn.prepareStatement(sql);  ResultSet rs = ps.executeQuery()) {
 
             if (rs.next()) {
                 count = rs.getInt("total");
@@ -277,5 +264,4 @@ public class OrderDAO {
                 rs.getTimestamp("created_at")
         );
     }
-
 }

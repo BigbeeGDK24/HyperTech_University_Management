@@ -70,7 +70,6 @@
             }
 
             .price{
-                color:#e53935;
                 font-weight:700;
             }
 
@@ -120,7 +119,25 @@
             }
 
             /* ===== EMPTY CART ANIMATION ===== */
+            .discount-badge{
+                background:#ff424e;
+                color:white;
+                font-size:12px;
+                padding:3px 8px;
+                border-radius:6px;
+                margin-left:6px;
+            }
 
+            .old-price{
+                text-decoration:line-through;
+                color:#999;
+                font-size:13px;
+            }
+
+            .new-price{
+                color:#e53935;
+                font-weight:700;
+            }
             .empty-cart-box{
                 text-align:center;
                 padding:60px;
@@ -198,7 +215,7 @@
 
                         for (ProductDTO p : cart.getCart().values()) {
 
-                            double itemTotal = p.getNew_price() * p.getQuantity();
+                            double itemTotal = p.getFinalPrice() * p.getQuantity();
 
                             total += itemTotal;
 
@@ -208,12 +225,37 @@
 
                     <td class="product-name">
                         <%=p.getName()%>
+
+                        <% if (p.getDiscountPercent() > 0) {%>
+                        <span class="discount-badge">
+                            -<%=p.getDiscountPercent()%>%
+                        </span>
+                        <% }%>
                     </td>
 
                     <td class="price">
-                        <%=String.format("%,.0f", p.getNew_price())%> ₫
-                    </td>
 
+                        <% if (p.getDiscountPercent() > 0) {%>
+
+                        <div class="old-price">
+                            <%= String.format("%,.0f đ", p.getOld_price())%>
+                        </div>
+
+                        <div class="new-price">
+                            <%= String.format("%,.0f đ", p.getNew_price())%>
+                        </div>
+
+                        <span class="discount-badge">
+                            -<%=p.getDiscountPercent()%>%
+                        </span>
+
+                        <% } else {%>
+
+                        <%= String.format("%,.0f đ", p.getNew_price())%>
+
+                        <% }%>
+
+                    </td>
                     <td>
 
                         <input type="number"
@@ -222,12 +264,12 @@
                                class="form-control quantity"
                                style="width:90px"
                                data-id="<%=p.getId()%>"
-                               data-price="<%=p.getNew_price()%>">
+                               data-price="<%= p.getFinalPrice()%>">
 
                     </td>
 
                     <td class="item-total">
-                        <%=String.format("%,.0f", itemTotal)%> ₫
+                        <%= String.format("%,.0f ₫", itemTotal)%>
                     </td>
 
                     <td>

@@ -5,7 +5,7 @@ import java.sql.Timestamp;
 public class OrderDTO {
 
     private int id;
-    private String userID;
+    private String email;        // 🔥 đổi từ userID -> email
     private double totalPrice;
     private String status;
     private Timestamp createdAt;
@@ -13,9 +13,9 @@ public class OrderDTO {
     public OrderDTO() {
     }
 
-    public OrderDTO(int id, String userID, double totalPrice, String status, Timestamp createdAt) {
+    public OrderDTO(int id, String email, double totalPrice, String status, Timestamp createdAt) {
         this.id = id;
-        this.userID = userID;
+        this.email = email;
         this.totalPrice = totalPrice;
         this.status = status;
         this.createdAt = createdAt;
@@ -29,12 +29,12 @@ public class OrderDTO {
         this.id = id;
     }
 
-    public String getUserID() {
-        return userID;
+    public String getEmail() {
+        return email;
     }
 
-    public void setUserID(String userID) {
-        this.userID = userID;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public double getTotalPrice() {
@@ -60,7 +60,4 @@ public class OrderDTO {
     public void setCreatedAt(Timestamp createdAt) {
         this.createdAt = createdAt;
     }
-
-    
-
 }
