@@ -20,6 +20,7 @@ public class ProductDTO {
 
     // dùng cho cart
     private int quantity = 1;
+    private int discountPercent = 0;
 
     public ProductDTO() {
     }
@@ -170,5 +171,21 @@ public class ProductDTO {
         this.quantity = quantity;
     }
 
-    
+    // SETTER (đã đúng)
+    public void setDiscountPercent(int discountPercent) {
+        this.discountPercent = discountPercent;
+    }
+
+// FIX 1: getter phải trả về DB
+    public int getDiscountPercent() {
+        return discountPercent;
+    }
+
+// FIX 2: tính giá sau discount
+    public float getFinalPrice() {
+        if (discountPercent > 0) {
+            return old_price * (100 - discountPercent) / 100;
+        }
+        return new_price;
+    }
 }

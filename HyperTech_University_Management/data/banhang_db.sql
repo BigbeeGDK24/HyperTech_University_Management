@@ -384,3 +384,25 @@ VALUES
 INSERT INTO products (category_id, name, old_price, new_price, image)
 VALUES
 (7, N'Chuột văn phòng MonsGeek D1 Black', 299000, 150000, 'm36.png');
+-- ================= ADD DISCOUNT (FIX CHUẨN) =================
+
+-- 1. FIX GIÁ TRƯỚC
+UPDATE products
+SET new_price = old_price * 0.95
+WHERE new_price >= old_price;
+
+-- 2. XÓA DISCOUNT CŨ (đúng thứ tự FK)
+DELETE FROM product_discounts;
+DELETE FROM discounts;
+
+-- 3. INSERT DISCOUNT
+INSERT INTO discounts (name, discount_percent, start_date, end_date)
+VALUES (N'Sale toàn shop 5%', 5, GETDATE()-1, GETDATE()+30);
+
+-- 4. LẤY ID AN TOÀN
+DECLARE @discountId INT;
+SELECT @discountId = MAX(id) FROM discounts;
+
+-- 5. GÁN CHO TOÀN BỘ PRODUCT
+INSERT INTO product_discounts (product_id, discount_id)
+SELECT id, @discountId FROM products;
