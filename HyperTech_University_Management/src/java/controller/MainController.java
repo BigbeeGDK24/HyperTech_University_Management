@@ -37,11 +37,23 @@ public class MainController extends HttpServlet {
 
         if (action == null) {
             url = "index.jsp";
-        } else if (action.equals("login") || action.equals("logout")) {
+        } else if (action.equals("login") || action.equals("Adminlogout")) {
             url = "AdminController";
-            
+        } else if (action.equals("Userlogout")) {
+            url = "UserController";  
         } else if (action.equals("addUser")) {
             url = "UserController";
+            //======== PRODUCT  ===================
+            } else if (action.equals("searchLaptop")
+                || action.equals("searchVGA")
+                || action.equals("searchCase")
+                || action.equals("searchRAM")
+                || action.equals("searchBanPhim")
+                || action.equals("searchProduct")
+                || action.equals("searchManHinh")) {
+
+            url = "ProductController";
+            
             // ================= CART =================
         } else if (action.equals("viewCart")
                 || action.equals("AddCart")

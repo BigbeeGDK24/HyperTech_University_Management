@@ -48,7 +48,7 @@ public class UserController extends HttpServlet {
             session.invalidate();
         }
 
-        response.sendRedirect("login.jsp");
+        response.sendRedirect("index.jsp");
     }
 
     // ================= DELETE USER =================
@@ -263,7 +263,7 @@ public class UserController extends HttpServlet {
                 doLogin(request, response);
                 break;
 
-            case "logout":
+            case "Userlogout":
                 doLogout(request, response);
                 break;
 

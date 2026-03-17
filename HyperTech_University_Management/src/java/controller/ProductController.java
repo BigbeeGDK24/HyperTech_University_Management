@@ -1,13 +1,13 @@
 package controller;
 
 import java.io.IOException;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+
 import java.util.ArrayList;
 import javax.servlet.ServletException;
 import javax.servlet.http.*;
-import model.LaptopDAO;
-import model.LaptopDTO;
+import model.DiscountDAO;
+import model.DiscountDTO;
+
 import model.ProductDAO;
 import model.ProductDTO;
 
@@ -22,10 +22,6 @@ public class ProductController extends HttpServlet {
         return request.getSession().getAttribute("user") != null;
     }
 
-    private boolean isLoggedIn(HttpServletRequest request) {
-        return isAdmin(request) || isUser(request);
-    }
-
     // ================= MAIN PROCESS =================
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -35,7 +31,8 @@ public class ProductController extends HttpServlet {
 
         String action = request.getParameter("action");
         if (action == null) {
-            action = "searchProduct";
+            request.getRequestDispatcher("product.jsp").forward(request, response);
+            return;
         }
 
         switch (action) {
@@ -45,6 +42,9 @@ public class ProductController extends HttpServlet {
                 doSearch(request, response);
                 break;
 
+            case "searchByAd":
+                doSearchAdmin(request, response);
+                break;
             case "viewProduct":
                 doView(request, response);
                 break;
@@ -92,6 +92,50 @@ public class ProductController extends HttpServlet {
     }
 
     // ================= SEARCH =================
+    // ================= SEARCH =================
+// ================= SEARCH =================
+private void doSearchAdmin(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException {
+
+    String keywords = request.getParameter("keywords");
+    String category = request.getParameter("category");
+
+    ProductDAO dao = new ProductDAO();
+    ArrayList<ProductDTO> list;
+
+    // chuẩn hóa
+    if (keywords == null) keywords = "";
+    keywords = keywords.trim();
+
+    // ===== SEARCH LOGIC =====
+    if (keywords.isEmpty() && (category == null || category.isEmpty())) {
+        list = dao.getAll();
+    } else if (category != null && !category.isEmpty() && !keywords.isEmpty()) {
+        int category_id = Integer.parseInt(category);
+        list = dao.searchByNamepro(keywords, category_id);
+    } else if (category != null && !category.isEmpty()) {
+        int category_id = Integer.parseInt(category);
+        list = dao.getByCategory(category_id);
+    } else {
+        list = dao.searchByName(keywords);
+    }
+
+    // ===== LOGIC HIỂN THỊ CỘT =====
+    boolean isLaptop = false;
+
+    if (category != null && !category.isEmpty()) {
+        isLaptop = category.equals("1");
+    } else if (list != null && !list.isEmpty()) {
+        // auto detect nếu không chọn category
+        isLaptop = list.get(0).getCpu() != null;
+    }
+
+    request.setAttribute("list", list);
+    request.setAttribute("isLaptop", isLaptop);
+
+    request.getRequestDispatcher("product.jsp").forward(request, response);
+}
+
     private void doSearch(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
@@ -283,12 +327,12 @@ public class ProductController extends HttpServlet {
             ArrayList<ProductDTO> list = dao.getAllLaptop();
             ArrayList<ProductDTO> listUnder25 = dao.getLaptopUnder25();
             ArrayList<ProductDTO> listUnder30 = dao.getLaptopUnder30();
-            ArrayList<ProductDTO> listTop30 = dao.getLaptopTop30();
+            ArrayList<ProductDTO> listHigher30 = dao.getLaptopHigher30();
 
             request.setAttribute("list", list);
             request.setAttribute("listUnder25", listUnder25);
             request.setAttribute("listUnder30", listUnder30);
-            request.setAttribute("listTop30", listTop30);
+            request.setAttribute("listTop30", listHigher30);
 
             request.getRequestDispatcher("BestSeller.jsp").forward(request, response);
         }

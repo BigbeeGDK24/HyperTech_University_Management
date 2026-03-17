@@ -1,51 +1,119 @@
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>Quản Lý Sản Phẩm</title>
-        <link rel="stylesheet" href="css/product.css">
-    </head>
+<br><br><br>
 
-    <body>
+<h2>QUẢN LÝ SẢN PHẨM</h2>
 
-        <div class="product-container">
+<!-- ===== SEARCH + ADD ===== -->
+<div style="display:flex; justify-content:space-between; margin-bottom:15px;">
 
-            <h1>Quản Lý Sản Phẩm</h1>
+    <form action="ProductController" method="get">
 
-            <div class="category-grid">
+        <input type="hidden" name="action" value="searchByAd"/>
 
-                <a href="${pageContext.request.contextPath}/laptop.jsp">
-                    <div class="category-card">Laptop</div>
-                </a>
+        <input type="text" name="keywords"
+               value="${param.keywords}"
+               placeholder="Tìm sản phẩm...">
 
-                <a href="${pageContext.request.contextPath}/vga.jsp">
-                    <div class="category-card">VGA</div>
-                </a>
+        <select name="category">
+            <option value="">Tất cả</option>
+            <option value="1" ${param.category eq '1' ? 'selected' : ''}>Laptop</option>
+            <option value="7" ${param.category eq '7' ? 'selected' : ''}>Mouse</option>
+        </select>
 
-                <a href="${pageContext.request.contextPath}/case.jsp">
-                    <div class="category-card">Case</div>
-                </a>
+        <button type="submit">Tìm</button>
+    </form>
 
-                <a href="${pageContext.request.contextPath}/ram.jsp">
-                    <div class="category-card">RAM</div>
-                </a>
+    <button onclick="openForm()">+ Thêm</button>
 
-                <a href="${pageContext.request.contextPath}/monitor.jsp">
-                    <div class="category-card">Màn hình</div>
-                </a>
+</div>
 
-                <a href="${pageContext.request.contextPath}/keyboard.jsp">
-                    <div class="category-card">Bàn phím</div>
-                </a>
+<!-- ===== TABLE ===== -->
+<c:if test="${not empty list}">
 
-                <a href="${pageContext.request.contextPath}/mouse.jsp">
-                    <div class="category-card">Chuột</div>
-                </a>
+    <table border="1" width="100%" cellpadding="10">
+        <tr>
+            <th>ID</th>
+            <th>Tên</th>
 
-            </div>
+            <c:if test="${isLaptop}">
+                <th>CPU</th>
+                <th>GPU</th>
+                <th>SSD</th>
+                <th>Màn hình</th>
+                <th>Hz</th>
+            </c:if>
 
-        </div>
+            <th>RAM</th>
+            <th>Giá</th>
+            <th>Hành động</th>
+        </tr>
 
-    </body>
-</html>
+        <c:forEach var="p" items="${list}">
+            <tr>
+                <td>${p.id}</td>
+                <td>${p.name}</td>
+
+                <c:if test="${isLaptop}">
+                    <td>${p.cpu}</td>
+                    <td>${p.gpu}</td>
+                    <td>${p.ssd}</td>
+                    <td>${p.screen}</td>
+                    <td>${p.refresh_rate}</td>
+                </c:if>
+
+                <td>${p.ram}</td>
+                <td>${p.new_price}</td>
+
+                <td>
+                    <button type="button"
+                        onclick="editProduct(
+                            '${p.id}',
+                            '${p.name}',
+                            '${p.cpu}',
+                            '${p.gpu}',
+                            '${p.ram}',
+                            '${p.ssd}',
+                            '${p.old_price}',
+                            '${p.new_price}',
+                            '${p.image}'
+                        )">
+                        Update
+                    </button>
+
+                    <form action="ProductController" method="post" style="display:inline;">
+                        <input type="hidden" name="id" value="${p.id}">
+                        <button type="submit" name="action" value="deleteLaptop">
+                            Delete
+                        </button>
+                    </form>
+                </td>
+            </tr>
+        </c:forEach>
+
+    </table>
+
+</c:if>
+
+
+<!-- ===== SCRIPT ===== -->
+<script>
+    function openForm() {
+        document.getElementById("productForm").style.display = "block";
+    }
+
+    function editProduct(id, name, cpu, gpu, ram, ssd, old_price, new_price, image) {
+        openForm();
+
+        document.getElementById("id").value = id;
+        document.getElementById("name").value = name;
+        document.getElementById("cpu").value = cpu;
+        document.getElementById("gpu").value = gpu;
+        document.getElementById("ram").value = ram;
+        document.getElementById("ssd").value = ssd;
+        document.getElementById("old_price").value = old_price;
+        document.getElementById("new_price").value = new_price;
+        document.getElementById("image_url").value = image;
+    }
+</script>

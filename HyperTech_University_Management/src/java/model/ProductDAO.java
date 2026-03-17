@@ -8,12 +8,9 @@ import util.DbUtil;
 
 public class ProductDAO {
 
-    // =====================================================
-    // 1. LẤY TẤT CẢ SẢN PHẨM ĐANG HOẠT ĐỘNG
-    // =====================================================
     public ArrayList<ProductDTO> getAll() {
         ArrayList<ProductDTO> list = new ArrayList<>();
-        String sql = "SELECT * FROM products WHERE status = 1";
+        String sql = "SELECT * FROM products";
 
         try ( Connection con = DbUtil.getConnection();  PreparedStatement ps = con.prepareStatement(sql);  ResultSet rs = ps.executeQuery()) {
 
@@ -28,9 +25,6 @@ public class ProductDAO {
         return list;
     }
 
-    // =====================================================
-    // 2. LẤY THEO ID
-    // =====================================================
     public ProductDTO getById(int id) {
         String sql = "SELECT * FROM products WHERE id = ?";
 
@@ -50,9 +44,6 @@ public class ProductDAO {
         return null;
     }
 
-    // =====================================================
-    // 3. SEARCH THEO TÊN (CHỈ LẤY SẢN PHẨM ACTIVE)
-    // =====================================================
     public ArrayList<ProductDTO> searchByName(String name) {
         ArrayList<ProductDTO> list = new ArrayList<>();
         String sql = "SELECT * FROM products WHERE name LIKE ? AND status = 1";
@@ -73,9 +64,29 @@ public class ProductDAO {
         return list;
     }
 
-    // =====================================================
-    // 4. THÊM SẢN PHẨM
-    // =====================================================
+    public ArrayList<ProductDTO> searchByNamepro(String name, int category_id) {
+    ArrayList<ProductDTO> list = new ArrayList<>();
+
+    String sql = "SELECT * FROM products WHERE name LIKE ? AND category_id = ?";
+
+    try (Connection con = DbUtil.getConnection();
+         PreparedStatement ps = con.prepareStatement(sql)) {
+
+        ps.setString(1, "%" + name + "%");
+        ps.setInt(2, category_id);
+        ResultSet rs = ps.executeQuery();
+
+        while (rs.next()) {
+            list.add(extractProduct(rs));
+        }
+
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+
+    return list;
+}
+
     public boolean add(ProductDTO p) {
 
         String sqlLaptop = "INSERT INTO products "
@@ -132,9 +143,6 @@ public class ProductDAO {
         return false;
     }
 
-    // =====================================================
-    // 5. UPDATE
-    // =====================================================
     public boolean update(ProductDTO p) {
 
         String sqlLaptop = "UPDATE products SET "
@@ -195,10 +203,7 @@ public class ProductDAO {
 
         return false;
     }
-
-    // =====================================================
-    // 6. DELETE MỀM (SOFT DELETE)
-    // =====================================================
+    
     public boolean delete(int id) {
         String sql = "UPDATE products SET status = 0 WHERE id = ?";
 
@@ -214,9 +219,6 @@ public class ProductDAO {
         return false;
     }
 
-    // =====================================================
-    // 7. ĐẾM SỐ SẢN PHẨM ACTIVE
-    // =====================================================
     public int countProducts() {
         String sql = "SELECT COUNT(*) FROM products WHERE status = 1";
 
@@ -458,7 +460,9 @@ public class ProductDAO {
 
         try {
             Connection con = DbUtil.getConnection();
-            String sql = "SELECT * FROM products WHERE new_price <= 25000000";
+            String sql = "SELECT * FROM products "
+                    + "WHERE new_price <= 25000000 "
+                    + "AND category_id = 1 ";
             PreparedStatement ps = con.prepareStatement(sql);
 
             ResultSet rs = ps.executeQuery();
@@ -498,7 +502,9 @@ public class ProductDAO {
 
         try {
             Connection con = DbUtil.getConnection();
-            String sql = "SELECT * FROM products WHERE new_price > 25000000 AND new_price <= 30000000";
+            String sql = "SELECT * FROM products "
+                    + "WHERE new_price > 25000000 AND new_price <= 30000000 "
+                    + "AND category_id = 1 ";
             PreparedStatement ps = con.prepareStatement(sql);
 
             ResultSet rs = ps.executeQuery();
@@ -532,13 +538,15 @@ public class ProductDAO {
         return list;
     }
 
-    public ArrayList<ProductDTO> getLaptopTop30() {
+    public ArrayList<ProductDTO> getLaptopHigher30() {
 
         ArrayList<ProductDTO> list = new ArrayList<>();
 
         try {
             Connection con = DbUtil.getConnection();
-            String sql = "SELECT * FROM products WHERE new_price > 30000000";
+            String sql = "SELECT * FROM products "
+                    + "WHERE new_price > 30000000 "
+                    + "AND category_id = 1 ";
             PreparedStatement ps = con.prepareStatement(sql);
 
             ResultSet rs = ps.executeQuery();
