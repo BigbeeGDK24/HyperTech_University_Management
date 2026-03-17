@@ -87,7 +87,7 @@ public class CartController extends HttpServlet {
 
         for (CartDTO item : list) {
 
-            ProductDTO product = productDAO.getById(item.getProductId());
+            ProductDTO product = productDAO.getByIdWithDiscount(item.getProductId());
 
             if (product != null) {
 
@@ -119,7 +119,7 @@ public class CartController extends HttpServlet {
         }
 
         ProductDAO productDAO = new ProductDAO();
-        ProductDTO product = productDAO.getById(productId);
+        ProductDTO product = productDAO.getByIdWithDiscount(productId);
 
         if (product == null) {
             response.sendRedirect("index.jsp");
@@ -219,8 +219,11 @@ public class CartController extends HttpServlet {
         }
 
         CartDAO dao = new CartDAO();
-
         dao.clearCart(email);
+
+        // 🔥 QUAN TRỌNG: XÓA SESSION
+        HttpSession session = request.getSession();
+        session.removeAttribute("CART");
 
         response.setStatus(HttpServletResponse.SC_OK);
     }

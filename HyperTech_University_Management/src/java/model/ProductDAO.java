@@ -233,11 +233,94 @@ public class ProductDAO {
         return 0;
     }
 
+    public ArrayList<ProductDTO> getAllWithDiscount() {
+
+        ArrayList<ProductDTO> list = new ArrayList<>();
+
+        String sql = "SELECT p.*, d.discount_percent "
+                + "FROM products p "
+                + "LEFT JOIN product_discounts pd ON p.id = pd.product_id "
+                + "LEFT JOIN discounts d ON pd.discount_id = d.id "
+                + "AND GETDATE() BETWEEN d.start_date AND d.end_date "
+                + "WHERE p.status = 1";
+
+        try ( Connection con = DbUtil.getConnection();  PreparedStatement ps = con.prepareStatement(sql);  ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                list.add(extractProduct(rs));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return list;
+    }
+
+    //discount 
+    public ProductDTO getByIdWithDiscount(int id) {
+        ProductDTO p = null;
+
+        try {
+            Connection con = DbUtil.getConnection();
+
+            String sql = "SELECT p.*, d.discount_percent "
+                    + "FROM products p "
+                    + "LEFT JOIN product_discounts pd ON p.id = pd.product_id "
+                    + "LEFT JOIN discounts d ON pd.discount_id = d.id "
+                    + "WHERE p.id = ? "
+                    + "AND (d.start_date IS NULL OR GETDATE() BETWEEN d.start_date AND d.end_date)";
+
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setInt(1, id);
+
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+
+                p = new ProductDTO(
+                        rs.getInt("id"),
+                        rs.getInt("category_id"),
+                        rs.getString("name"),
+                        rs.getString("cpu"),
+                        rs.getString("gpu"),
+                        rs.getString("ram"),
+                        rs.getString("ssd"),
+                        rs.getString("screen"),
+                        rs.getString("refresh_rate"),
+                        rs.getFloat("old_price"),
+                        rs.getFloat("new_price"),
+                        rs.getInt("stock"),
+                        rs.getString("description"),
+                        rs.getString("image"),
+                        rs.getBoolean("status")
+                );
+
+                // 🔥 FIX NULL DISCOUNT
+                Integer discount = (Integer) rs.getObject("discount_percent");
+
+                if (discount == null) {
+                    discount = 0;
+                }
+
+                p.setDiscountPercent(discount);
+
+                System.out.println("DEBUG discount = " + discount);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return p;
+    }
+
     // =====================================================
     // HÀM HỖ TRỢ
     // =====================================================
     private ProductDTO extractProduct(ResultSet rs) throws Exception {
-        return new ProductDTO(
+
+        ProductDTO p = new ProductDTO(
                 rs.getInt("id"),
                 rs.getInt("category_id"),
                 rs.getString("name"),
@@ -254,6 +337,9 @@ public class ProductDAO {
                 rs.getString("image"),
                 rs.getBoolean("status")
         );
+
+        // ===== THÊM ĐOẠN NÀY =====
+        return p;
     }
 
     public ArrayList<ProductDTO> getByCategory(int category_id) {
