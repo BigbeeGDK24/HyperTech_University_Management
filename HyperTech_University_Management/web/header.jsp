@@ -23,7 +23,6 @@
         <input type="text" placeholder="Bạn cần tìm gì?">
         <button><i class="fa-solid fa-magnifying-glass"></i></button>
     </div>
-
     <div class="header-right">
         <a href="#" class="item">
             <i class="fa-solid fa-headset"></i>
@@ -65,8 +64,16 @@
                 if (user != null) {
             %>
 
-            <div>
+            <div id="userMenu" style="cursor:pointer;">
                 <%= ((model.UserDTO) user).getUsername()%>
+            </div>
+            <div id="dropdownMenu" style="display:none; position:absolute; top:30px; right:0; background:#eee; padding:10px;">
+                <form action="MainController" method="post">
+                    <input type="hidden" name="action" value="Userlogout">
+                    <button type="submit" style="border:none; background:none; cursor:pointer;">
+                        Đăng xuất
+                    </button>
+                </form>
             </div>
 
             <%
@@ -134,7 +141,7 @@
                     <a href="ProductController?action=list">
                         <img class="banner-small" src="images/laptopgaming.jpg">
                     </a>
-                    <a href="ProductController?action=searchProduct&category=2">
+                    <a href="MainController?action=searchProduct&category=2">
                         <img class="banner-small" src="images/chuotgaming.jpg">
                     </a>
                 </div>
@@ -177,31 +184,25 @@
 <script>
     window.addEventListener("load", function () {
 
-        const banner = document.querySelector(".fixed-rtx");
-        const topBanner = document.querySelector(".top-banner");
-        const mainHeader = document.querySelector(".main-header");
-        const subMenu = document.querySelector(".sub-menu");
-
-        const spacing = 60;
-
-        // Tính vị trí ban đầu
-        const baseTop =
-                topBanner.offsetHeight +
-                mainHeader.offsetHeight +
-                subMenu.offsetHeight +
-                spacing;
-
-        // Set vị trí ban đầu
-        banner.style.top = baseTop + "px";
-
-        // Scroll effect
-        window.addEventListener("scroll", function () {
-            const offset = window.scrollY * 0.2;  // tốc độ trôi
-            banner.style.top = (baseTop + offset) + "px";
-        });
-
+    const banner = document.querySelector(".fixed-rtx");
+    const topBanner = document.querySelector(".top-banner");
+    const mainHeader = document.querySelector(".main-header");
+    const subMenu = document.querySelector(".sub-menu");
+    const spacing = 60;
+    // Tính vị trí ban đầu
+    const baseTop =
+            topBanner.offsetHeight +
+            mainHeader.offsetHeight +
+            subMenu.offsetHeight +
+            spacing;
+    // Set vị trí ban đầu
+    banner.style.top = baseTop + "px";
+    // Scroll effect
+    window.addEventListener("scroll", function () {
+    const offset = window.scrollY * 0.2; // tốc độ trôi
+    banner.style.top = (baseTop + offset) + "px";
     });
-</script>
+    });</script>
 
 <div class="login-modal" id="loginModal">
     <div class="login-box">
@@ -324,59 +325,73 @@
 </div>
 
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", function () {
 
-        const loginModal = document.getElementById("loginModal");
-        const registerModal = document.getElementById("registerModal");
+    // ===== LOGIN / REGISTER =====
+    const loginModal = document.getElementById("loginModal");
+    const registerModal = document.getElementById("registerModal");
 
-        const openLoginBtn = document.getElementById("openLoginBtn");
-        const closeModal = document.getElementById("closeModal");
+    const openLoginBtn = document.getElementById("openLoginBtn");
+    const closeModal = document.getElementById("closeModal");
 
-        const openRegister = document.getElementById("openRegister");
-        const switchToLogin = document.getElementById("switchToLogin");
-        const closeRegister = document.getElementById("closeRegister");
+    const openRegister = document.getElementById("openRegister");
+    const switchToLogin = document.getElementById("switchToLogin");
+    const closeRegister = document.getElementById("closeRegister");
 
-        // mở bảng đăng nhập
-        if (openLoginBtn) {
-            openLoginBtn.addEventListener("click", function (e) {
-                e.preventDefault();
-                loginModal.classList.add("show");
-            });
-        }
+    if (openLoginBtn) {
+        openLoginBtn.addEventListener("click", function (e) {
+            e.preventDefault();
+            loginModal.classList.add("show");
+        });
+    }
 
-        // đóng bảng đăng nhập
-        if (closeModal) {
-            closeModal.addEventListener("click", function () {
-                loginModal.classList.remove("show");
-            });
-        }
+    if (closeModal) {
+        closeModal.addEventListener("click", function () {
+            loginModal.classList.remove("show");
+        });
+    }
 
-        // đăng nhập -> đăng ký
-        if (openRegister) {
-            openRegister.addEventListener("click", function (e) {
-                e.preventDefault();
-                loginModal.classList.remove("show");
-                registerModal.classList.add("show");
-            });
-        }
+    if (openRegister) {
+        openRegister.addEventListener("click", function (e) {
+            e.preventDefault();
+            loginModal.classList.remove("show");
+            registerModal.classList.add("show");
+        });
+    }
 
-        // đăng ký -> đăng nhập
-        if (switchToLogin) {
-            switchToLogin.addEventListener("click", function (e) {
-                e.preventDefault();
-                registerModal.classList.remove("show");
-                loginModal.classList.add("show");
-            });
-        }
+    if (switchToLogin) {
+        switchToLogin.addEventListener("click", function (e) {
+            e.preventDefault();
+            registerModal.classList.remove("show");
+            loginModal.classList.add("show");
+        });
+    }
 
-        // đóng đăng ký
-        if (closeRegister) {
-            closeRegister.addEventListener("click", function () {
-                registerModal.classList.remove("show");
-            });
-        }
+    if (closeRegister) {
+        closeRegister.addEventListener("click", function () {
+            registerModal.classList.remove("show");
+        });
+    }
 
-    });
+    // ===== USER DROPDOWN =====
+    const userMenu = document.getElementById("userMenu");
+    const dropdown = document.getElementById("dropdownMenu");
+
+    if (userMenu && dropdown) {
+        userMenu.addEventListener("click", function (e) {
+            e.stopPropagation();
+            dropdown.style.display =
+                dropdown.style.display === "block" ? "none" : "block";
+        });
+
+        document.addEventListener("click", function (e) {
+            if (!userMenu.contains(e.target) && !dropdown.contains(e.target)) {
+                dropdown.style.display = "none";
+            }
+        });
+    }
+
+});
 </script>
 
 <c:if test="${sessionScope.showLoginModal}">
@@ -384,11 +399,9 @@
 
         document.addEventListener("DOMContentLoaded", function () {
 
-            let toastEl = document.getElementById("loginToast");
-            let toast = new bootstrap.Toast(toastEl);
-
-            toast.show();
-
+        let toastEl = document.getElementById("loginToast");
+        let toast = new bootstrap.Toast(toastEl);
+        toast.show();
         });
 
     </script>
