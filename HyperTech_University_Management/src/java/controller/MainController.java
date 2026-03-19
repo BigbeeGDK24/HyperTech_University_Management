@@ -1,31 +1,15 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
- */
 package controller;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import model.UserDTO;
 
-/**
- *
- * @author ASUS
- */
 public class MainController extends HttpServlet {
 
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
@@ -34,17 +18,21 @@ public class MainController extends HttpServlet {
         String action = request.getParameter("action");
         String url = "index.jsp";
 
-
         if (action == null) {
             url = "index.jsp";
+
+            // ================= LOGIN =================
         } else if (action.equals("login") || action.equals("Adminlogout")) {
             url = "AdminController";
+
         } else if (action.equals("Userlogout")) {
-            url = "UserController";  
+            url = "UserController";
+
         } else if (action.equals("addUser")) {
             url = "UserController";
-            //======== PRODUCT  ===================
-            } else if (action.equals("searchLaptop")
+
+            // ================= PRODUCT =================
+        } else if (action.equals("searchLaptop")
                 || action.equals("searchVGA")
                 || action.equals("searchCase")
                 || action.equals("searchRAM")
@@ -53,7 +41,7 @@ public class MainController extends HttpServlet {
                 || action.equals("searchManHinh")) {
 
             url = "ProductController";
-            
+
             // ================= CART =================
         } else if (action.equals("viewCart")
                 || action.equals("AddCart")
@@ -73,9 +61,40 @@ public class MainController extends HttpServlet {
 
             url = "OrderController";
 
+            // ================= 🔥 CHECKOUT FLOW (FIX CHUẨN) =================
+        } else if (action.equals("checkout")) {
+
+            HttpSession session = request.getSession();
+            UserDTO user = (UserDTO) session.getAttribute("user");
+
+            // ❌ chưa login
+            if (user == null) {
+
+                session.setAttribute("showLoginModal", true);
+                url = "cart.jsp";
+
+            } else {
+
+                // ✔ check thiếu info
+                if (user.getPhone() == null || user.getPhone().isEmpty()
+                        || user.getAddress() == null || user.getAddress().isEmpty()) {
+
+                    url = "information.jsp";
+
+                } else {
+
+                    // ✔ đủ info → set session
+                    session.setAttribute("FULLNAME", user.getUsername());
+                    session.setAttribute("EMAIL", user.getEmail());
+                    session.setAttribute("PHONE", user.getPhone());
+                    session.setAttribute("ADDRESS", user.getAddress());
+
+                    url = "payment.jsp";
+                }
+            }
+
             // ================= PAYMENT =================
-        } else if (action.equals("checkout")
-                || action.equals("searchPayment")
+        } else if (action.equals("searchPayment")
                 || action.equals("viewPayment")
                 || action.equals("viewUserPayments")
                 || action.equals("addPayment")
@@ -84,48 +103,25 @@ public class MainController extends HttpServlet {
                 || action.equals("paymentStatistic")) {
 
             url = "PaymentController";
-
         }
+
         request.getRequestDispatcher(url).forward(request, response);
     }
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /**
-     * Handles the HTTP <code>GET</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
     }
 
-    /**
-     * Handles the HTTP <code>POST</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
     }
 
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
     @Override
     public String getServletInfo() {
-        return "Short description";
-    }// </editor-fold>
-
+        return "Main Controller";
+    }
 }
