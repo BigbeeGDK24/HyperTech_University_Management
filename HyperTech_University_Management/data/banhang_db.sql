@@ -215,6 +215,7 @@ VALUES
 (1,N'Laptop gaming HP VICTUS 15 fb3116AX','R7-7445HS','RTX 3050','16 GB','512 GB','15.6 FHD','144 Hz',25990000,20990000,10,N'HP Victus Ryzen7 RTX3050','l10.png'),
 (1,N'Laptop gaming MSI Katana A15 AI B8VE','R7-8845HS','RTX 4050','16 GB','512 GB','15.6 FHD','144 Hz',28990000,23990000,10,N'MSI Katana RTX4050','l11.png'),
 (1,N'Laptop gaming Lenovo LOQ 15ARP9','R5-7235HS','RTX 3050','16 GB','1 TB','15.6 FHD','144 Hz',24490000,22290000,10,N'Lenovo LOQ RTX3050','l12.png'),
+(1,N'Laptop gaming Acer Predator Helios PHN',N'Ultra 7 255HX', N'RTX 5060', N'32 GB', N'1 TB',N'16 inch 2K+', N'240 Hz',56990000, 56990000,10,'Acer Predator Helios PHN', 'l16.png'),
 (1,N'Laptop gaming Acer Nitro ProPanel ANV15',
 N'R7-7735HS', N'RTX 4050', N'16 GB', N'512 GB',
 N'15.6 inch FHD', N'180 Hz',
@@ -267,7 +268,19 @@ N'Laptop gaming HP OMEN 16-am0178TX BX8Y4PA','l24.png'),
 N'Intel Core Ultra 9 275HX', N'RTX 5080 16GB', N'32 GB', N'1 TB',
 N'18 inch', N'240 Hz',
 88390000,84990000,10,
-N'Laptop gaming ASUS ROG Strix SCAR 18 G835LW SA193W','l25.png');
+N'Laptop gaming ASUS ROG Strix SCAR 18 G835LW SA193W','l25.png'),
+
+(1,N'Laptop gaming Lenovo Legion 5 15AHP10 83M0002XVN',
+N'AMD Ryzen 7 260', N'RTX 5050', N'24 GB', N'512 GB',
+N'15 inch', N'180 Hz',
+39490000,36990000,10,
+N'Laptop gaming Lenovo Legion 5 15AHP10 83M0002XVN','l26.png'),
+
+(1,N'Laptop gaming ASUS ROG Zephyrus G14 GA403WM QS058WS',
+N'AMD Ryzen 9 8945HS', N'RTX 4070', N'32 GB', N'1 TB',
+N'14 inch', N'180 Hz',
+58990000,55990000,10,
+N'Laptop gaming ASUS ROG Zephyrus G14 GA403WM QS058WS','l27.png')
 
 INSERT INTO cart (email,product_id,quantity) VALUES
 ('a@gmail.com',1,1),
@@ -293,9 +306,6 @@ INSERT INTO order_items (order_id,product_id,price,quantity) VALUES
 
 
 
-select * from products
-select * from users
-select * from admins
 
 INSERT INTO products
 (category_id,name,cpu,gpu,ram,ssd,screen,refresh_rate,old_price,new_price,stock,description,image)
@@ -508,3 +518,25 @@ N'Màn hình MSI MAG 274QF X24 27 inch'
 
 select *
 from tb
+-- ================= ADD DISCOUNT (FIX CHUẨN) =================
+
+-- 1. FIX GIÁ TRƯỚC
+UPDATE products
+SET new_price = old_price * 0.95
+WHERE new_price >= old_price;
+
+-- 2. XÓA DISCOUNT CŨ (đúng thứ tự FK)
+DELETE FROM product_discounts;
+DELETE FROM discounts;
+
+-- 3. INSERT DISCOUNT
+INSERT INTO discounts (name, discount_percent, start_date, end_date)
+VALUES (N'Sale toàn shop 5%', 5, GETDATE()-1, GETDATE()+30);
+
+-- 4. LẤY ID AN TOÀN
+DECLARE @discountId INT;
+SELECT @discountId = MAX(id) FROM discounts;
+
+-- 5. GÁN CHO TOÀN BỘ PRODUCT
+INSERT INTO product_discounts (product_id, discount_id)
+SELECT id, @discountId FROM products;

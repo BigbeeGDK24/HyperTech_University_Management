@@ -111,7 +111,6 @@ public class OrderController extends HttpServlet {
             throws IOException {
 
         HttpSession session = request.getSession();
-
         CartDTO cart = (CartDTO) session.getAttribute("CART");
 
         if (cart == null || cart.getCart().isEmpty()) {
@@ -121,17 +120,39 @@ public class OrderController extends HttpServlet {
 
         UserDTO user = (UserDTO) session.getAttribute("user");
 
-        double total = 0;
+        // ===== LẤY THÔNG TIN KHÁCH =====
+        String fullname = request.getParameter("fullname");
+        String email = request.getParameter("email");
+        String phone = request.getParameter("phone");
+        String address = request.getParameter("address");
 
-        for (ProductDTO p : cart.getCart().values()) {
-            total += p.getNew_price()* p.getQuantity();
+        // ===== ƯU TIÊN: FORM → SESSION → USER =====
+        if (email == null || email.isEmpty()) {
+            email = (String) session.getAttribute("EMAIL");
         }
 
+        if (email == null && user != null) {
+            email = user.getEmail();
+        }
+
+        // ===== LƯU LẠI SESSION =====
+        session.setAttribute("FULLNAME", fullname);
+        session.setAttribute("EMAIL", email);
+        session.setAttribute("PHONE", phone);
+        session.setAttribute("ADDRESS", address);
+
+        // ===== TÍNH TOTAL =====
+        double total = 0;
+        for (ProductDTO p : cart.getCart().values()) {
+            total += p.getNew_price() * p.getQuantity();
+        }
+
+        // ===== INSERT ORDER =====
         OrderDAO orderDAO = new OrderDAO();
 
         OrderDTO order = new OrderDTO(
                 0,
-                user.getEmail(),
+                email,
                 total,
                 "pending",
                 null
@@ -154,19 +175,18 @@ public class OrderController extends HttpServlet {
                 );
 
                 itemDAO.insert(item);
-
             }
 
-            session.removeAttribute("CART");
+            // ❌ KHÔNG xóa cart ở đây
+// lưu orderId để hiển thị
+            session.setAttribute("ORDER_ID", orderId);
 
+// 👉 chuyển sang payment
             response.sendRedirect("payment.jsp");
 
         } else {
-
             response.sendRedirect("cart.jsp?error=orderFail");
-
         }
-
     }
 
     // ================= SEARCH =================

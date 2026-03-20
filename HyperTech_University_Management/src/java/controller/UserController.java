@@ -7,6 +7,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.*;
 import model.UserDAO;
 import model.UserDTO;
+import org.mindrot.jbcrypt.BCrypt;
 
 public class UserController extends HttpServlet {
 
@@ -21,7 +22,6 @@ public class UserController extends HttpServlet {
 
         UserDAO dao = new UserDAO();
         UserDTO user = dao.login(email, password);
-
         HttpSession session = request.getSession();
 
         if (user != null) {
@@ -34,7 +34,7 @@ public class UserController extends HttpServlet {
             request.setAttribute("message", "Sai email hoặc mật khẩu");
             request.setAttribute("showLoginModal", true);
 
-            request.getRequestDispatcher("header.jsp").forward(request, response);
+            request.getRequestDispatcher("index.jsp").forward(request, response);
         }
     }
 
@@ -48,7 +48,7 @@ public class UserController extends HttpServlet {
             session.invalidate();
         }
 
-        response.sendRedirect("login.jsp");
+        response.sendRedirect("index.jsp");
     }
 
     // ================= DELETE USER =================
@@ -141,6 +141,13 @@ public class UserController extends HttpServlet {
         return new UserDTO(email, username, password, phone, address, status);
     }
 
+    private boolean checkpass(HttpServletRequest request) {
+        String password = request.getParameter("password");
+        String passcom = request.getParameter("password");
+
+        return password.equalsIgnoreCase(passcom);
+    }
+
     // ================= VALIDATE =================
     private String validateUser(UserDTO u, boolean isUpdate) {
 
@@ -169,28 +176,31 @@ public class UserController extends HttpServlet {
     // ================= ADD USER =================
     protected void doAdd(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
         UserDTO u = extractUserFromRequest(request);
-
         String error = validateUser(u, false);
         String msg = "";
+        
+        if (checkpass(request)) {
+            if (error.isEmpty()) {
 
-        if (error.isEmpty()) {
+                UserDAO dao = new UserDAO();
 
-            UserDAO dao = new UserDAO();
-
-            if (dao.add(u)) {
-                msg = "Thêm user thành công!";
-            } else {
-                error = "Không thể thêm user!";
+                if (dao.add(u)) {
+                    msg = "Thêm user thành công!";
+                } else {
+                    error = "Không thể thêm user!";
+                }
             }
+
+        } else {
+            error = "Password is incorrect!";
         }
 
         request.setAttribute("u", u);
         request.setAttribute("msg", msg);
         request.setAttribute("error", error);
 
-        request.getRequestDispatcher("university-form.jsp").forward(request, response);
+        request.getRequestDispatcher("index.jsp").forward(request, response);
     }
 
     // ================= SAVE UPDATE =================
@@ -253,7 +263,7 @@ public class UserController extends HttpServlet {
                 doLogin(request, response);
                 break;
 
-            case "logout":
+            case "Userlogout":
                 doLogout(request, response);
                 break;
 

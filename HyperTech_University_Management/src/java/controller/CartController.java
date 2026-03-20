@@ -12,7 +12,6 @@ import model.ProductDAO;
 import model.ProductDTO;
 import model.UserDTO;
 
-
 public class CartController extends HttpServlet {
 
     // ===== GET USER EMAIL =====
@@ -28,9 +27,11 @@ public class CartController extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
 
         String action = request.getParameter("action");
+        System.out.println("cart" + action);
         if (action == null) {
             action = "viewCart";
         }
+        System.out.println("cart" + action);
 
         switch (action) {
 
@@ -66,10 +67,15 @@ public class CartController extends HttpServlet {
         String email = getUserEmail(request);
 
         if (email == null) {
+
+            request.getSession().setAttribute("message",
+                    "Bạn cần đăng nhập trước khi mua hàng!");
+
+            request.getSession().setAttribute("showLoginModal", true);
+
             response.sendRedirect("index.jsp");
             return;
         }
-
         HttpSession session = request.getSession();
 
         CartDAO cartDAO = new CartDAO();
@@ -81,7 +87,7 @@ public class CartController extends HttpServlet {
 
         for (CartDTO item : list) {
 
-            ProductDTO product = productDAO.getById(item.getProductId());
+            ProductDTO product = productDAO.getByIdWithDiscount(item.getProductId());
 
             if (product != null) {
 
@@ -103,12 +109,7 @@ public class CartController extends HttpServlet {
     private void doAdd(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
 
-        String email = getUserEmail(request);
-
-        if (email == null) {
-            response.sendRedirect("index.jsp");
-            return;
-        }
+        HttpSession session = request.getSession();
 
         int productId = parseInt(request.getParameter("productID"));
         int quantity = parseInt(request.getParameter("quantity"));
@@ -117,19 +118,39 @@ public class CartController extends HttpServlet {
             quantity = 1;
         }
 
-        CartDAO dao = new CartDAO();
+        ProductDAO productDAO = new ProductDAO();
+        ProductDTO product = productDAO.getByIdWithDiscount(productId);
 
-        CartDTO existing = dao.getItem(email, productId);
+        if (product == null) {
+            response.sendRedirect("index.jsp");
+            return;
+        }
 
-        if (existing == null) {
+        CartDTO cart = (CartDTO) session.getAttribute("CART");
 
-            dao.insert(new CartDTO(email, productId, quantity));
+        if (cart == null) {
+            cart = new CartDTO();
+        }
 
-        } else {
+        product.setQuantity(quantity);
+        cart.add(product);
 
-            int newQuantity = existing.getQuantity() + quantity;
+        session.setAttribute("CART", cart);
 
-            dao.updateQuantity(email, productId, newQuantity);
+        String email = getUserEmail(request);
+
+        if (email != null) {
+
+            CartDAO dao = new CartDAO();
+
+            CartDTO existing = dao.getItem(email, productId);
+
+            if (existing == null) {
+                dao.insert(new CartDTO(email, productId, quantity));
+            } else {
+                dao.updateQuantity(email, productId, existing.getQuantity() + quantity);
+            }
+
         }
 
         response.sendRedirect("MainController?action=viewCart");
@@ -157,7 +178,7 @@ public class CartController extends HttpServlet {
             dao.updateQuantity(email, productId, quantity);
         }
 
-        response.sendRedirect("MainController?action=viewCart");
+        response.setStatus(HttpServletResponse.SC_OK);
     }
 
     // ===== REMOVE ITEM =====
@@ -174,10 +195,16 @@ public class CartController extends HttpServlet {
         int productId = parseInt(request.getParameter("productID"));
 
         CartDAO dao = new CartDAO();
-
         dao.deleteItem(email, productId);
 
-        response.sendRedirect("MainController?action=viewCart");
+        HttpSession session = request.getSession();
+        CartDTO cart = (CartDTO) session.getAttribute("CART");
+
+        if (cart != null && cart.getCart() != null) {
+            cart.remove(productId);
+        }
+
+        response.setStatus(HttpServletResponse.SC_OK);
     }
 
     // ===== CLEAR CART =====
@@ -192,10 +219,13 @@ public class CartController extends HttpServlet {
         }
 
         CartDAO dao = new CartDAO();
-
         dao.clearCart(email);
 
-        response.sendRedirect("MainController?action=viewCart");
+        // 🔥 QUAN TRỌNG: XÓA SESSION
+        HttpSession session = request.getSession();
+        session.removeAttribute("CART");
+
+        response.setStatus(HttpServletResponse.SC_OK);
     }
 
     // ===== PARSE INT =====

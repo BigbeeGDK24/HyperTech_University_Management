@@ -22,35 +22,33 @@ public class AdminDAO {
 
     public AdminDTO searchByAdminName(String Username) {
         AdminDTO admin = null;
-        try {
-            Connection conn = DbUtil.getConnection();
+        
             String sql = "SELECT * FROM admins WHERE username=?";
-            System.out.println(sql);
-
-            PreparedStatement letter = conn.prepareStatement(sql);
-            letter.setString(1, Username);
-            ResultSet rs = letter.executeQuery();
-
-            if (rs.next()) {
-
-            String user = rs.getString("username");
-            String pass = rs.getString("password");
-
-            admin = new AdminDTO(user, pass);
-        }
-            rs.close();
-        letter.close();
-        conn.close();
+            try (Connection conn = DbUtil.getConnection()) {             
+                System.out.println(sql);
+                
+                PreparedStatement letter = conn.prepareStatement(sql);
+                letter.setString(1, Username);
+                ResultSet rs = letter.executeQuery();
+                
+                if (rs.next()) {
+                    
+                    String user = rs.getString("username");
+                    String pass = rs.getString("password");
+                    
+                    admin = new AdminDTO(user, pass);
+                }
+                rs.close();
+                letter.close();
+            
         } catch (Exception e) {
-            e.printStackTrace();
-        }
+}
         return admin;
     }
 
     public AdminDTO adLogin(String Username, String Password) {
         AdminDTO admin = searchByAdminName(Username);
         if (admin != null && Password.equals(admin.getPassword())) {
-            System.out.println("amin: " + admin);
                     
             return admin;
         }
@@ -70,7 +68,7 @@ public class AdminDAO {
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
-        return result > 0;
+        return false;
     }
 
     public boolean UpdateAd(AdminDTO ad) {
@@ -79,8 +77,8 @@ public class AdminDAO {
 
             Connection conn = DbUtil.getConnection();
             String sql = "UPDATE admins"
-                    + "   SET adPass = ?"
-                    + " WHERE admin = ?";
+                    + "   SET password = ?"
+                    + " WHERE username = ?";
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, ad.getPassword());
             ps.setString(2, ad.getUsername());
@@ -88,6 +86,6 @@ public class AdminDAO {
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
-        return result > 0;
+        return false;
     }
 }
