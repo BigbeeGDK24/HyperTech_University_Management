@@ -372,7 +372,7 @@ public class ProductDAO {
 
         try {
             Connection con = DbUtil.getConnection();
-            String sql = "SELECT * FROM products WHERE new_price <= 25000000";
+            String sql = "SELECT * FROM products WHERE new_price > 18000000 AND new_price <= 25000000";
             PreparedStatement ps = con.prepareStatement(sql);
 
             ResultSet rs = ps.executeQuery();
@@ -628,5 +628,257 @@ public class ProductDAO {
 
         return list;
     }
+
+    public ArrayList<ProductDTO> getKeyboard() {
+
+        ArrayList<ProductDTO> list = new ArrayList<>();
+
+        try {
+            Connection conn = DbUtil.getConnection();
+
+            String sql = "SELECT * FROM products "
+                    + "WHERE category_id = 6 "
+                    + "AND name LIKE N'%Bàn phím%' "
+                    + "ORDER BY new_price ASC";
+
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+
+                float oldPrice = rs.getFloat("old_price");
+                double newPrice = oldPrice * 0.95;   // giảm 5%
+
+                ProductDTO p = new ProductDTO(
+                        rs.getInt("id"),
+                        rs.getInt("category_id"),
+                        rs.getString("name"),
+                        rs.getString("cpu"),
+                        rs.getString("gpu"),
+                        rs.getString("ram"),
+                        rs.getString("ssd"),
+                        rs.getString("screen"),
+                        rs.getString("refresh_rate"),
+                        oldPrice,
+                        (float) newPrice,
+                        rs.getInt("stock"),
+                        rs.getString("description"),
+                        rs.getString("image"),
+                        rs.getBoolean("status")
+                );
+
+                list.add(p);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return list;
+    }
+
+    public ArrayList<ProductDTO> getMonitor() {
+
+        ArrayList<ProductDTO> list = new ArrayList<>();
+
+        try {
+            Connection conn = DbUtil.getConnection();
+
+            String sql = "SELECT * FROM products "
+                    + "WHERE category_id = 5 "
+                    + "AND id IN ( "
+                    + "   SELECT TOP 11 id FROM products "
+                    + "   WHERE category_id = 5 "
+                    + "   ORDER BY id ASC "
+                    + ") "
+                    + "ORDER BY id ASC";
+
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+
+                float oldPrice = rs.getFloat("old_price");
+                double newPrice = oldPrice * 0.7;   // 
+
+                ProductDTO p = new ProductDTO(
+                        rs.getInt("id"),
+                        rs.getInt("category_id"),
+                        rs.getString("name"),
+                        rs.getString("cpu"),
+                        rs.getString("gpu"),
+                        rs.getString("ram"),
+                        rs.getString("ssd"),
+                        rs.getString("screen"),
+                        rs.getString("refresh_rate"),
+                        oldPrice,
+                        (float) newPrice,
+                        rs.getInt("stock"),
+                        rs.getString("description"),
+                        rs.getString("image"),
+                        rs.getBoolean("status")
+                );
+
+                list.add(p);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return list;
+    }
+
+    public ArrayList<ProductDTO> getMonitor24Inch() {
+        ArrayList<ProductDTO> list = new ArrayList<>();
+
+        try {
+            Connection conn = DbUtil.getConnection();
+            String sql = "SELECT TOP 7 * FROM products "
+                    + "WHERE category_id = 5 "
+                    + "AND screen IN ('24 inch', '25 inch') "
+                    + "AND id NOT IN ( "
+                    + "   SELECT TOP 12 id FROM products "
+                    + "   WHERE category_id = 5 "
+                    + "   ORDER BY id ASC "
+                    + ") "
+                    + "ORDER BY new_price ASC";
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+
+                float oldPrice = rs.getFloat("old_price");
+                double newPrice = oldPrice * 0.9;
+
+                ProductDTO p = new ProductDTO(
+                        rs.getInt("id"),
+                        rs.getInt("category_id"),
+                        rs.getString("name"),
+                        rs.getString("cpu"),
+                        rs.getString("gpu"),
+                        rs.getString("ram"),
+                        rs.getString("ssd"),
+                        rs.getString("screen"),
+                        rs.getString("refresh_rate"),
+                        oldPrice,
+                        (float) newPrice,
+                        rs.getInt("stock"),
+                        rs.getString("description"),
+                        rs.getString("image"),
+                        rs.getBoolean("status")
+                );
+
+                list.add(p);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return list;
+    }
+
+    public ArrayList<ProductDTO> getMonitor27Inch() {
+        ArrayList<ProductDTO> list = new ArrayList<>();
+
+        try {
+            Connection conn = DbUtil.getConnection();
+
+            String sql = "SELECT TOP 11 * FROM products "
+                    + "WHERE category_id = 5 "
+                    + "AND screen = '27 inch' "
+                    + "AND id NOT IN ( "
+                    + "    SELECT TOP 12 id FROM products "
+                    + "    WHERE category_id = 5 "
+                    + "   ORDER BY id ASC "
+                    + ") "
+                    + "ORDER BY new_price ASC";
+
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+
+                float oldPrice = rs.getFloat("old_price");
+                double newPrice = oldPrice * 0.9;
+
+                ProductDTO p = new ProductDTO(
+                        rs.getInt("id"),
+                        rs.getInt("category_id"),
+                        rs.getString("name"),
+                        rs.getString("cpu"),
+                        rs.getString("gpu"),
+                        rs.getString("ram"),
+                        rs.getString("ssd"),
+                        rs.getString("screen"),
+                        rs.getString("refresh_rate"),
+                        oldPrice,
+                        (float) newPrice,
+                        rs.getInt("stock"),
+                        rs.getString("description"),
+                        rs.getString("image"),
+                        rs.getBoolean("status")
+                );
+
+                list.add(p);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return list;
+    }
+    
+    public ArrayList<ProductDTO> getMonitorOLED() {
+    ArrayList<ProductDTO> list = new ArrayList<>();
+
+    try {
+        Connection conn = DbUtil.getConnection();
+
+        String sql = "SELECT TOP 12 * FROM products "
+                + "WHERE category_id = 5 "
+                + "AND name LIKE N'%OLED%' "
+                + "AND id NOT IN ( "
+                + "    SELECT TOP 12 id FROM products "
+                + "    WHERE category_id = 5 "
+                + "    ORDER BY id ASC "
+                + ") "
+                + "ORDER BY new_price ASC";
+
+        PreparedStatement ps = conn.prepareStatement(sql);
+        ResultSet rs = ps.executeQuery();
+
+        while (rs.next()) {
+
+            float oldPrice = rs.getFloat("old_price");
+            double newPrice = oldPrice * 0.9;
+
+            ProductDTO p = new ProductDTO(
+                    rs.getInt("id"),
+                    rs.getInt("category_id"),
+                    rs.getString("name"),
+                    rs.getString("cpu"),
+                    rs.getString("gpu"),
+                    rs.getString("ram"),
+                    rs.getString("ssd"),
+                    rs.getString("screen"),
+                    rs.getString("refresh_rate"),
+                    oldPrice,
+                    (float) newPrice,
+                    rs.getInt("stock"),
+                    rs.getString("description"),
+                    rs.getString("image"),
+                    rs.getBoolean("status")
+            );
+
+            list.add(p);
+        }
+
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+
+    return list;
+}
 
 }
