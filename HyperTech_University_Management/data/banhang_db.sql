@@ -384,6 +384,140 @@ VALUES
 INSERT INTO products (category_id, name, old_price, new_price, image)
 VALUES
 (7, N'Chuột văn phòng MonsGeek D1 Black', 299000, 150000, 'm36.png');
+
+INSERT INTO products (category_id, name, old_price, new_price, image)
+VALUES
+(6, N'Bàn phím cơ ASUS ROG Falchion Ace HFX Rapid', 5499000, 5224050, 'b1.jpg');
+
+INSERT INTO products (category_id, name, old_price, new_price, image)
+VALUES
+(6, N'BÀN PHÍM CƠ E-DRA EK375 V2 ALPHA LINEAR SWITCH', 699000, 664050, 'b2.jpg'),
+
+(6, N'BÀN PHÍM CƠ ASUS TUF K3 GEN II BLACK OPTICAL RED SWITCH', 1999000, 1899050, 'b3.jpg'),
+
+(6, N'BÀN PHÍM CƠ E-DRA EK368HE', 999000, 949050, 'b4.jpg'),
+
+(6, N'BÀN PHÍM CƠ E-DRA EK398S WIRELESS RED SWITCH', 799000, 759050, 'b5.jpg'),
+
+(6, N'BÀN PHÍM CƠ E-DRA EK375S WIRELESS RED SWITCH', 699000, 664050, 'b6.jpg'),
+
+(6, N'BÀN PHÍM CƠ E-DRA EK368S WIRELESS RED SWITCH', 649000, 616550, 'b7.jpg'),
+
+(6, N'BÀN PHÍM CƠ MCHOSE G75 PRO GLACIER GRADIENT CABBAGE', 1399000, 1329050, 'b8.png'),
+
+(6, N'BÀN PHÍM CƠ MCHOSE G75 PRO ARCTIS SNOW MATCHA LATTE', 1399000, 1329050, 'b9.png');
+
+INSERT INTO products (category_id, name, old_price, new_price, image)
+VALUES
+(6, N'BÀN PHÍM CƠ MACHENIKE KG98 WHITE BLUE PURPLE GOLD', 1699000, 1349000, 'b10.png'),
+
+(6, N'BÀN PHÍM CƠ MACHENIKE KG98 BLACK GREEN PURPLE GOLD', 1699000, 1349000, 'b11.png'),
+
+(6, N'BÀN PHÍM CƠ MADLIONS MAD68 HE FLAGSHIP V2 WHITE', 1099000, 889000, 'b12.jpg'),
+
+(6, N'BÀN PHÍM CƠ MADLIONS MAD68 HE FLAGSHIP V2 BLACK', 1099000, 889000, 'b13.jpg'),
+
+(6, N'BÀN PHÍM CƠ AULA F75 WHITE BLUE GRADIENT OUTEMU SILENT', 1999000, 1549000, 'b14.webp');
+
+INSERT INTO products (category_id, name, old_price, new_price, image)
+VALUES
+(6, N'BÀN PHÍM CƠ AULA F75 3 MODE GLACIER BLUE OUTEMU SILENT', 1999000, 1349000, 'b15.png'),
+
+(6, N'BÀN PHÍM CƠ AULA F75 3 MODE SNOW BLUE OUTEMU SILENT', 1999000, 1349000, 'b16.jpg'),
+
+(6, N'BÀN PHÍM CƠ RAZER HUNTSMAN V3 PRO TKL CS2 COUNTER-STRIKE', 6490000, 5489000, 'b17.jpg'),
+
+(6, N'BÀN PHÍM CƠ MCHOSE G75 PRO BLUE CABBAGE TOFU V2 SWITCH', 1199000, 1049000, 'b18.png'),
+
+(6, N'BÀN PHÍM CƠ MCHOSE G75 PRO GREEN MATCHA LATTE SWITCH', 1399000, 1249000, 'b19.png');
+
+INSERT INTO products (category_id, name, old_price, new_price, image)
+VALUES
+(6, N'BÀN PHÍM CƠ MCHOSE GX87 LITE BLUE NANO SPRAYING MATCHA', 2399000, 2199000, 'b20.png'),
+
+(6, N'BÀN PHÍM CƠ MCHOSE GX87 LITE WHITE NANO SPRAYING MATCHA', 2399000, 2199000, 'b21.png'),
+
+(6, N'BÀN PHÍM CƠ MCHOSE X UNBOX THERAPY UT98 CLASSIC', 2899000, 2099000, 'b22.png'),
+
+(6, N'BÀN PHÍM CƠ RAZER HUNTSMAN V3 PRO TKL 8KHZ ANALOG', 5990000, 4989000, 'b23.jpg'),
+
+(6, N'BÀN PHÍM CƠ RAZER HUNTSMAN V3 PRO 8KHZ ANALOG OPTICAL', 6890000, 5889000, 'b24.jpg'),
+
+(6, N'BÀN PHÍM CƠ ATK RS7 ULTRA STELLAR PINK BLAZEBLADE', 4499000, 3889000, 'b25.jpg'),
+
+(6, N'BÀN PHÍM CƠ ATK RS7 ULTRA SILVER EDGE SNOWBLADE SWITCH', 4499000, 3889000, 'b26.jpg'),
+
+(6, N'BÀN PHÍM CƠ ATK 68 RX HE PINK WOLF SWITCH', 1999000, 1589000, 'b27.jpg'),
+
+(6, N'BÀN PHÍM CƠ ATK 68 RX HE WHITE WOLF SWITCH', 1999000, 1589000, 'b28.jpg'),
+
+(6, N'BÀN PHÍM CƠ ATK 68 RX HE BLACK WOLF SWITCH', 1999000, 1589000, 'b29.jpg');
+
+INSERT INTO products (category_id, name, old_price, new_price, image)
+VALUES
+(6, N'BÀN PHÍM CƠ ATK 68 RX HE BLACK WOLF SWITCH', 1999000, 1589000, 'b30.jpg');
+
+INSERT INTO products (category_id, name, old_price, new_price, image)
+VALUES
+(6, N'BÀN PHÍM CƠ ASUS ROG AZOTH X WIRELESS NX SNOW V2 SWITCH', 7999000, 6489000, 'b29.jpg');
+
+INSERT INTO products (category_id, name, old_price, new_price, image) VALUES
+(5, N'Màn hình ASUS TUF GAMING VG27AQ5A', 5990000, 4990000, 'mh1.jpg'),
+(5, N'Màn hình ViewSonic VX2882-4KP 28 inch', 15990000, 8390000, 'mh2.jpg'),
+(5, N'Màn hình ViewSonic VA2432A-H 24 inch', 3590000, 2050000, 'mh3.jpg'),
+(5, N'Màn hình ASUS TUF VG259Q5A 25 inch', 3990000, 2990000, 'mh4.jpg'),
+(5, N'Màn hình ViewSonic VA2432-H-2 24 inch', 2590000, 1990000, 'mh5.jpg'),
+(5, N'Màn hình ASUS VY249HGR 24 inch', 3090000, 2250000, 'mh6.jpg'),
+(5, N'Màn hình ASUS TUF VG249Q5A 24 inch', 3990000, 2590000, 'mh7.jpg'),
+(5, N'Màn hình ViewSonic VX2479A-HD-PRO 24 inch', 4490000, 2790000, 'mh8.jpg'),
+(5, N'Màn hình Acer KG240Y-X1 24 inch', 3790000, 2690000, 'mh9.jpg'),
+(5, N'Màn hình ViewSonic VA2708-2K-MHD 27 inch', 4190000, 3690000, 'mh10.jpg'),
+(5, N'Màn hình MSI MAG 274QF X24 27 inch', 6990000, 5490000, 'mh11.jpg');
+
+INSERT INTO products 
+(category_id, name, old_price, new_price, image)
+VALUES 
+(
+    5,
+    N'Màn hình MSI MAG 255F E20 25 inch Rapid IPS 200Hz',
+    3690000,
+    3690000 * 0.9,  
+    'mh25-1.jpg'
+);
+
+INSERT INTO products 
+(category_id, name, old_price, new_price, image)
+VALUES 
+
+(5, N'Màn hình GIGABYTE GS25F2A 25 inch IPS 240Hz', 3990000, ROUND(3990000*0.9,0), 'mh25-2.jpg'),
+
+(5, N'Màn hình MSI MAG 244F 24 inch Rapid IPS 200Hz', 3990000, ROUND(3990000*0.9,0), 'mh25-3.jpg'),
+
+(5, N'Màn hình AOC CS25G 25 inch Fast IPS 310Hz', 5090000, ROUND(5090000*0.9,0), 'mh25-4.jpg'),
+
+(5, N'Màn hình MSI MAG 255PXF 25 inch Rapid IPS 300Hz', 5990000, ROUND(5990000*0.9,0), 'mh25-5.jpg'),
+
+(5, N'Màn hình Samsung LS25BG400 25 inch IPS 240Hz', 9190000, ROUND(9190000*0.9,0), 'mh25-6.jpg'),
+
+(5, N'Màn hình ASUS ROG Strix XG259QNS 25 inch IPS 380Hz', 11990000, ROUND(11990000*0.9,0), 'mh25-7.jpg');
+
+DELETE FROM products
+WHERE name IN (
+    N'Màn hình GIGABYTE GS25F2A 25 inch IPS 240Hz',
+    N'Màn hình MSI MAG 244F 24 inch Rapid IPS 200Hz',
+    N'Màn hình AOC CS25G 25 inch Fast IPS 310Hz',
+    N'Màn hình MSI MAG 255PXF 25 inch Rapid IPS 300Hz',
+    N'Màn hình Samsung LS25BG400 25 inch IPS 240Hz',
+    N'Màn hình ASUS ROG Strix XG259QNS 25 inch IPS 380Hz'
+);
+
+DELETE FROM products
+WHERE name IN (
+N'Màn hình MSI MAG 274QF X24 27 inch'
+);
+
+select *
+from tb
 -- ================= ADD DISCOUNT (FIX CHUẨN) =================
 
 -- 1. FIX GIÁ TRƯỚC

@@ -133,9 +133,23 @@
         <div class="home-wrapper">
 
             <div class="home-left">
-                <a href="li-xi-tet-2026.jsp">
-                    <img class="banner-main" src="images/madaothanhcong.png">
-                </a>
+                <div class="banner-slider">
+
+                    <a href="li-xi-tet-2026.jsp">
+                        <img class="banner-main slide active" src="images/madaothanhcong.png">
+                    </a>
+
+                    <a href="ProductController?action=monitor">
+                        <img class="banner-main slide" src="images/bannermh1.jpg">
+                    </a>
+
+                    <!-- thanh ngang -->
+                    <div class="slider-nav">
+                        <span class="nav-dot active" data-index="0"></span>
+                        <span class="nav-dot" data-index="1"></span>
+                    </div>
+
+                </div>
 
                 <div class="banner-row">
                     <a href="ProductController?action=list">
@@ -148,7 +162,7 @@
             </div>
 
             <div class="home-middle">
-                <a href="BestSeller3.jsp">
+                <a href="ProductController?action=keyboard">
                     <img class="banner-keyboard" src="images/keyboard_new.jpg">
                 </a>
             </div>
@@ -373,6 +387,59 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
+    });
+</script>
+
+<script>
+
+    const slides = document.querySelectorAll(".slide");
+    const dots = document.querySelectorAll(".nav-dot");
+
+    let currentIndex = 0;
+    let autoSlide;
+
+    function showSlide(index) {
+
+        slides.forEach(slide => slide.classList.remove("active"));
+        dots.forEach(dot => dot.classList.remove("active"));
+
+        slides[index].classList.add("active");
+        dots[index].classList.add("active");
+
+        currentIndex = index;
+    }
+
+    dots.forEach((dot, index) => {
+        dot.addEventListener("click", () => {
+
+            showSlide(index);
+
+            resetAutoSlide();
+        });
+    });
+
+    function nextSlide() {
+        currentIndex++;
+
+        if (currentIndex >= slides.length) {
+            currentIndex = 0;
+        }
+
+        showSlide(currentIndex);
+    }
+
+    function startAutoSlide() {
+        autoSlide = setInterval(nextSlide, 4000);
+    }
+
+    function resetAutoSlide() {
+        clearInterval(autoSlide);
+        startAutoSlide();
+    }
+
+    startAutoSlide();
+
+</script>
     // ===== USER DROPDOWN =====
     const userMenu = document.getElementById("userMenu");
     const dropdown = document.getElementById("dropdownMenu");
