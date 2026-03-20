@@ -1,10 +1,19 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+
 <%
-    if (session.getAttribute("ORDER_ID") == null) {
+    // ✅ FIX: check login
+    if (session.getAttribute("user") == null) {
+        response.sendRedirect("login.jsp");
+        return;
+    }
+
+    // ✅ FIX: kiểm tra CART
+    if (session.getAttribute("CART") == null) {
         response.sendRedirect("cart.jsp");
         return;
     }
 %>
+
 <%@page import="model.CartDTO"%>
 <%@page import="model.ProductDTO"%>
 
@@ -35,7 +44,6 @@
                 position:relative;
             }
 
-            /* 🐱 mèo meme */
             .cat-left, .cat-right{
                 position:absolute;
                 width:80px;
@@ -84,10 +92,6 @@
                 margin-bottom:20px;
             }
 
-            .payment-box:hover{
-                box-shadow:0 5px 15px rgba(0,0,0,0.05);
-            }
-
             .info-box{
                 background:#f8f9fa;
                 padding:15px;
@@ -106,17 +110,6 @@
                 padding:10px 20px;
                 border-radius:10px;
             }
-
-            @keyframes fadeIn{
-                from{
-                    opacity:0;
-                    transform:translateY(10px);
-                }
-                to{
-                    opacity:1;
-                    transform:translateY(0);
-                }
-            }
         </style>
 
     </head>
@@ -125,16 +118,15 @@
 
         <div class="wrapper">
 
-            <!-- 🐱 mèo meme -->
             <img class="cat-left" src="https://cdn-icons-png.flaticon.com/512/616/616408.png">
             <img class="cat-right" src="https://cdn-icons-png.flaticon.com/512/616/616430.png">
 
             <%
                 CartDTO cart = (CartDTO) session.getAttribute("CART");
                 double total = 0;
-            %>
-            <%
-                if (cart == null) {
+
+                // ✅ FIX: check cart rỗng
+                if (cart == null || cart.getCart() == null || cart.getCart().isEmpty()) {
             %>
             <script>
                 alert("Giỏ hàng trống!");
@@ -144,6 +136,7 @@
                     return;
                 }
             %>
+
             <!-- STEP -->
             <div class="steps">
                 <div class="step">🛒<br>Giỏ hàng</div>
@@ -155,22 +148,33 @@
             <!-- INFO USER -->
             <div class="info-box">
                 <h5>👤 Thông tin giao hàng</h5>
-                <p><b>Mã đơn:</b> <%= session.getAttribute("ORDER_ID")%></p>
-                <p><b>Tên:</b> <%= session.getAttribute("FULLNAME")%></p>
-                <p><b>Điện thoại:</b> <%= session.getAttribute("PHONE")%></p>
-                <p><b>Địa chỉ:</b> <%= session.getAttribute("ADDRESS")%></p>
+
+                <p><b>Mã đơn:</b> 
+                    <%= session.getAttribute("ORDER_ID") != null ? session.getAttribute("ORDER_ID") : "Chưa tạo"%>
+                </p>
+
+                <p><b>Tên:</b> 
+                    <%= session.getAttribute("FULLNAME") != null ? session.getAttribute("FULLNAME") : ""%>
+                </p>
+
+                <p><b>Điện thoại:</b> 
+                    <%= session.getAttribute("PHONE") != null ? session.getAttribute("PHONE") : ""%>
+                </p>
+
+                <p><b>Địa chỉ:</b> 
+                    <%= session.getAttribute("ADDRESS") != null ? session.getAttribute("ADDRESS") : ""%>
+                </p>
             </div>
 
             <h4>💳 Phương thức thanh toán</h4>
 
             <form action="MainController" method="post" onsubmit="return loading()">
-
-                <input type="hidden" name="action" value="complete">
+                <input type="hidden" name="action" value="addPayment">
 
                 <div class="payment-box">
 
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="payment_method" value="COD" checked>
+                        <input class="form-check-input" type="radio" name="payment_method" value="COD" checked required>
                         <label class="form-check-label">Thanh toán khi nhận hàng (COD)</label>
                     </div>
 
@@ -198,22 +202,20 @@
                     </tr>
 
                     <%
-                        if (cart != null && cart.getCart() != null) {
-                            for (ProductDTO p : cart.getCart().values()) {
+                        for (ProductDTO p : cart.getCart().values()) {
 
-                                double itemTotal = p.getNew_price() * p.getQuantity();
-                                total += itemTotal;
+                            double itemTotal = p.getFinalPrice() * p.getQuantity();
+                            total += itemTotal;
                     %>
 
                     <tr>
                         <td><%=p.getName()%></td>
-                        <td><%= String.format("%,.0f", p.getNew_price())%> ₫</td>
+                        <td><%= String.format("%,.0f", p.getFinalPrice())%> ₫</td>
                         <td><%=p.getQuantity()%></td>
                         <td><%= String.format("%,.0f", itemTotal)%> ₫</td>
                     </tr>
 
                     <%
-                            }
                         }
                     %>
 
@@ -229,7 +231,7 @@
                         ← Quay lại
                     </a>
 
-                    <button class="btn btn-success">
+                    <button type="submit" class="btn btn-success" id="submitBtn">
                         Xác nhận thanh toán
                     </button>
 
@@ -240,10 +242,18 @@
         </div>
 
         <script>
+            let submitted = false;
+
             function loading() {
-                let btn = document.querySelector(".btn-success");
-                btn.innerText = "Đang xử lý...";
-                btn.disabled = true;
+                if (submitted)
+                    return false;
+                submitted = true;
+
+                let btn = document.getElementById("submitBtn");
+                if (btn) {
+                    btn.innerText = "Đang xử lý...";
+                    btn.disabled = true;
+                }
                 return true;
             }
         </script>
