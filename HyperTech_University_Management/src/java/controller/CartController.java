@@ -27,11 +27,12 @@ public class CartController extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
 
         String action = request.getParameter("action");
-        System.out.println("cart" + action);
+
         if (action == null) {
             action = "viewCart";
         }
-        System.out.println("cart" + action);
+
+        System.out.println("Cart action: " + action);
 
         switch (action) {
 
@@ -67,15 +68,11 @@ public class CartController extends HttpServlet {
         String email = getUserEmail(request);
 
         if (email == null) {
-
-            request.getSession().setAttribute("message",
-                    "Bạn cần đăng nhập trước khi mua hàng!");
-
             request.getSession().setAttribute("showLoginModal", true);
-
             response.sendRedirect("index.jsp");
             return;
         }
+
         HttpSession session = request.getSession();
 
         CartDAO cartDAO = new CartDAO();
@@ -90,9 +87,7 @@ public class CartController extends HttpServlet {
             ProductDTO product = productDAO.getByIdWithDiscount(item.getProductId());
 
             if (product != null) {
-
                 product.setQuantity(item.getQuantity());
-
                 cartMap.put(product.getId(), product);
             }
         }
@@ -142,7 +137,6 @@ public class CartController extends HttpServlet {
         if (email != null) {
 
             CartDAO dao = new CartDAO();
-
             CartDTO existing = dao.getItem(email, productId);
 
             if (existing == null) {
@@ -150,7 +144,6 @@ public class CartController extends HttpServlet {
             } else {
                 dao.updateQuantity(email, productId, existing.getQuantity() + quantity);
             }
-
         }
 
         response.sendRedirect("MainController?action=viewCart");
@@ -207,7 +200,7 @@ public class CartController extends HttpServlet {
         response.setStatus(HttpServletResponse.SC_OK);
     }
 
-    // ===== CLEAR CART =====
+    // ===== 🔥 CLEAR CART (FIX CHUẨN) =====
     private void doClear(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
 
@@ -218,19 +211,20 @@ public class CartController extends HttpServlet {
             return;
         }
 
+        // ❌ Xóa DB
         CartDAO dao = new CartDAO();
         dao.clearCart(email);
 
-        // 🔥 QUAN TRỌNG: XÓA SESSION
+        // ❌ Xóa session
         HttpSession session = request.getSession();
         session.removeAttribute("CART");
 
-        response.setStatus(HttpServletResponse.SC_OK);
+        // 🔥 QUAN TRỌNG: phải redirect
+        response.sendRedirect("MainController?action=viewCart");
     }
 
     // ===== PARSE INT =====
     private int parseInt(String value) {
-
         try {
             return Integer.parseInt(value);
         } catch (Exception e) {
@@ -242,14 +236,12 @@ public class CartController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
         processRequest(request, response);
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
         processRequest(request, response);
     }
 }

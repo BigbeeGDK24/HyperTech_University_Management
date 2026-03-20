@@ -94,12 +94,12 @@ public class MainController extends HttpServlet {
             }
 
             // ================= PAYMENT =================
-        } else if (action.equals("searchPayment")
-                || action.equals("viewPayment")
-                || action.equals("viewUserPayments")
-                || action.equals("addPayment")
-                || action.equals("updatePayment")
-                || action.equals("deletePayment")
+        } else if (action.startsWith("viewPayment")
+                || action.startsWith("viewUserPayment")
+                || action.startsWith("searchPayment")
+                || action.startsWith("addPayment")
+                || action.startsWith("updatePayment")
+                || action.startsWith("deletePayment")
                 || action.equals("paymentStatistic")) {
 
             url = "PaymentController";
