@@ -91,7 +91,12 @@ public class ProductController extends HttpServlet {
             case "list":
                 doShowLap(request, response);
                 break;
-
+            case "keyboard":
+                doShowKeyBoard(request, response);
+                break;
+            case "monitor":
+                doShowMonitor(request, response);
+                break;
             default:
                 doSearch(request, response);
         }
@@ -413,6 +418,38 @@ public class ProductController extends HttpServlet {
 
             request.getRequestDispatcher("BestSeller.jsp").forward(request, response);
         }
+    }
+
+    protected void doShowKeyBoard(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        ProductDAO dao = new ProductDAO();
+
+        ArrayList<ProductDTO> keyboardList = dao.getKeyboard();
+
+        request.setAttribute("keyboardList", keyboardList);
+
+        request.getRequestDispatcher("BestSeller3.jsp").forward(request, response);
+    }
+
+    protected void doShowMonitor(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        ProductDAO dao = new ProductDAO();
+
+        ArrayList<ProductDTO> monitorList = dao.getMonitor();
+        ArrayList<ProductDTO> list24inch = dao.getMonitor24Inch();
+        ArrayList<ProductDTO> list27inch = dao.getMonitor27Inch();
+        ArrayList<ProductDTO> listOLED = dao.getMonitorOLED();
+
+
+        // set tất cả trước
+        request.setAttribute("listProduct", monitorList);
+        request.setAttribute("list24inch", list24inch);
+        request.setAttribute("list27inch", list27inch);
+        request.setAttribute("listOLED", listOLED);
+        // 👉 forward 1 lần duy nhất
+        request.getRequestDispatcher("BestSeller4.jsp").forward(request, response);
     }
 
 }

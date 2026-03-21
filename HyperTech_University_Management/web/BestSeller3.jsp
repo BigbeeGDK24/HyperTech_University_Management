@@ -1,17 +1,66 @@
-<%-- 
-    Document   : BestSeller3
-    Created on : Mar 16, 2026, 6:38:33 PM
-    Author     : truon
---%>
-
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
 <!DOCTYPE html>
 <html>
     <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page</title>
+        <meta charset="UTF-8">
+        <title>Best Seller Keyboard</title>
+
+        <link rel="stylesheet" href="css/BestSeller3.css">
+
     </head>
+
     <body>
-        <h1>Hello World!</h1>
+
+        <div class="banner">
+            <img src="images/keyboardgaming.png" alt="banner">
+        </div>
+        
+        <div class="separator"></div>
+        
+        <div class="product-section">
+
+            <div class="product-container">
+
+                <c:forEach var="p" items="${keyboardList}">
+
+                    <div class="product-card">
+
+                        <div class="product-img">
+                            <img src="images/${p.image}">
+                        </div>
+
+                        <div class="product-name">
+                            ${p.name}
+                        </div>
+
+                        <div class="product-price">
+
+                            <span class="old-price">
+                                <fmt:formatNumber value="${p.old_price}" type="number" groupingUsed="true"/>đ
+                            </span>
+
+                            <div class="price-row">
+                                <span class="new-price">
+                                    <fmt:formatNumber value="${p.new_price}" type="number" groupingUsed="true"/>đ
+                                </span>
+
+                                <span class="discount">-5%</span>
+                            </div>
+
+                        </div>
+
+                        <button class="buy-btn">Mua ngay</button>
+
+                    </div>
+
+                </c:forEach>
+
+            </div>
+
+        </div>
+
     </body>
 </html>

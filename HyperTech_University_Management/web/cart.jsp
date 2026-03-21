@@ -306,7 +306,7 @@
                     🗑 Xóa toàn bộ giỏ hàng
                 </a>
 
-                <a href="PaymentController" class="btn btn-checkout">
+                <a href="MainController?action=checkout" class="btn btn-checkout">
                     Thanh toán
                 </a>
 
