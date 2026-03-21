@@ -183,9 +183,6 @@ INSERT INTO admins (username,password) VALUES
 -- ================= INSERT CATEGORIES =================
 INSERT INTO categories (name,description) VALUES
 (N'Laptop',N'Laptop văn phòng và gaming'),
-(N'CPU',N'Bộ vi xử lý máy tính'),
-(N'Nguồn',N'Bộ nguồn máy tính'),
-(N'SSD',N'Ổ cứng SSD'),
 (N'Màn hình',N'Màn hình máy tính'),
 (N'Bàn phím',N'Bàn phím cơ'),
 (N'Chuột',N'Chuột gaming');
@@ -330,8 +327,6 @@ N'Laptop gaming ASUS ROG Zephyrus G14 GA403WM QS058WS','l27.png');
 INSERT INTO products (category_id, name, old_price, new_price, image)
 VALUES 
 (7, N'Chuột Logitech G502 Hero Gaming', 1090000, 890000, 'm1.png');
-
-SELECT * FROM products
 
 DELETE FROM products
 WHERE name = N'Chuột Logitech G502 Hero Gaming';

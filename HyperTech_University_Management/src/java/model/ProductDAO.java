@@ -25,24 +25,43 @@ public class ProductDAO {
         return list;
     }
 
-    public ProductDTO getById(int id) {
-        String sql = "SELECT * FROM products WHERE id = ?";
+public ProductDTO getById(int id) {
 
-        try ( Connection con = DbUtil.getConnection();  PreparedStatement ps = con.prepareStatement(sql)) {
+    String sql = "SELECT * FROM products WHERE id=?";
 
-            ps.setInt(1, id);
-            ResultSet rs = ps.executeQuery();
+    try (Connection con = DbUtil.getConnection();
+         PreparedStatement ps = con.prepareStatement(sql)) {
 
-            if (rs.next()) {
-                return extractProduct(rs);
-            }
+        ps.setInt(1, id);
+        ResultSet rs = ps.executeQuery();
 
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (rs.next()) {
+            return new ProductDTO(
+                    rs.getInt("id"),
+                    rs.getInt("category_id"),
+                    rs.getString("name"),
+                    rs.getString("cpu"),
+                    rs.getString("gpu"),
+                    rs.getString("ram"),
+                    rs.getString("ssd"),
+                    rs.getString("screen"),
+                    rs.getString("refresh_rate"),
+                    rs.getFloat("old_price"),
+                    rs.getFloat("new_price"),
+                    rs.getInt("stock"),
+                    rs.getString("description"),
+                    rs.getString("image"),
+                    rs.getBoolean("status")
+            );
         }
 
-        return null;
+    } catch (Exception e) {
+        e.printStackTrace();
     }
+
+    return null;
+}
+
 
     public ArrayList<ProductDTO> searchByName(String name) {
         ArrayList<ProductDTO> list = new ArrayList<>();
@@ -67,7 +86,7 @@ public class ProductDAO {
     public ArrayList<ProductDTO> searchByNamepro(String name, int category_id) {
     ArrayList<ProductDTO> list = new ArrayList<>();
 
-    String sql = "SELECT * FROM products WHERE name LIKE ? AND category_id = ?";
+    String sql = "SELECT * FROM products WHERE name LIKE ? AND 4?";
 
     try (Connection con = DbUtil.getConnection();
          PreparedStatement ps = con.prepareStatement(sql)) {
@@ -159,7 +178,7 @@ public class ProductDAO {
         try ( Connection con = DbUtil.getConnection()) {
 
             PreparedStatement ps;
-
+            
             // ===== nếu là laptop =====
             if (p.getCategory_id() == 1) {
 
@@ -589,7 +608,7 @@ public class ProductDAO {
             Connection conn = DbUtil.getConnection();
 
             String sql = "SELECT TOP 12 * FROM products "
-                    + "WHERE category_id = 7 "
+                    + "WHERE category_id =  "
                     + "AND new_price < 1000000 "
                     + "AND name NOT LIKE N'%Chuột văn phòng%' "
                     + "ORDER BY new_price ASC";
@@ -639,7 +658,7 @@ public class ProductDAO {
             Connection conn = DbUtil.getConnection();
 
             String sql = "SELECT TOP 12 * FROM products "
-                    + "WHERE category_id = 7 AND new_price > 1000000 "
+                    + "WHERE category_id = 4 AND new_price > 1000000 "
                     + "ORDER BY new_price ASC";
 
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -685,7 +704,7 @@ public class ProductDAO {
             Connection conn = DbUtil.getConnection();
 
             String sql = "SELECT TOP 12 * FROM products "
-                    + "WHERE category_id = 7 "
+                    + "WHERE category_id = 4 "
                     + "AND name LIKE N'%Chuột văn phòng%' "
                     + "ORDER BY new_price ASC";
 
