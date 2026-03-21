@@ -42,7 +42,7 @@ public class ProductController extends HttpServlet {
                 doSearch(request, response);
                 break;
 
-            case "searchByAd":
+            case "searchProductByAd":
                 doSearchAdmin(request, response);
                 break;
             case "viewProduct":
@@ -60,12 +60,18 @@ public class ProductController extends HttpServlet {
 
             case "updateProduct":
                 if (isAdmin(request)) {
-                    doUpdate(request, response);
+                    runUpdate(request, response);
                 } else {
                     deny(response);
                 }
                 break;
-
+            case "editProduct":
+                if (isAdmin(request)) {
+                    doUpdate(request, response);
+                } else {
+                    deny(response);
+                }
+                break;  
             case "deleteProduct":
                 if (isAdmin(request)) {
                     doSoftDelete(request, response);
@@ -91,50 +97,50 @@ public class ProductController extends HttpServlet {
         }
     }
 
-    // ================= SEARCH =================
-    // ================= SEARCH =================
 // ================= SEARCH =================
-private void doSearchAdmin(HttpServletRequest request, HttpServletResponse response)
-        throws ServletException, IOException {
+    private void doSearchAdmin(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
 
-    String keywords = request.getParameter("keywords");
-    String category = request.getParameter("category");
+        String keywords = request.getParameter("keywords");
+        String category = request.getParameter("category");
 
-    ProductDAO dao = new ProductDAO();
-    ArrayList<ProductDTO> list;
+        ProductDAO dao = new ProductDAO();
+        ArrayList<ProductDTO> list;
 
-    // chuẩn hóa
-    if (keywords == null) keywords = "";
-    keywords = keywords.trim();
+        // chuẩn hóa
+        if (keywords == null) {
+            keywords = "";
+        }
+        keywords = keywords.trim();
 
-    // ===== SEARCH LOGIC =====
-    if (keywords.isEmpty() && (category == null || category.isEmpty())) {
-        list = dao.getAll();
-    } else if (category != null && !category.isEmpty() && !keywords.isEmpty()) {
-        int category_id = Integer.parseInt(category);
-        list = dao.searchByNamepro(keywords, category_id);
-    } else if (category != null && !category.isEmpty()) {
-        int category_id = Integer.parseInt(category);
-        list = dao.getByCategory(category_id);
-    } else {
-        list = dao.searchByName(keywords);
+        // ===== SEARCH LOGIC =====
+        if (keywords.isEmpty() && (category == null || category.isEmpty())) {
+            list = dao.getAll();
+        } else if (category != null && !category.isEmpty() && !keywords.isEmpty()) {
+            int category_id = Integer.parseInt(category);
+            list = dao.searchByNamepro(keywords, category_id);
+        } else if (category != null && !category.isEmpty()) {
+            int category_id = Integer.parseInt(category);
+            list = dao.getByCategory(category_id);
+        } else {
+            list = dao.searchByName(keywords);
+        }
+
+        // ===== LOGIC HIỂN THỊ CỘT =====
+        boolean isLaptop = false;
+
+        if (category != null && !category.isEmpty()) {
+            isLaptop = category.equals("1");
+        } else if (list != null && !list.isEmpty()) {
+            // auto detect nếu không chọn category
+            isLaptop = list.get(0).getCpu() != null;
+        }
+
+        request.setAttribute("list", list);
+        request.setAttribute("isLaptop", isLaptop);
+
+        request.getRequestDispatcher("product.jsp").forward(request, response);
     }
-
-    // ===== LOGIC HIỂN THỊ CỘT =====
-    boolean isLaptop = false;
-
-    if (category != null && !category.isEmpty()) {
-        isLaptop = category.equals("1");
-    } else if (list != null && !list.isEmpty()) {
-        // auto detect nếu không chọn category
-        isLaptop = list.get(0).getCpu() != null;
-    }
-
-    request.setAttribute("list", list);
-    request.setAttribute("isLaptop", isLaptop);
-
-    request.getRequestDispatcher("product.jsp").forward(request, response);
-}
 
     private void doSearch(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -187,30 +193,102 @@ private void doSearchAdmin(HttpServletRequest request, HttpServletResponse respo
     }
 
     // ================= ADD =================
-    private void doAdd(HttpServletRequest request, HttpServletResponse response)
-            throws IOException {
+    
+    private ProductDTO extractProductForAdd(HttpServletRequest request) {
 
-        ProductDTO p = extractProduct(request);
+    return new ProductDTO(
+            0, // ❌ không dùng id khi add
+            safeParseInt(request.getParameter("category_id")),
+            request.getParameter("name"),
+            request.getParameter("cpu"),
+            request.getParameter("gpu"),
+            request.getParameter("ram"),
+            request.getParameter("ssd"),
+            request.getParameter("screen"),
+            request.getParameter("refresh_rate"),
+            safeParseFloat(request.getParameter("old_price")),
+            safeParseFloat(request.getParameter("new_price")),
+            safeParseInt(request.getParameter("stock")),
+            request.getParameter("description"),
+            request.getParameter("image"),
+            true
+    );
+}
+    
+    
+    private void doAdd(HttpServletRequest request, HttpServletResponse response)
+        throws IOException {
+
+    try {
+        ProductDTO p = extractProductForAdd(request);
         ProductDAO dao = new ProductDAO();
 
+        System.out.println(">>> ADD PRODUCT: " + p.getName());
+
         if (dao.add(p)) {
-            response.sendRedirect("ProductController?action=searchProduct");
+            System.out.println(">>> ADD SUCCESS");
+            response.sendRedirect("ProductController?action=searchProductByAd");
         } else {
-            response.sendRedirect("ProductController?action=searchProduct&error=addFail");
+            System.out.println(">>> ADD FAIL");
+            response.sendRedirect("ProductController?action=searchProductByAd&error=addFail");
         }
+
+    } catch (Exception e) {
+        e.printStackTrace();
+        response.sendRedirect("ProductController?action=searchProductByAd&error=invalidData");
+    }
+}
+
+    private void runUpdate(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
+        try {
+
+            int id = Integer.parseInt(request.getParameter("id"));
+            ProductDAO dao = new ProductDAO();
+            ProductDTO p = dao.getById(id);
+
+            request.setAttribute("product", p);
+            request.setAttribute("keyword", request.getParameter("keyword"));
+
+            request.getRequestDispatcher("updateProduct.jsp").forward(request, response);
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.sendRedirect("ProductController?action=searchProdzByAd&error=sailuong");
+        }
+
     }
 
     // ================= UPDATE =================
     private void doUpdate(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
 
-        ProductDTO p = extractProduct(request);
-        ProductDAO dao = new ProductDAO();
+        try {
+            ProductDTO p = extractProductSafe(request);
+            ProductDAO dao = new ProductDAO();
 
-        if (dao.update(p)) {
-            response.sendRedirect("ProductController?action=searchProduct");
-        } else {
-            response.sendRedirect("ProductController?action=searchProduct&error=updateFail");
+            String keyword = request.getParameter("keyword");
+
+            System.out.println(">>> Updating product ID = " + p.getId());
+
+            if (dao.update(p)) {
+
+                System.out.println(">>> UPDATE SUCCESS");
+
+                response.sendRedirect("ProductController?action=searchProductByAd"
+                        + "&keyword=" + (keyword != null ? keyword : ""));
+
+            } else {
+
+                System.out.println(">>> UPDATE FAIL");
+
+                response.sendRedirect("ProductController?action=searchProductByAd"
+                        + "&error=updateFail"
+                        + "&keyword=" + (keyword != null ? keyword : ""));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.sendRedirect("ProductController?action=searchProductByAd&error=invalidData");
         }
     }
 
@@ -218,13 +296,13 @@ private void doSearchAdmin(HttpServletRequest request, HttpServletResponse respo
     private void doSoftDelete(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
 
-        int id = parseInt(request.getParameter("id"));
+        int id = Integer.parseInt(request.getParameter("id"));
         ProductDAO dao = new ProductDAO();
 
         if (dao.delete(id)) {
-            response.sendRedirect("ProductController?action=searchProduct");
+            response.sendRedirect("ProductController?action=searchProductByAd");
         } else {
-            response.sendRedirect("ProductController?action=searchProduct&error=deleteFail");
+            response.sendRedirect("ProductController?action=searchProductByAd&error=deleteFail");
         }
     }
 
@@ -240,41 +318,40 @@ private void doSearchAdmin(HttpServletRequest request, HttpServletResponse respo
     }
 
     // ================= EXTRACT =================
-    private ProductDTO extractProduct(HttpServletRequest request) {
+    private int safeParseInt(String s) {
+        if (s == null || s.trim().isEmpty()) {
+            return 0;
+        }
+        return Integer.parseInt(s);
+    }
 
-        int id = parseInt(request.getParameter("id"));
-        int category_id = parseInt(request.getParameter("category_id"));
+    private float safeParseFloat(String s) {
+        if (s == null || s.trim().isEmpty()) {
+            return 0;
+        }
+        return Float.parseFloat(s);
+    }
 
-        String name = request.getParameter("name");
-        String cpu = request.getParameter("cpu");
-        String gpu = request.getParameter("gpu");
-        String ram = request.getParameter("ram");
-        String ssd = request.getParameter("ssd");
-        String screen = request.getParameter("screen");
-        String refresh = request.getParameter("refresh_rate");
+    private ProductDTO extractProductSafe(HttpServletRequest request) {
 
-        float old_price = parseFloat(request.getParameter("old_price"));
-        float new_price = parseFloat(request.getParameter("new_price"));
-
-        int stock = parseInt(request.getParameter("stock"));
-        String description = request.getParameter("description");
-        String image = request.getParameter("image");
+        int id = safeParseInt(request.getParameter("id"));
+        int category_id = safeParseInt(request.getParameter("category_id"));
 
         return new ProductDTO(
                 id,
                 category_id,
-                name,
-                cpu,
-                gpu,
-                ram,
-                ssd,
-                screen,
-                refresh,
-                old_price,
-                new_price,
-                stock,
-                description,
-                image,
+                request.getParameter("name"),
+                request.getParameter("cpu"),
+                request.getParameter("gpu"),
+                request.getParameter("ram"),
+                request.getParameter("ssd"),
+                request.getParameter("screen"),
+                request.getParameter("refresh_rate"),
+                safeParseFloat(request.getParameter("old_price")),
+                safeParseFloat(request.getParameter("new_price")),
+                safeParseInt(request.getParameter("stock")),
+                request.getParameter("description"),
+                request.getParameter("image"),
                 true
         );
     }

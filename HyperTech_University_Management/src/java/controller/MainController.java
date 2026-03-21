@@ -32,28 +32,24 @@ public class MainController extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
 
         String action = request.getParameter("action");
-        String url = "index.jsp";
-
-
+int id =safeParseInt((request.getParameter("id")));
+String url = "index.jsp";
+            
+        System.out.println("Main: " + action);
+        System.out.println("Main: " + id);
         if (action == null) {
             url = "index.jsp";
         } else if (action.equals("login") || action.equals("Adminlogout")) {
             url = "AdminController";
         } else if (action.equals("Userlogout")) {
-            url = "UserController";  
+            url = "UserController";
         } else if (action.equals("addUser")) {
             url = "UserController";
             //======== PRODUCT  ===================
-            } else if (action.equals("searchLaptop")
-                || action.equals("searchVGA")
-                || action.equals("searchCase")
-                || action.equals("searchRAM")
-                || action.equals("searchBanPhim")
-                || action.equals("searchProduct")
-                || action.equals("searchManHinh")) {
+        } else if (action.contains("Product")) {
 
             url = "ProductController";
-            
+
             // ================= CART =================
         } else if (action.equals("viewCart")
                 || action.equals("AddCart")
@@ -88,6 +84,13 @@ public class MainController extends HttpServlet {
         }
         request.getRequestDispatcher(url).forward(request, response);
     }
+    private int safeParseInt(String value) {
+    try {
+        return Integer.parseInt(value);
+    } catch (Exception e) {
+        return 0;
+    }
+}
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**

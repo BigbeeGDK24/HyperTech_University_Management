@@ -279,22 +279,16 @@
         <!-- FORM -->
         <form action="MainController" method="post">
             <input type="hidden" name="action" value="addUser">
-
-            <div class="login-body">
-
+                        <div class="login-body">
                 <input type="text" name="username" placeholder="Họ và Tên" required>
-
                 <input type="email" name="email" placeholder="Email" required>
-
                 <input type="password" name="password" placeholder="Mật khẩu" required>
-
-                <input type="password" name="confirm_password" placeholder="Nhập lại mật khẩu" required>
-
+               <input type="password" name="confirm_password" placeholder="Nhập lại mật khẩu" required>
                 <button type="submit" class="login-submit">ĐĂNG KÝ</button>
+                    </div>
 
-            </div>
         </form>
-
+       
         <!-- DIVIDER -->
         <div class="divider">
             <span>hoặc đăng ký bằng</span>
