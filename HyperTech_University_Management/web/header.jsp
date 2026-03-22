@@ -51,7 +51,7 @@
 
         </a>
 
-        <a href="MainController?action=searchOrder" class="item">
+        <a href="order-lookup.jsp" class="item">
             <i class="fa-solid fa-magnifying-glass"></i>
             <div>Tra cứu<br>đơn hàng</div>
         </a>
@@ -67,20 +67,31 @@
             <div id="userMenu" style="cursor:pointer;">
                 <%= ((model.UserDTO) user).getUsername()%>
             </div>
-            <div id="dropdownMenu" style="display:none; position:absolute; top:30px; right:0; background:#eee; padding:10px;">
+            <div id="dropdownMenu" class="account-dropdown">
+
+                <!-- Greeting -->
+                <div class="account-top">
+                    <span class="wave">👋</span>
+                    <span>Xin chào, <strong><%= ((model.UserDTO) user).getUsername()%></strong></span>
+                </div>
+
+                <div class="account-divider"></div>
+
+                <!-- Logout -->
                 <form action="MainController" method="post">
                     <input type="hidden" name="action" value="Userlogout">
-                    <button type="submit" style="border:none; background:none; cursor:pointer;">
+                    <button type="submit" class="logout-btn">
+                        <i class="fa-solid fa-right-from-bracket"></i>
                         Đăng xuất
                     </button>
                 </form>
+
             </div>
 
             <%
             } else {
             %>
-
-            <div id="openLoginBtn" style="cursor:pointer;">
+<div id="openLoginBtn" style="cursor:pointer;">
                 Đăng nhập
             </div>
 
@@ -90,14 +101,11 @@
 
             <div class="account-divider"></div>
 
-            <div class="account-help">
-                <i class="fa-regular fa-circle-question"></i>
-                <span>Trợ giúp</span>
-            </div>
+
 
         </div>
     </div>
-</div>
+
 </header>
 
 <div class="sub-menu">
@@ -117,9 +125,9 @@
     <div class="sidebar">
         <ul class="category-list">
             <li><a href="MainController?action=searchProductLaptop"><span>Laptop</span><span class="arrow">›</span></a></li>
-            <li><a href="MainController?action=searchProductMonitor"><span>Màn hình</span><span class="arrow">›</span></a></li>
-            <li><a href="MainController?action=searchProductKeyboard"><span>Bàn phím</span><span class="arrow">›</span></a></li>
-            <li><a href="MainController?action=searchProductMouse"><span>Chuột</span><span class="arrow">›</span></a></li>
+            <li><a href="MainController?action=searchProductMonitor"></span>Màn hình<span class="arrow">›</span></a></li>
+            <li><a href="MainController?action=searchProductKeyboard"></span>Bàn phím<span class="arrow">›</span></a></li>
+            <li><a href="MainController?action=searchProductMouse"></span>Chuột<span class="arrow">›</span></a></li>
         </ul>
     </div>
 
@@ -136,7 +144,7 @@
                         <img class="banner-main slide active" src="images/madaothanhcong.png">
                     </a>
 
-                    <a href="MainController?action=searchProductMonitor">
+                    <a href="ProductController?action=monitor">
                         <img class="banner-main slide" src="images/bannermh1.jpg">
                     </a>
 
@@ -149,26 +157,26 @@
                 </div>
 
                 <div class="banner-row">
-                    <a href="MainController?action=searchProductLaptop">
+                    <a href="ProductController?action=list">
                         <img class="banner-small" src="images/laptopgaming.jpg">
                     </a>
-                    <a href="MainController?action=searchProductMouse">
+                    <a href="MainController?action=searchProduct&category=2">
                         <img class="banner-small" src="images/chuotgaming.jpg">
                     </a>
                 </div>
             </div>
 
             <div class="home-middle">
-                <a href="MainController?action=searchProductKeyboard">
+                <a href="ProductController?action=keyboard">
                     <img class="banner-keyboard" src="images/keyboard_new.jpg">
                 </a>
             </div>
 
             <!-- Fixed RTX -->
             <div class="rtx-side">
-                <a href="MainController?action=searchProductLaptop">
+                <a href="LaptopRTX.jsp">
                     <img src="images/laptoprtx.jpg" alt="Laptop RTX">
-                </a>
+</a>
             </div>
 
         </div>
@@ -262,15 +270,13 @@
                 <span>Facebook</span>
             </button>
         </div>
-
-        <!-- FOOTER -->
+<!-- FOOTER -->
         <div class="login-footer">
             Bạn chưa có tài khoản?
             <a href="#" id="openRegister">Đăng ký ngay!</a>
         </div>
     </div> <!-- login-box -->
 </div>
-
 <div class="login-modal" id="registerModal">
     <div class="login-box">
 
@@ -290,16 +296,16 @@
         <!-- FORM -->
         <form action="MainController" method="post">
             <input type="hidden" name="action" value="addUser">
-                        <div class="login-body">
+            <div class="login-body">
                 <input type="text" name="username" placeholder="Họ và Tên" required>
                 <input type="email" name="email" placeholder="Email" required>
                 <input type="password" name="password" placeholder="Mật khẩu" required>
-               <input type="password" name="confirm_password" placeholder="Nhập lại mật khẩu" required>
+                <input type="password" name="confirm_password" placeholder="Nhập lại mật khẩu" required>
                 <button type="submit" class="login-submit">ĐĂNG KÝ</button>
-                    </div>
+            </div>
 
         </form>
-       
+
         <!-- DIVIDER -->
         <div class="divider">
             <span>hoặc đăng ký bằng</span>
@@ -349,8 +355,7 @@
                 loginModal.classList.add("show");
             });
         }
-
-        if (closeModal) {
+if (closeModal) {
             closeModal.addEventListener("click", function () {
                 loginModal.classList.remove("show");
             });
@@ -378,14 +383,61 @@
             });
         }
 
-        // ===== USER DROPDOWN =====
-        const userMenu = document.getElementById("userMenu");
-        const dropdown = document.getElementById("dropdownMenu");
+    });
+</script>
+
+<script>
+
+    const slides = document.querySelectorAll(".slide");
+    const dots = document.querySelectorAll(".nav-dot");
+
+    let currentIndex = 0;
+    let autoSlide;
+
+    function showSlide(index) {
+
+        slides.forEach(slide => slide.classList.remove("active"));
+        dots.forEach(dot => dot.classList.remove("active"));
+
+        slides[index].classList.add("active");
+        dots[index].classList.add("active");
+
+        currentIndex = index;
+    }
+
+    dots.forEach((dot, index) => {
+        dot.addEventListener("click", () => {
+
+            showSlide(index);
+
+            resetAutoSlide();
+        });
+    });
+
+    function nextSlide() {
+        currentIndex++;
+
+        if (currentIndex >= slides.length) {
+            currentIndex = 0;
+        }
+
+        showSlide(currentIndex);
+    }
+
+    function startAutoSlide() {
+        autoSlide = setInterval(nextSlide, 4000);
+    }
+
+    function resetAutoSlide() {
+        clearInterval(autoSlide);
+        startAutoSlide();
+    }
+
+    startAutoSlide();
 
 </script>
 <script>
-document.addEventListener("DOMContentLoaded", function () {
-
+    // ===== USER DROPDOWN =====
     const userMenu = document.getElementById("userMenu");
     const dropdown = document.getElementById("dropdownMenu");
 
@@ -393,17 +445,18 @@ document.addEventListener("DOMContentLoaded", function () {
         userMenu.addEventListener("click", function (e) {
             e.stopPropagation();
             dropdown.style.display =
-                dropdown.style.display === "block" ? "none" : "block";
+                    dropdown.style.display === "block" ? "none" : "block";
         });
 
-            document.addEventListener("click", function (e) {
-                if (!userMenu.contains(e.target) && !dropdown.contains(e.target)) {
-                    dropdown.style.display = "none";
-                }
-            });
+        document.addEventListener("click", function (e) {
+            if (!userMenu.contains(e.target) && !dropdown.contains(e.target)) {
+                dropdown.style.display = "none";
+            }
+        });
         }
 
-    });
+    }
+    );
 </script>
 
 <c:if test="${sessionScope.showLoginModal}">
