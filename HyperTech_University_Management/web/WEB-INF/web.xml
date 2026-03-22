@@ -52,6 +52,10 @@
         <servlet-name>CaseController</servlet-name>
         <servlet-class>controller.CaseController</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ComplainController</servlet-name>
+        <servlet-class>controller.ComplainController</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>AdminController</servlet-name>
         <url-pattern>/AdminController</url-pattern>
@@ -103,6 +107,10 @@
     <servlet-mapping>
         <servlet-name>CaseController</servlet-name>
         <url-pattern>/CaseController</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ComplainController</servlet-name>
+        <url-pattern>/ComplainController</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

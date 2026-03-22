@@ -19,7 +19,9 @@
         <select name="category">
             <option value="">Tất cả</option>
             <option value="1" ${param.category eq '1' ? 'selected' : ''}>Laptop</option>
-            <option value="7" ${param.category eq '7' ? 'selected' : ''}>Mouse</option>
+            <option value="2" ${param.category eq '2' ? 'selected' : ''}>Màn Hình</option>
+            <option value="3" ${param.category eq '3' ? 'selected' : ''}>Bàn Phím</option>
+            <option value="4" ${param.category eq '4' ? 'selected' : ''}>Mouse</option>
         </select>
 
         <button type="submit">Tìm</button>

@@ -116,13 +116,10 @@
     <!-- SIDEBAR -->
     <div class="sidebar">
         <ul class="category-list">
-            <li><a href="ProductController?action=list"><span>Laptop</span><span class="arrow">›</span></a></li>
-            <li><a href="#"><span>VGA</span><span class="arrow">›</span></a></li>
-            <li><a href="#"><span>Case</span><span class="arrow">›</span></a></li>
-            <li><a href="#"><span>RAM</span><span class="arrow">›</span></a></li>
-            <li><a href="#"><span>Màn hình</span><span class="arrow">›</span></a></li>
-            <li><a href="#"><span>Bàn phím</span><span class="arrow">›</span></a></li>
-            <li><a href="#"><span>Chuột</span><span class="arrow">›</span></a></li>
+            <li><a href="MainController?action=searchProductLaptop"><span>Laptop</span><span class="arrow">›</span></a></li>
+            <li><a href="MainController?action=searchProductMonitor"><span>Màn hình</span><span class="arrow">›</span></a></li>
+            <li><a href="MainController?action=searchProductKeyboard"><span>Bàn phím</span><span class="arrow">›</span></a></li>
+            <li><a href="MainController?action=searchProductMouse"><span>Chuột</span><span class="arrow">›</span></a></li>
         </ul>
     </div>
 
@@ -139,7 +136,7 @@
                         <img class="banner-main slide active" src="images/madaothanhcong.png">
                     </a>
 
-                    <a href="ProductController?action=monitor">
+                    <a href="MainController?action=searchProductMonitor">
                         <img class="banner-main slide" src="images/bannermh1.jpg">
                     </a>
 
@@ -152,24 +149,24 @@
                 </div>
 
                 <div class="banner-row">
-                    <a href="ProductController?action=list">
+                    <a href="MainController?action=searchProductLaptop">
                         <img class="banner-small" src="images/laptopgaming.jpg">
                     </a>
-                    <a href="MainController?action=searchProduct&category=2">
+                    <a href="MainController?action=searchProductMouse">
                         <img class="banner-small" src="images/chuotgaming.jpg">
                     </a>
                 </div>
             </div>
 
             <div class="home-middle">
-                <a href="ProductController?action=keyboard">
+                <a href="MainController?action=searchProductKeyboard">
                     <img class="banner-keyboard" src="images/keyboard_new.jpg">
                 </a>
             </div>
 
             <!-- Fixed RTX -->
             <div class="rtx-side">
-                <a href="LaptopRTX.jsp">
+                <a href="MainController?action=searchProductLaptop">
                     <img src="images/laptoprtx.jpg" alt="Laptop RTX">
                 </a>
             </div>
@@ -385,12 +382,19 @@
         const userMenu = document.getElementById("userMenu");
         const dropdown = document.getElementById("dropdownMenu");
 
-        if (userMenu && dropdown) {
-            userMenu.addEventListener("click", function (e) {
-                e.stopPropagation();
-                dropdown.style.display =
-                        dropdown.style.display === "block" ? "none" : "block";
-            });
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const userMenu = document.getElementById("userMenu");
+    const dropdown = document.getElementById("dropdownMenu");
+
+    if (userMenu && dropdown) {
+        userMenu.addEventListener("click", function (e) {
+            e.stopPropagation();
+            dropdown.style.display =
+                dropdown.style.display === "block" ? "none" : "block";
+        });
 
             document.addEventListener("click", function (e) {
                 if (!userMenu.contains(e.target) && !dropdown.contains(e.target)) {

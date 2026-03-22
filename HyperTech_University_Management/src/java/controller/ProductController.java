@@ -18,9 +18,6 @@ public class ProductController extends HttpServlet {
         return request.getSession().getAttribute("admin") != null;
     }
 
-    private boolean isUser(HttpServletRequest request) {
-        return request.getSession().getAttribute("user") != null;
-    }
 
     // ================= MAIN PROCESS =================
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
@@ -34,14 +31,9 @@ public class ProductController extends HttpServlet {
             request.getRequestDispatcher("product.jsp").forward(request, response);
             return;
         }
-
         switch (action) {
 
             // ================= USER + ADMIN =================
-            case "searchProduct":
-                doSearch(request, response);
-                break;
-
             case "searchProductByAd":
                 doSearchAdmin(request, response);
                 break;
@@ -71,7 +63,7 @@ public class ProductController extends HttpServlet {
                 } else {
                     deny(response);
                 }
-                break;  
+                break;
             case "deleteProduct":
                 if (isAdmin(request)) {
                     doSoftDelete(request, response);
@@ -87,14 +79,16 @@ public class ProductController extends HttpServlet {
                     deny(response);
                 }
                 break;
-
-            case "list":
+            case "searchProductMouse":
+                doshowMouse(request, response);
+                break;
+            case "searchProductLaptop":
                 doShowLap(request, response);
                 break;
-            case "keyboard":
+            case "searchProductKeyboard":
                 doShowKeyBoard(request, response);
                 break;
-            case "monitor":
+            case "searchProductMonitor":
                 doShowMonitor(request, response);
                 break;
             default:
@@ -103,6 +97,19 @@ public class ProductController extends HttpServlet {
     }
 
 // ================= SEARCH =================
+    private void doSearch(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        String keywords = request.getParameter("keywords");
+
+        ProductDAO dao = new ProductDAO();
+        ArrayList<ProductDTO> list = dao.searchByName(keywords);
+
+        request.setAttribute("list", list);
+
+        request.getRequestDispatcher("")
+                .forward(request, response);
+    }
+
     private void doSearchAdmin(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
@@ -147,12 +154,12 @@ public class ProductController extends HttpServlet {
         request.getRequestDispatcher("product.jsp").forward(request, response);
     }
 
-    private void doSearch(HttpServletRequest request, HttpServletResponse response)
+    private void doshowMouse(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
         String keywords = request.getParameter("keywords");
         String category = request.getParameter("category");
-
+        System.out.println("search" + category);
         if (keywords == null) {
             keywords = "";
         }
@@ -198,51 +205,45 @@ public class ProductController extends HttpServlet {
     }
 
     // ================= ADD =================
-    
     private ProductDTO extractProductForAdd(HttpServletRequest request) {
 
-    return new ProductDTO(
-            0, // ❌ không dùng id khi add
-            safeParseInt(request.getParameter("category_id")),
-            request.getParameter("name"),
-            request.getParameter("cpu"),
-            request.getParameter("gpu"),
-            request.getParameter("ram"),
-            request.getParameter("ssd"),
-            request.getParameter("screen"),
-            request.getParameter("refresh_rate"),
-            safeParseFloat(request.getParameter("old_price")),
-            safeParseFloat(request.getParameter("new_price")),
-            safeParseInt(request.getParameter("stock")),
-            request.getParameter("description"),
-            request.getParameter("image"),
-            true
-    );
-}
-    
-    
-    private void doAdd(HttpServletRequest request, HttpServletResponse response)
-        throws IOException {
-
-    try {
-        ProductDTO p = extractProductForAdd(request);
-        ProductDAO dao = new ProductDAO();
-
-        System.out.println(">>> ADD PRODUCT: " + p.getName());
-
-        if (dao.add(p)) {
-            System.out.println(">>> ADD SUCCESS");
-            response.sendRedirect("ProductController?action=searchProductByAd");
-        } else {
-            System.out.println(">>> ADD FAIL");
-            response.sendRedirect("ProductController?action=searchProductByAd&error=addFail");
-        }
-
-    } catch (Exception e) {
-        e.printStackTrace();
-        response.sendRedirect("ProductController?action=searchProductByAd&error=invalidData");
+        return new ProductDTO(
+                0,
+                safeParseInt(request.getParameter("category_id")),
+                request.getParameter("name"),
+                request.getParameter("cpu"),
+                request.getParameter("gpu"),
+                request.getParameter("ram"),
+                request.getParameter("ssd"),
+                request.getParameter("screen"),
+                request.getParameter("refresh_rate"),
+                safeParseFloat(request.getParameter("old_price")),
+                safeParseFloat(request.getParameter("new_price")),
+                safeParseInt(request.getParameter("stock")),
+                request.getParameter("description"),
+                request.getParameter("image"),
+                true
+        );
     }
-}
+
+    private void doAdd(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
+
+        try {
+            ProductDTO p = extractProductForAdd(request);
+            ProductDAO dao = new ProductDAO();
+
+            if (dao.add(p)) {
+                response.sendRedirect("ProductController?action=searchProductByAd");
+            } else {
+                response.sendRedirect("ProductController?action=searchProductByAd&error=addFail");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.sendRedirect("ProductController?action=searchProductByAd&error=invalidData");
+        }
+    }
 
     private void runUpdate(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
@@ -399,10 +400,10 @@ public class ProductController extends HttpServlet {
         String action = request.getParameter("action");
 
         if (action == null) {
-            action = "list";
+            action = "searchProductLaptop";
         }
 
-        if (action.equals("list")) {
+        if (action.equals("searchProductLaptop")) {
 
             ProductDAO dao = new ProductDAO();
 
@@ -441,14 +442,13 @@ public class ProductController extends HttpServlet {
         ArrayList<ProductDTO> list24inch = dao.getMonitor24Inch();
         ArrayList<ProductDTO> list27inch = dao.getMonitor27Inch();
         ArrayList<ProductDTO> listOLED = dao.getMonitorOLED();
-
-
+        System.out.println("list: " +list27inch);
         // set tất cả trước
         request.setAttribute("listProduct", monitorList);
         request.setAttribute("list24inch", list24inch);
         request.setAttribute("list27inch", list27inch);
         request.setAttribute("listOLED", listOLED);
-        // 👉 forward 1 lần duy nhất
+
         request.getRequestDispatcher("BestSeller4.jsp").forward(request, response);
     }
 
