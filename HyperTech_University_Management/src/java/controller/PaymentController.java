@@ -162,7 +162,7 @@ public class PaymentController extends HttpServlet {
                         .append("</li>");
             }
             // ===== SEND MAIL =====
-            String content = "<h2>Order confirmation</h2>"
+            String content = "<h2>Xác nhận đơn hàngg!!!</h2>"
                     + "<p>Mã đơn: <b>#" + orderId + "</b></p>"
                     + "<ul>" + productList.toString() + "</ul>"
                     + "<p>Tổng tiền: <b>" + String.format("%,.0f", total) + " VND</b></p>"

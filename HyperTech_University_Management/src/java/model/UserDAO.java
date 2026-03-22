@@ -242,4 +242,23 @@ public class UserDAO {
 
         return count;
     }
+    // ================= UPDATE PASSWORD =================
+
+    public boolean updatePassword(String email, String password) {
+        try {
+            Connection con = DbUtil.getConnection();
+
+            String sql = "UPDATE users SET password=? WHERE email=?";
+            PreparedStatement ps = con.prepareStatement(sql);
+
+            ps.setString(1, password);
+            ps.setString(2, email);
+
+            return ps.executeUpdate() > 0;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 }

@@ -6,7 +6,50 @@
 <link rel="stylesheet" href="css/home.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"><!-- comment -->
+<style>
+    /* 🔴 lỗi text */
+    #loginError {
+        color: red;
+        font-size: 14px;
+        margin-top: 5px;
+        display: block;
+    }
 
+    /* 🔴 input lỗi */
+    .input-error {
+        border: 2px solid red !important;
+        background-color: #fff5f5;
+    }
+
+    /* 💥 rung */
+    .shake {
+        animation: shake 0.3s;
+    }
+
+    @keyframes shake {
+        0% {
+            transform: translateX(0);
+        }
+        25% {
+            transform: translateX(-6px);
+        }
+        50% {
+            transform: translateX(6px);
+        }
+        75% {
+            transform: translateX(-6px);
+        }
+        100% {
+            transform: translateX(0);
+        }
+    }
+
+    /* ⏳ loading */
+    .loading {
+        opacity: 0.6;
+        pointer-events: none;
+    }
+</style>
 
 <!-- Banner -->
 <div class="top-banner"></div>
@@ -91,7 +134,7 @@
             <%
             } else {
             %>
-<div id="openLoginBtn" style="cursor:pointer;">
+            <div id="openLoginBtn" style="cursor:pointer;">
                 Đăng nhập
             </div>
 
@@ -176,7 +219,7 @@
             <div class="rtx-side">
                 <a href="LaptopRTX.jsp">
                     <img src="images/laptoprtx.jpg" alt="Laptop RTX">
-</a>
+                </a>
             </div>
 
         </div>
@@ -233,24 +276,21 @@
         </div>
 
         <!-- FORM -->
-        <form action="MainController" method="post">
-
+        <form id="loginForm">
             <input type="hidden" name="action" value="login">
+
             <div class="login-body">
-                <input type="text" placeholder="Email" name="txtUsername">
-                <input type="password" placeholder="Mật khẩu" name="txtPassword">
+                <input id="emailInput" type="text" placeholder="Email" name="txtUsername">
+                <input id="passInput" type="password" placeholder="Mật khẩu" name="txtPassword">
+
+                <!-- 🔴 ERROR HIỆN NGAY -->
+                <span id="loginError" style="color:red"></span>
 
                 <div class="forgot">
-                    <a href="#">Quên mật khẩu?</a>
+                    <a href="#" id="openForgot">Quên mật khẩu?</a>
                 </div>
-                <c:if test="${not empty sessionScope.message}">
-                    <span style="color:red">${sessionScope.message}</span>
-                </c:if>
-                <%
-                    session.removeAttribute("message");
-                    session.removeAttribute("showLoginModal");
-                %>
-                <button class="login-submit">ĐĂNG NHẬP</button>
+
+                <button id="loginBtn" class="login-submit">ĐĂNG NHẬP</button>
             </div>
         </form>
         <!-- DIVIDER -->
@@ -270,13 +310,32 @@
                 <span>Facebook</span>
             </button>
         </div>
-<!-- FOOTER -->
+        <!-- FOOTER -->
         <div class="login-footer">
             Bạn chưa có tài khoản?
             <a href="#" id="openRegister">Đăng ký ngay!</a>
         </div>
     </div> <!-- login-box -->
 </div>
+<div class="login-modal" id="forgotModal">
+    <div class="login-box">
+
+        <div class="login-header">
+            <h2>QUÊN MẬT KHẨU</h2>
+            <span class="close-btn" id="closeForgot">&times;</span>
+        </div>
+
+        <form action="MainController" method="post">
+            <input type="hidden" name="action" value="forgotPassword">
+
+            <div class="login-body">
+                <input type="email" name="email" placeholder="Nhập email của bạn" required>
+                <button class="login-submit">GỬI MẬT KHẨU MỚI</button>
+            </div>
+        </form>
+
+    </div>
+</div>             
 <div class="login-modal" id="registerModal">
     <div class="login-box">
 
@@ -341,21 +400,18 @@
         // ===== LOGIN / REGISTER =====
         const loginModal = document.getElementById("loginModal");
         const registerModal = document.getElementById("registerModal");
-
         const openLoginBtn = document.getElementById("openLoginBtn");
         const closeModal = document.getElementById("closeModal");
-
         const openRegister = document.getElementById("openRegister");
         const switchToLogin = document.getElementById("switchToLogin");
         const closeRegister = document.getElementById("closeRegister");
-
         if (openLoginBtn) {
             openLoginBtn.addEventListener("click", function (e) {
                 e.preventDefault();
                 loginModal.classList.add("show");
             });
         }
-if (closeModal) {
+        if (closeModal) {
             closeModal.addEventListener("click", function () {
                 loginModal.classList.remove("show");
             });
@@ -382,26 +438,37 @@ if (closeModal) {
                 registerModal.classList.remove("show");
             });
         }
+// ===== FORGOT PASSWORD =====
+        const openForgot = document.getElementById("openForgot");
+        const forgotModal = document.getElementById("forgotModal");
+        const closeForgot = document.getElementById("closeForgot");
+        if (openForgot) {
+            openForgot.addEventListener("click", function (e) {
+                e.preventDefault();
+                loginModal.classList.remove("show");
+                forgotModal.classList.add("show");
+            });
+        }
 
-    });
-</script>
+        if (closeForgot) {
+            closeForgot.addEventListener("click", function () {
+                forgotModal.classList.remove("show");
+            });
+        }
+    });</script>
 
 <script>
 
     const slides = document.querySelectorAll(".slide");
     const dots = document.querySelectorAll(".nav-dot");
-
     let currentIndex = 0;
     let autoSlide;
-
     function showSlide(index) {
 
         slides.forEach(slide => slide.classList.remove("active"));
         dots.forEach(dot => dot.classList.remove("active"));
-
         slides[index].classList.add("active");
         dots[index].classList.add("active");
-
         currentIndex = index;
     }
 
@@ -409,14 +476,11 @@ if (closeModal) {
         dot.addEventListener("click", () => {
 
             showSlide(index);
-
             resetAutoSlide();
         });
     });
-
     function nextSlide() {
         currentIndex++;
-
         if (currentIndex >= slides.length) {
             currentIndex = 0;
         }
@@ -433,30 +497,24 @@ if (closeModal) {
         startAutoSlide();
     }
 
-    startAutoSlide();
-
-</script>
+    startAutoSlide();</script>
 <script>
     // ===== USER DROPDOWN =====
     const userMenu = document.getElementById("userMenu");
     const dropdown = document.getElementById("dropdownMenu");
-
     if (userMenu && dropdown) {
         userMenu.addEventListener("click", function (e) {
             e.stopPropagation();
             dropdown.style.display =
                     dropdown.style.display === "block" ? "none" : "block";
         });
-
         document.addEventListener("click", function (e) {
             if (!userMenu.contains(e.target) && !dropdown.contains(e.target)) {
                 dropdown.style.display = "none";
             }
         });
-        }
-
     }
-    );
+
 </script>
 
 <c:if test="${sessionScope.showLoginModal}">
@@ -468,6 +526,74 @@ if (closeModal) {
             let toast = new bootstrap.Toast(toastEl);
             toast.show();
         });
-
     </script>
 </c:if>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+        document.getElementById("loginForm").addEventListener("submit", function (e) {
+            e.preventDefault();
+            const emailInput = document.getElementById("emailInput");
+            const passInput = document.getElementById("passInput");
+            const errorEl = document.getElementById("loginError");
+            const btn = document.getElementById("loginBtn");
+            const modal = document.querySelector(".login-box");
+            const email = emailInput.value.trim();
+            const password = passInput.value.trim();
+            // reset
+            errorEl.innerText = "";
+            emailInput.classList.remove("input-error");
+            passInput.classList.remove("input-error");
+            const emailRegex = /^[A-Za-z0-9+_.-]+@(.+)$/;
+            // ❌ email sai
+            if (!emailRegex.test(email)) {
+                errorEl.innerText = "Email không hợp lệ!";
+                emailInput.classList.add("input-error");
+                shake(modal);
+                return;
+            }
+
+            // ❌ thiếu input
+            if (email === "" || password === "") {
+                errorEl.innerText = "Vui lòng nhập đầy đủ thông tin!";
+                if (email === "")
+                    emailInput.classList.add("input-error");
+                if (password === "")
+                    passInput.classList.add("input-error");
+                shake(modal);
+                return;
+            }
+
+            // ⏳ loading
+            btn.innerText = "Đang xử lý...";
+            btn.classList.add("loading");
+            fetch("MainController", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded"
+                },
+                body: "action=login&txtUsername=" + encodeURIComponent(email)
+                        + "&txtPassword=" + encodeURIComponent(password)
+            })
+                    .then(res => res.text())
+                    .then(data => {
+                        if (data.trim() === "success") {
+                            location.reload();
+                        } else {
+                            errorEl.innerText = "Invalid email or password!!!!";
+                            passInput.classList.add("input-error");
+                            shake(modal);
+                        }
+
+                        btn.innerText = "ĐĂNG NHẬP";
+                        btn.classList.remove("loading");
+                    });
+        });
+        // 💥 rung
+        function shake(el) {
+            el.classList.add("shake");
+            setTimeout(() => el.classList.remove("shake"), 300);
+        }
+
+    });
+</script>
