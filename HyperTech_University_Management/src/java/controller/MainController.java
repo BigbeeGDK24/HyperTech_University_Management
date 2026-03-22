@@ -16,7 +16,8 @@ public class MainController extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
 
         String action = request.getParameter("action");
-        String url = "index.jsp";
+String url = "index.jsp";
+            System.out.println(action);
 
         if (action == null) {
             url = "index.jsp";
@@ -27,20 +28,15 @@ public class MainController extends HttpServlet {
 
         } else if (action.equals("Userlogout")) {
             url = "UserController";
-
         } else if (action.equals("addUser")) {
             url = "UserController";
-
-            // ================= PRODUCT =================
-        } else if (action.equals("searchLaptop")
-                || action.equals("searchVGA")
-                || action.equals("searchCase")
-                || action.equals("searchRAM")
-                || action.equals("searchBanPhim")
-                || action.equals("searchProduct")
-                || action.equals("searchManHinh")) {
+            //======== PRODUCT  ===================
+        } else if (action.contains("Product")) {
 
             url = "ProductController";
+            } else if (action.contains("Complain")) {
+
+            url = "ComplainController";
 
             // ================= CART =================
         } else if (action.equals("viewCart")
@@ -151,6 +147,13 @@ public class MainController extends HttpServlet {
 
         request.getRequestDispatcher(url).forward(request, response);
     }
+    private int safeParseInt(String value) {
+    try {
+        return Integer.parseInt(value);
+    } catch (Exception e) {
+        return 0;
+    }
+}
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)

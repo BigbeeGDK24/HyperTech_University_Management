@@ -31,70 +31,89 @@ public class ComplaintDAO {
     // =====================================================
     // 2. LẤY THEO ID (Xem chi tiết)
     // =====================================================
-    public ComplaintDTO getById(int id) {
-        String sql = "SELECT * FROM complaints WHERE id = ?";
+    public ArrayList<ComplaintDTO> searchByCategory(int categoryId) {
+    ArrayList<ComplaintDTO> list = new ArrayList<>();
 
-        try ( Connection conn = DbUtil.getConnection();  PreparedStatement ps = conn.prepareStatement(sql)) {
+String sql = "SELECT c.* " +
+             "FROM complaints c " +
+             "JOIN products p ON c.product_id = p.id " +
+             "WHERE p.category_id = ?";
 
-            ps.setInt(1, id);
-            ResultSet rs = ps.executeQuery();
+    try (Connection conn = DbUtil.getConnection();
+         PreparedStatement ps = conn.prepareStatement(sql)) {
 
-            if (rs.next()) {
-                return extractComplaint(rs);
-            }
+        ps.setInt(1, categoryId);
+        ResultSet rs = ps.executeQuery();
 
-        } catch (Exception e) {
-            e.printStackTrace();
+        while (rs.next()) {
+            list.add(extractComplaint(rs));
         }
 
-        return null;
+    } catch (Exception e) {
+        e.printStackTrace();
     }
+
+    return list;
+}
 
     // =====================================================
     // 3. LẤY THEO USER (User xem khiếu nại của mình)
     // =====================================================
-    public ArrayList<ComplaintDTO> getByUserId(String userId) {
-        ArrayList<ComplaintDTO> list = new ArrayList<>();
-        String sql = "SELECT * FROM complaints WHERE user_id = ?";
+    public ArrayList<ComplaintDTO> searchComplaints(String keyword, int categoryId) {
+    ArrayList<ComplaintDTO> list = new ArrayList<>();
 
-        try ( Connection conn = DbUtil.getConnection();  PreparedStatement ps = conn.prepareStatement(sql)) {
+String sql = "SELECT c.* " +
+             "FROM complaints c " +
+             "JOIN products p ON c.product_id = p.id " +
+             "WHERE p.name LIKE ? AND p.category_id = ?";
 
-            ps.setString(1, userId);
-            ResultSet rs = ps.executeQuery();
 
-            while (rs.next()) {
-                list.add(extractComplaint(rs));
-            }
+    try (Connection conn = DbUtil.getConnection();
+         PreparedStatement ps = conn.prepareStatement(sql)) {
 
-        } catch (Exception e) {
-            e.printStackTrace();
+        ps.setString(1, "%" + keyword + "%");
+        ps.setInt(2, categoryId);
+
+        ResultSet rs = ps.executeQuery();
+
+        while (rs.next()) {
+            list.add(extractComplaint(rs));
         }
 
-        return list;
+    } catch (Exception e) {
+        e.printStackTrace();
     }
+
+    return list;
+}
 
     // =====================================================
     // 4. LỌC THEO TRẠNG THÁI (Admin lọc pending, resolved...)
     // =====================================================
-    public ArrayList<ComplaintDTO> getByStatus(String status) {
-        ArrayList<ComplaintDTO> list = new ArrayList<>();
-        String sql = "SELECT * FROM complaints WHERE status = ?";
+    public ArrayList<ComplaintDTO> searchByProductName(String keyword) {
+    ArrayList<ComplaintDTO> list = new ArrayList<>();
 
-        try ( Connection conn = DbUtil.getConnection();  PreparedStatement ps = conn.prepareStatement(sql)) {
+String sql = "SELECT c.* " +
+             "FROM complaints c " +
+             "JOIN products p ON c.product_id = p.id " +
+             "WHERE p.name LIKE ?";
 
-            ps.setString(1, status);
-            ResultSet rs = ps.executeQuery();
+    try (Connection conn = DbUtil.getConnection();
+         PreparedStatement ps = conn.prepareStatement(sql)) {
 
-            while (rs.next()) {
-                list.add(extractComplaint(rs));
-            }
+        ps.setString(1, "%" + keyword + "%");
+        ResultSet rs = ps.executeQuery();
 
-        } catch (Exception e) {
-            e.printStackTrace();
+        while (rs.next()) {
+            list.add(extractComplaint(rs));
         }
 
-        return list;
+    } catch (Exception e) {
+        e.printStackTrace();
     }
+
+    return list;
+}
 
     // =====================================================
     // 5. INSERT (User gửi khiếu nại)
@@ -210,7 +229,7 @@ public class ComplaintDAO {
     private ComplaintDTO extractComplaint(ResultSet rs) throws Exception {
         return new ComplaintDTO(
                 rs.getInt("id"),
-                rs.getString("user_id"),
+                rs.getString("email"),
                 rs.getInt("order_id"),
                 rs.getInt("product_id"),
                 rs.getString("title"),
