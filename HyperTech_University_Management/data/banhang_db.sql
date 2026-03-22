@@ -263,6 +263,7 @@ N'Intel Core Ultra 9 275HX', N'RTX 5080 16GB', N'32 GB', N'1 TB',
 N'18 inch', N'240 Hz',
 88390000,84990000,10,
 N'Laptop gaming ASUS ROG Strix SCAR 18 G835LW SA193W','l25.png');
+<<<<<<< HEAD
 INSERT INTO products
 (category_id,name,cpu,gpu,ram,ssd,screen,refresh_rate,old_price,new_price,stock,description,image)
 VALUES
@@ -278,6 +279,9 @@ N'AMD Ryzen 9 8945HS', N'RTX 4070', N'32 GB', N'1 TB',
 N'14 inch', N'180 Hz',
 58990000,55990000,10,
 N'Laptop gaming ASUS ROG Zephyrus G14 GA403WM QS058WS','l27.png');
+=======
+
+>>>>>>> 08a896c6e42796eb830424d19d7f6f525ca5c8be
 INSERT INTO cart (email,product_id,quantity) VALUES
 ('a@gmail.com',1,1),
 ('a@gmail.com',2,1),
@@ -501,6 +505,33 @@ WHERE name IN (
     N'Màn hình ViewSonic VA2708-2K-MHD 27 inch',
     N'Màn hình ViewSonic VX2882-4KP 28 inch'
 );
+<<<<<<< HEAD
+=======
+select *
+from products
+
+
+DELETE FROM products
+WHERE category_id = 5;
+
+SELECT name, COUNT(*) 
+FROM products
+GROUP BY name
+HAVING COUNT(*) > 1
+
+WITH temp AS (
+    SELECT *,
+           ROW_NUMBER() OVER (PARTITION BY name ORDER BY id) AS rn
+    FROM products
+)
+DELETE FROM temp
+WHERE rn > 1;
+
+SELECT name, COUNT(*) 
+FROM products
+GROUP BY name
+HAVING COUNT(*) > 1
+>>>>>>> 08a896c6e42796eb830424d19d7f6f525ca5c8be
 
 INSERT INTO products 
 (category_id, name, screen, refresh_rate, old_price, new_price, image)

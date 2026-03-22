@@ -479,9 +479,7 @@ public ProductDTO getById(int id) {
 
         try {
             Connection con = DbUtil.getConnection();
-            String sql = "SELECT * FROM products WHERE new_price > 18000000 AND new_price <= 25000000"+ "AND category_id = 1 ";
-
-                    
+            String sql = "SELECT * FROM products WHERE new_price > 18000000 AND new_price <= 25000000 AND category_id = 1";  
             PreparedStatement ps = con.prepareStatement(sql);
 
             ResultSet rs = ps.executeQuery();
@@ -520,10 +518,10 @@ public ProductDTO getById(int id) {
         ArrayList<ProductDTO> list = new ArrayList<>();
 
         try {
-            Connection con = DbUtil.getConnection();
+            Connection con = DbUtil.getConnection();        
             String sql = "SELECT * FROM products "
                     + "WHERE new_price > 25000000 AND new_price <= 30000000 "
-                    + "AND category_id = 1 ";
+                    + "AND category_id = 1 ";         
             PreparedStatement ps = con.prepareStatement(sql);
 
             ResultSet rs = ps.executeQuery();
