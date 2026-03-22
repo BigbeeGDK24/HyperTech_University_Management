@@ -110,6 +110,37 @@ public class OrderDAO {
         return list;
     }
 
+    public ArrayList<OrderDTO> searchOrders(String keywords) {
+
+        ArrayList<OrderDTO> list = new ArrayList<>();
+
+        String sql;
+        System.out.println("dao: "+ keywords);
+        if (keywords == null || keywords.trim().isEmpty()) {
+            sql = "SELECT * FROM orders";
+        } else {
+            sql = "SELECT * FROM orders WHERE email LIKE ? ";
+        }
+
+        try ( Connection conn = DbUtil.getConnection();  PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            if (keywords != null && !keywords.trim().isEmpty()) {
+                ps.setString(1, "%" + keywords.trim() + "%");
+            }
+
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                list.add(extractOrder(rs));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return list;
+    }
+
     // =====================================================
     // 5. SEARCH ORDER
     // =====================================================

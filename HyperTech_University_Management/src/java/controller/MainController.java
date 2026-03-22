@@ -31,6 +31,7 @@ public class MainController extends HttpServlet {
         } else if (action.equals("addUser")) {
             url = "UserController";
         } else if (action.equals("forgotPassword")) {
+            } else if (action.equals("deleteUser")) {
             url = "UserController";
             //======== PRODUCT  ===================
         } else if (action.contains("Product")) {
@@ -39,7 +40,9 @@ public class MainController extends HttpServlet {
         } else if (action.contains("Complain")) {
 
             url = "ComplainController";
+} else if (action.equals("searchUserByAd")) {
 
+            url = "UserController";
             // ================= CART =================
         } else if (action.equals("Cart")
                 || action.equals("AddCart")
@@ -55,7 +58,8 @@ public class MainController extends HttpServlet {
                 || action.equals("cancelOrder")
                 || action.equals("updateOrder")
                 || action.equals("saveUpdateOrder")
-                || action.equals("statisticsOrder")) {
+                || action.equals("statisticsOrder")
+                || action.equals("searchOrderByAd")) {
 
             url = "OrderController";
 
