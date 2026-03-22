@@ -41,8 +41,8 @@ public class MailUtil {
                     InternetAddress.parse(to)
             );
 
-            message.setSubject(subject);
-            message.setText(content);
+            message.setSubject(javax.mail.internet.MimeUtility.encodeText(subject, "UTF-8", "B"));
+            message.setContent(content, "text/html; charset=UTF-8");
 
             Transport.send(message);
 
