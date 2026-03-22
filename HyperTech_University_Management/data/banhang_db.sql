@@ -136,9 +136,7 @@ CREATE TABLE complaints (
     product_id INT,
     title NVARCHAR(200),
     content NVARCHAR(MAX),
-    status VARCHAR(20)
-        CHECK (status IN ('pending','processing','resolved','rejected'))
-        DEFAULT 'pending',
+
 
     FOREIGN KEY (email) REFERENCES users(email),
     FOREIGN KEY (order_id) REFERENCES orders(id),
@@ -169,10 +167,10 @@ CREATE TABLE payments (
 
 -- ================= INSERT USERS =================
 INSERT INTO users (email, username, password, phone, address) VALUES
-('a@gmail.com',N'Nguyễn Văn A','123456','0900000001',N'Hà Nội'),
-('b@gmail.com',N'Trần Thị B','123456','0900000002',N'Hồ Chí Minh'),
-('c@gmail.com',N'Lê Văn C','123456','0900000003',N'Đà Nẵng'),
-('d@gmail.com',N'Phạm Thị D','123456','0900000004',N'Cần Thơ');
+('a@gmail.com',N'Nguyễn Văn A','$2a$10$7EqJtq98hPqEX7fNZaFWoOe5n7y4F7n9k1Z8w3YQ7g6X8kFQK7G9r','0900000001',N'Hà Nội'),
+('b@gmail.com',N'Trần Thị B','$2a$10$Wl1x0p9vG6kQJ3Yt8Fz0BOd9u4H8n2Lm5PqR7sT1UvXyZ0aBcDeFg','0900000002',N'Hồ Chí Minh'),
+('c@gmail.com',N'Lê Văn C','$2a$10$k9H3LpQw8ZrT6YxV1aBcDeFgHiJkLmNoPqRsTuVwXyZ1234567890','0900000003',N'Đà Nẵng'),
+('d@gmail.com',N'Phạm Thị D','$2a$10$ZxCvBnM1QwErTyUiOpAsDfGhJkLzXcVbNmQwErTyUiOpAsDfGhJkL','0900000004',N'Cần Thơ');
 
 -- ================= INSERT ADMINS =================
 INSERT INTO admins (username,password) VALUES
@@ -588,3 +586,20 @@ DELETE FROM products
 WHERE category_id = 5
 AND name LIKE N'%OLED%';
 
+-- 5. GÁN CHO TOÀN BỘ PRODUCT
+INSERT INTO product_discounts (product_id, discount_id)
+SELECT id, @discountId FROM products;
+
+SELECT * FROM complaints;
+INSERT INTO complaints (email, order_id, product_id, title, content)
+VALUES 
+('a@gmail.com', 1, 1, N'Sản phẩm lỗi', N'Sản phẩm bị hỏng sau khi sử dụng'),
+('a@gmail.com', 2, 2, N'Giao hàng chậm', N'Đơn hàng giao trễ hơn dự kiến'),
+('b@gmail.com', 3, 3, N'Sai sản phẩm', N'Nhận sai sản phẩm đã đặt'),
+('b@gmail.com', 4, 4, N'Thiếu phụ kiện', N'Sản phẩm thiếu phụ kiện'),
+('c@gmail.com', 1, 5, N'Chất lượng kém', N'Sản phẩm không như quảng cáo'),
+('c@gmail.com', 2, 6, N'Không hoạt động', N'Sản phẩm không khởi động được'),
+('d@gmail.com', 3, 7, N'Đóng gói kém', N'Hộp bị móp méo'),
+('d@gmail.com', 4, 8, N'Sai màu', N'Màu không đúng mô tả'),
+('a@gmail.com', 1, 9, N'Chưa nhận hàng', N'Đã thanh toán nhưng chưa nhận'),
+('b@gmail.com', 2, 10, N'Yêu cầu đổi trả', N'Muốn đổi sản phẩm khác');

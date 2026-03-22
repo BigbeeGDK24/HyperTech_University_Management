@@ -59,7 +59,7 @@ public class ComplainController extends HttpServlet {
         String keywords = request.getParameter("keywords");
         String category = request.getParameter("category");
         System.out.println(keywords);
-        System.out.println("cate"+category);
+        System.out.println("cate" + category);
         ComplaintDAO dao = new ComplaintDAO();
         ArrayList<ComplaintDTO> list;
 
@@ -81,9 +81,7 @@ public class ComplainController extends HttpServlet {
         } else {
             list = dao.searchByProductName(keywords);
         }
-        System.out.println(list);
         request.setAttribute("list", list);
-
         request.getRequestDispatcher("complain.jsp").forward(request, response);
     }
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -125,7 +123,5 @@ public class ComplainController extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
-
-
 
 }

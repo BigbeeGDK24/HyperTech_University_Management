@@ -160,7 +160,7 @@
                     <a href="ProductController?action=list">
                         <img class="banner-small" src="images/laptopgaming.jpg">
                     </a>
-                    <a href="MainController?action=searchProduct&category=2">
+                    <a href="MainController?action=searchProductMouse">
                         <img class="banner-small" src="images/chuotgaming.jpg">
                     </a>
                 </div>

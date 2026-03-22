@@ -119,17 +119,16 @@ String sql = "SELECT c.* " +
     // 5. INSERT (User gửi khiếu nại)
     // =====================================================
     public boolean insert(ComplaintDTO c) {
-        String sql = "INSERT INTO complaints (user_id, order_id, product_id, title, content, status) "
+        String sql = "INSERT INTO complaints (email, order_id, product_id, title, content) "
                 + "VALUES (?, ?, ?, ?, ?, ?)";
 
         try ( Connection conn = DbUtil.getConnection();  PreparedStatement ps = conn.prepareStatement(sql)) {
 
-            ps.setString(1, c.getUserId());
+            ps.setString(1, c.getEmail());
             ps.setInt(2, c.getOrderId());
             ps.setInt(3, c.getProductId());
             ps.setString(4, c.getTitle());
             ps.setString(5, c.getContent());
-            ps.setString(6, c.getStatus()); // thường là "pending"
 
             return ps.executeUpdate() > 0;
 
@@ -145,16 +144,15 @@ String sql = "SELECT c.* " +
     // =====================================================
     public boolean update(ComplaintDTO c) {
         String sql = "UPDATE complaints SET user_id=?, order_id=?, product_id=?, "
-                + "title=?, content=?, status=? WHERE id=?";
+                + "title=?, content=? WHERE id=?";
 
         try ( Connection conn = DbUtil.getConnection();  PreparedStatement ps = conn.prepareStatement(sql)) {
 
-            ps.setString(1, c.getUserId());
+            ps.setString(1, c.getEmail());
             ps.setInt(2, c.getOrderId());
             ps.setInt(3, c.getProductId());
             ps.setString(4, c.getTitle());
             ps.setString(5, c.getContent());
-            ps.setString(6, c.getStatus());
             ps.setInt(7, c.getId());
 
             return ps.executeUpdate() > 0;
@@ -227,14 +225,15 @@ String sql = "SELECT c.* " +
     // HÀM HỖ TRỢ: CHUYỂN ResultSet → ComplaintDTO
     // =====================================================
     private ComplaintDTO extractComplaint(ResultSet rs) throws Exception {
-        return new ComplaintDTO(
-                rs.getInt("id"),
-                rs.getString("email"),
-                rs.getInt("order_id"),
-                rs.getInt("product_id"),
-                rs.getString("title"),
-                rs.getString("content"),
-                rs.getString("status")
-        );
-    }
+    ComplaintDTO c = new ComplaintDTO();
+
+    c.setId(rs.getInt("id"));
+    c.setEmail(rs.getString("email"));
+    c.setOrderId(rs.getInt("order_id"));
+    c.setProductId(rs.getInt("product_id"));
+    c.setTitle(rs.getString("title"));
+    c.setContent(rs.getString("content"));
+
+    return c;
+}
 }

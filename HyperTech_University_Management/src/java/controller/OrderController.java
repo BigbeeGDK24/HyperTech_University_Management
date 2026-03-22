@@ -60,7 +60,11 @@ public class OrderController extends HttpServlet {
                     handleDelete(request, response);
 
                     break;
+                case "searchOrderByAd":
 
+                    searchOrderbyad(request, response);
+
+                    break;
                 case "updateOrder":
                     if (isAdmin(request)) {
                         handleUpdate(request, response);
@@ -194,6 +198,25 @@ public class OrderController extends HttpServlet {
 
         } else {
             response.sendRedirect("cart.jsp?error=orderFail");
+        }
+    }
+
+    protected void searchOrderbyad(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        try {
+            String keywords = request.getParameter("keywords");
+            System.out.println("control" + keywords);
+            OrderDAO dao = new OrderDAO();
+            ArrayList<OrderDTO> list = dao.searchOrders(keywords);
+
+            request.setAttribute("list", list);
+
+            request.getRequestDispatcher("order.jsp").forward(request, response);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.sendRedirect("order.jsp");
         }
     }
 

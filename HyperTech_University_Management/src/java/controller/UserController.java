@@ -49,56 +49,29 @@ public class UserController extends HttpServlet {
         response.sendRedirect("index.jsp");
     }
 
-    // ================= DELETE USER =================
-    protected void doDelete(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-
-        String keywords = request.getParameter("keywords");
-        String email = request.getParameter("email");
-
-        if (keywords == null) {
-            keywords = "";
-        }
-
-        UserDAO dao = new UserDAO();
-
-        if (email != null && !email.isEmpty()) {
-
-            boolean check = dao.updateUserStatus(email, false);
-
-            if (check) {
-                request.setAttribute("msg", "Deleted!");
-            } else {
-                request.setAttribute("msg", "Cannot delete user: " + email);
-            }
-        }
-
-        ArrayList<UserDTO> list = dao.filterByColumn("username", keywords);
-
-        request.setAttribute("list", list);
-        request.setAttribute("keywords", keywords);
-
-        request.getRequestDispatcher("search.jsp").forward(request, response);
-    }
-
     // ================= SEARCH USER =================
     protected void doSearch(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        String keywords = request.getParameter("keywords");
+        String keyword = request.getParameter("keyword");
 
-        if (keywords == null) {
-            keywords = "";
+        if (keyword == null) {
+            keyword = "";
         }
 
         UserDAO dao = new UserDAO();
+        ArrayList<UserDTO> list;
 
-        ArrayList<UserDTO> list = dao.filterByColumn("username", keywords);
+        if (keyword.trim().isEmpty()) {
+            list = new ArrayList<>(dao.getAllUsers());
+        } else {
+            list = dao.filterByColumn2("email", keyword);
+        }
 
         request.setAttribute("list", list);
-        request.setAttribute("keywords", keywords);
+        request.setAttribute("keyword", keyword);
 
-        request.getRequestDispatcher("search.jsp").forward(request, response);
+        request.getRequestDispatcher("user.jsp").forward(request, response);
     }
 
     // ================= LOAD USER TO UPDATE =================
@@ -248,6 +221,32 @@ public class UserController extends HttpServlet {
 
         request.getRequestDispatcher("university-form.jsp").forward(request, response);
     }
+// ================= DELETE USER =================
+
+    @Override
+    // ================= DELETE USER (SOFT DELETE) =================
+    protected void doDelete(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        String email = request.getParameter("email");
+        String keyword = request.getParameter("keyword");
+
+        if (keyword == null) {
+            keyword = "";
+        }
+
+        UserDAO dao = new UserDAO();
+
+        // 🔥 đổi sang update status = 0
+        boolean success = dao.disableUser(email);
+
+        if (success) {
+            response.sendRedirect("UserController?action=searchUserByAd&keyword=" + keyword);
+        } else {
+            request.setAttribute("error", "Không thể xóa user!");
+            request.getRequestDispatcher("user.jsp").forward(request, response);
+        }
+    }
 
     // ================= GET ALL USERS =================
     protected void doGetAll(HttpServletRequest request, HttpServletResponse response)
@@ -305,6 +304,9 @@ public class UserController extends HttpServlet {
                 doGetAll(request, response);
                 break;
 
+            case "searchUserByAd":
+                doSearch(request, response);
+                break;
             default:
                 doSearch(request, response);
                 break;

@@ -5,7 +5,7 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -13,6 +13,9 @@
         <title>JSP Page</title>
     </head>
     <body>
+        <br><br><br>
+
+<h2>XEM PHẢN HỒI</h2>
         <div style="display:flex; justify-content:space-between; margin-bottom:15px;">
 
             <form action="MainController" method="get">
@@ -40,11 +43,13 @@
             <tr>
                 <th>ID</th>
                 <th>Email</th>
-                <th>Tên sản phẩm</th>
+                <th>Mã sản phẩm</th>
                 <th>Tiêu đề</th>
                 <th>Nội dung</th>
             </tr>
+<c:forEach var="c" items="${list}">
 
+</c:forEach>
             <c:forEach var="c" items="${list}">
                 <tr>
                     <td>${c.id}</td>

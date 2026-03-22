@@ -40,6 +40,43 @@ public class UserDAO {
         return user;
     }
 
+    public ArrayList<UserDTO> filterByColumn2(String column, String value) {
+
+        ArrayList<UserDTO> result = new ArrayList<>();
+
+        try {
+
+            Connection conn = DbUtil.getConnection();
+
+            String sql = "SELECT * FROM users WHERE " + column + " LIKE ?";
+
+            PreparedStatement ps = conn.prepareStatement(sql);
+
+            ps.setString(1, "%" + value + "%");
+
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+
+                UserDTO u = new UserDTO(
+                        rs.getString("email"),
+                        rs.getString("username"),
+                        rs.getString("password"),
+                        rs.getString("phone"),
+                        rs.getString("address"),
+                        rs.getBoolean("status")
+                );
+
+                result.add(u);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return result;
+    }
+
     // ================= FILTER USER =================
     public ArrayList<UserDTO> filterByColumn(String column, String value) {
 
@@ -222,6 +259,23 @@ public class UserDAO {
         return false;
     }
 
+    public boolean deleteUser(String email) {
+
+        String sql = "DELETE FROM users WHERE email = ?";
+
+        try ( Connection conn = DbUtil.getConnection();  PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, email);
+
+            return ps.executeUpdate() > 0;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
     // ================= COUNT USERS =================
     public int countUsers() {
 
@@ -241,5 +295,22 @@ public class UserDAO {
         }
 
         return count;
+    }
+
+    public boolean disableUser(String email) {
+
+        String sql = "UPDATE users SET status = 0 WHERE email = ?";
+
+        try ( Connection conn = DbUtil.getConnection();  PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, email);
+
+            return ps.executeUpdate() > 0;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return false;
     }
 }
