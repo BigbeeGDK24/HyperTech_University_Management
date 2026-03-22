@@ -30,6 +30,8 @@ String url = "index.jsp";
             url = "UserController";
         } else if (action.equals("addUser")) {
             url = "UserController";
+            } else if (action.equals("deleteUser")) {
+            url = "UserController";
             //======== PRODUCT  ===================
         } else if (action.contains("Product")) {
 
@@ -37,7 +39,9 @@ String url = "index.jsp";
             } else if (action.contains("Complain")) {
 
             url = "ComplainController";
+} else if (action.equals("searchUserByAd")) {
 
+            url = "UserController";
             // ================= CART =================
         } else if (action.equals("viewCart")
                 || action.equals("AddCart")
@@ -53,7 +57,8 @@ String url = "index.jsp";
                 || action.equals("cancelOrder")
                 || action.equals("updateOrder")
                 || action.equals("saveUpdateOrder")
-                || action.equals("statisticsOrder")) {
+                || action.equals("statisticsOrder")
+                || action.equals("searchOrderByAd")) {
 
             url = "OrderController";
 

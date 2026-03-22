@@ -10,26 +10,25 @@ package model;
  */
 public class ComplaintDTO {
     private int id;
-    private String userId;
+    private String email;
     private int orderId;
     private int productId;
     private String title;
     private String content;
-    private String status;
 
     public ComplaintDTO() {
     }
 
-    public ComplaintDTO(int id, String userId, int orderId, int productId, String title, String content, String status) {
+    public ComplaintDTO(int id, String email, int orderId, int productId, String title, String content) {
         this.id = id;
-        this.userId = userId;
+        this.email = email;
         this.orderId = orderId;
         this.productId = productId;
         this.title = title;
         this.content = content;
-        this.status = status;
     }
 
+    
     public int getId() {
         return id;
     }
@@ -38,12 +37,12 @@ public class ComplaintDTO {
         this.id = id;
     }
 
-    public String getUserId() {
-        return userId;
+    public String getEmail() {
+        return email;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public int getOrderId() {
@@ -78,12 +77,6 @@ public class ComplaintDTO {
         this.content = content;
     }
 
-    public String getStatus() {
-        return status;
-    }
 
-    public void setStatus(String status) {
-        this.status = status;
-    }
     
 }
