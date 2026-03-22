@@ -152,26 +152,6 @@
                 </p>
             </div>
 
-            <!-- ================= TIMELINE ================= -->
-            <div class="timeline">
-
-                <div>
-                    <div style="font-size:30px;color:<%= "pending".equals(status) ? "orange" : "gray"%>">🟡</div>
-                    <div>Đang xử lý</div>
-                </div>
-
-                <div>
-                    <div style="font-size:30px;color:<%= "shipping".equals(status) ? "blue" : "gray"%>">🚚</div>
-                    <div>Đang giao</div>
-                </div>
-
-                <div>
-                    <div style="font-size:30px;color:<%= "completed".equals(status) ? "green" : "gray"%>">✅</div>
-                    <div>Hoàn tất</div>
-                </div>
-
-            </div>
-
             <!-- ================= PRODUCT ================= -->
             <%
                 CartDTO cart = (CartDTO) session.getAttribute("LAST_CART");

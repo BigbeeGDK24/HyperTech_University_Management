@@ -49,14 +49,36 @@ String url = "index.jsp";
             // ================= ORDER =================
         } else if (action.equals("createOrder")
                 || action.equals("searchOrder")
-                || action.equals("deleteOrder")
+                || action.equals("cancelOrder")
                 || action.equals("updateOrder")
                 || action.equals("saveUpdateOrder")
                 || action.equals("statisticsOrder")) {
 
             url = "OrderController";
 
-            // ================= 🔥 CHECKOUT FLOW (FIX CHUẨN) =================
+            // ================= SAVE INFO =================
+        } else if (action.equals("saveInfo")) {
+
+            HttpSession session = request.getSession();
+
+            String fullname = request.getParameter("fullname");
+            String email = request.getParameter("email");
+            String phone = request.getParameter("phone");
+            String address = request.getParameter("address");
+
+            // ✅ lưu session
+            session.setAttribute("FULLNAME", fullname);
+            session.setAttribute("EMAIL", email);
+            session.setAttribute("PHONE", phone);
+            session.setAttribute("ADDRESS", address);
+
+            // 🔥 FIX: xác nhận đã nhập thông tin
+            session.setAttribute("INFO_CONFIRMED", true);
+
+            response.sendRedirect("MainController?action=checkout");
+            return;
+
+            // ================= CHECKOUT =================
         } else if (action.equals("checkout")) {
 
             HttpSession session = request.getSession();
@@ -70,20 +92,42 @@ String url = "index.jsp";
 
             } else {
 
-                // ✔ check thiếu info
-                if (user.getPhone() == null || user.getPhone().isEmpty()
-                        || user.getAddress() == null || user.getAddress().isEmpty()) {
+                String phone = (String) session.getAttribute("PHONE");
+                String address = (String) session.getAttribute("ADDRESS");
+
+                // 👉 giữ info user
+                session.setAttribute("FULLNAME", user.getUsername());
+                session.setAttribute("EMAIL", user.getEmail());
+
+                if (phone != null) {
+                    session.setAttribute("PHONE", phone);
+                }
+                if (address != null) {
+                    session.setAttribute("ADDRESS", address);
+                }
+
+                // 👉 update DB
+                if (phone != null && !phone.isEmpty()
+                        && address != null && !address.isEmpty()) {
+
+                    user.setPhone(phone);
+                    user.setAddress(address);
+
+                    new model.UserDAO().updateContact(user.getEmail(), phone, address);
+
+                    session.setAttribute("user", user);
+                }
+
+                // 🔥 FIX LOOP
+                Boolean confirmed = (Boolean) session.getAttribute("INFO_CONFIRMED");
+
+                if (confirmed == null || !confirmed) {
 
                     url = "information.jsp";
 
                 } else {
 
-                    // ✔ đủ info → set session
-                    session.setAttribute("FULLNAME", user.getUsername());
-                    session.setAttribute("EMAIL", user.getEmail());
-                    session.setAttribute("PHONE", user.getPhone());
-                    session.setAttribute("ADDRESS", user.getAddress());
-
+                    session.removeAttribute("INFO_CONFIRMED");
                     url = "payment.jsp";
                 }
             }
