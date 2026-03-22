@@ -8,9 +8,9 @@
 <!-- ===== SEARCH + ADD ===== -->
 <div style="display:flex; justify-content:space-between; margin-bottom:15px;">
 
-    <form action="ProductController" method="get">
+    <form action="MainController" method="get">
 
-        <input type="hidden" name="action" value="searchByAd"/>
+        <input type="hidden" name="action" value="searchProductByAd"/>
 
         <input type="text" name="keywords"
                value="${param.keywords}"
@@ -25,8 +25,9 @@
         <button type="submit">Tìm</button>
     </form>
 
-    <button onclick="openForm()">+ Thêm</button>
-
+    <a href="updateProduct.jsp">
+        <button type="button">+ Thêm</button>
+    </a>
 </div>
 
 <!-- ===== TABLE ===== -->
@@ -37,16 +38,17 @@
             <th>ID</th>
             <th>Tên</th>
 
-            <c:if test="${isLaptop}">
+            <c:if test="${isLaptop}">            
                 <th>CPU</th>
                 <th>GPU</th>
                 <th>SSD</th>
                 <th>Màn hình</th>
                 <th>Hz</th>
-            </c:if>
+                </c:if>
 
             <th>RAM</th>
             <th>Giá</th>
+            <th>Status</th>
             <th>Hành động</th>
         </tr>
 
@@ -55,7 +57,7 @@
                 <td>${p.id}</td>
                 <td>${p.name}</td>
 
-                <c:if test="${isLaptop}">
+                <c:if test="${isLaptop}">                 
                     <td>${p.cpu}</td>
                     <td>${p.gpu}</td>
                     <td>${p.ssd}</td>
@@ -65,26 +67,19 @@
 
                 <td>${p.ram}</td>
                 <td>${p.new_price}</td>
-
+                <td>${p.status}</td>
                 <td>
-                    <button type="button"
-                        onclick="editProduct(
-                            '${p.id}',
-                            '${p.name}',
-                            '${p.cpu}',
-                            '${p.gpu}',
-                            '${p.ram}',
-                            '${p.ssd}',
-                            '${p.old_price}',
-                            '${p.new_price}',
-                            '${p.image}'
-                        )">
-                        Update
-                    </button>
+                    <form action="MainController" method="get">
+                        <input type="hidden" name="action" value="updateProduct" />
+                        <input type="hidden" name="id" value="${p.id}" />
+                        <input type="hidden" name="keyword" value="${param.keyword}" />
 
-                    <form action="ProductController" method="post" style="display:inline;">
+                        <button type="submit">Update</button>
+                    </form>
+
+                    <form action="MainController" method="post" style="display:inline;">
                         <input type="hidden" name="id" value="${p.id}">
-                        <button type="submit" name="action" value="deleteLaptop">
+                        <button type="submit" name="action" value="deleteProduct">
                             Delete
                         </button>
                     </form>

@@ -310,7 +310,7 @@
             </div>
 
         </form>
-
+       
         <!-- DIVIDER -->
         <div class="divider">
             <span>hoặc đăng ký bằng</span>
