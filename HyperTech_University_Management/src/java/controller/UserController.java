@@ -14,6 +14,7 @@ public class UserController extends HttpServlet {
             throws ServletException, IOException {
 
         request.setCharacterEncoding("UTF-8");
+        response.setContentType("text/plain"); // 🔥 QUAN TRỌNG
 
         String email = request.getParameter("txtUsername");
         String password = request.getParameter("txtPassword");
@@ -23,16 +24,14 @@ public class UserController extends HttpServlet {
         HttpSession session = request.getSession();
 
         if (user != null) {
-
             session.setAttribute("user", user);
-            response.sendRedirect("header.jsp");
+
+            // ✅ trả về cho JS
+            response.getWriter().write("success");
 
         } else {
-
-            request.setAttribute("message", "Sai email hoặc mật khẩu");
-            request.setAttribute("showLoginModal", true);
-
-            request.getRequestDispatcher("index.jsp").forward(request, response);
+            // ❌ KHÔNG redirect nữa
+            response.getWriter().write("error");
         }
     }
 
@@ -114,7 +113,7 @@ public class UserController extends HttpServlet {
 
     private boolean checkpass(HttpServletRequest request) {
         String password = request.getParameter("password");
-        String passcom = request.getParameter("password");
+        String passcom = request.getParameter("confirm_password");
 
         return password.equalsIgnoreCase(passcom);
     }
@@ -192,6 +191,54 @@ public class UserController extends HttpServlet {
         request.setAttribute("error", error);
 
         request.getRequestDispatcher("index.jsp").forward(request, response);
+    }
+// ================= FORGOT PASSWORD =================
+
+    protected void doForgotPassword(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        String email = request.getParameter("email");
+        // 🔥 VALIDATE Ở CONTROLLER
+        if (email == null || !email.matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
+            request.getSession().setAttribute("message", "Email không hợp lệ!");
+            response.sendRedirect("index.jsp");
+            return;
+        }
+        UserDAO dao = new UserDAO();
+        UserDTO user = dao.searchByEmail(email);
+
+        if (user != null) {
+
+            // 🔥 tạo password mới
+            String newPass = String.format("%06d", (int) (Math.random() * 1000000));
+
+            // hash password
+            String hashed = org.mindrot.jbcrypt.BCrypt.hashpw(newPass, org.mindrot.jbcrypt.BCrypt.gensalt());
+
+            // update DB
+            dao.updatePassword(email, hashed);
+
+            // gửi mail
+            String subject = "🔐 Reset mật khẩu";
+            String content = "<div style='font-family:sans-serif'>"
+                    + "<h2>🔐 Reset mật khẩu</h2>"
+                    + "<p>Xin chào <b>" + user.getUsername() + "</b>,</p>"
+                    + "<p>Mật khẩu mới của bạn là:</p>"
+                    + "<h1 style='color:red'>" + newPass + "</h1>"
+                    + "<p>👉 Vui lòng đăng nhập và đổi lại mật khẩu để bảo mật tài khoản.</p>"
+                    + "<hr>"
+                    + "<p>💖 Cảm ơn bạn đã tin tưởng TKT Shop</p>"
+                    + "</div>";
+
+            util.MailUtil.sendEmail(email, subject, content);
+
+            request.getSession().setAttribute("message", "Đã gửi mật khẩu mới về email!");
+
+        } else {
+            request.getSession().setAttribute("message", "Email không tồn tại!");
+        }
+
+        response.sendRedirect("index.jsp");
     }
 
     // ================= SAVE UPDATE =================
@@ -287,7 +334,9 @@ public class UserController extends HttpServlet {
             case "addUser":
                 doAdd(request, response);
                 break;
-
+            case "forgotPassword":
+                doForgotPassword(request, response);
+                break;
             case "deleteUser":
                 doDelete(request, response);
                 break;

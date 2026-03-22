@@ -16,8 +16,8 @@ public class MainController extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
 
         String action = request.getParameter("action");
-String url = "index.jsp";
-            System.out.println(action);
+        String url = "index.jsp";
+        System.out.println(action);
 
         if (action == null) {
             url = "index.jsp";
@@ -30,20 +30,21 @@ String url = "index.jsp";
             url = "UserController";
         } else if (action.equals("addUser")) {
             url = "UserController";
+        } else if (action.equals("forgotPassword")) {
             } else if (action.equals("deleteUser")) {
             url = "UserController";
             //======== PRODUCT  ===================
         } else if (action.contains("Product")) {
 
             url = "ProductController";
-            } else if (action.contains("Complain")) {
+        } else if (action.contains("Complain")) {
 
             url = "ComplainController";
 } else if (action.equals("searchUserByAd")) {
 
             url = "UserController";
             // ================= CART =================
-        } else if (action.equals("viewCart")
+        } else if (action.equals("Cart")
                 || action.equals("AddCart")
                 || action.equals("UpdateCart")
                 || action.equals("RemoveCart")
@@ -152,13 +153,14 @@ String url = "index.jsp";
 
         request.getRequestDispatcher(url).forward(request, response);
     }
+
     private int safeParseInt(String value) {
-    try {
-        return Integer.parseInt(value);
-    } catch (Exception e) {
-        return 0;
+        try {
+            return Integer.parseInt(value);
+        } catch (Exception e) {
+            return 0;
+        }
     }
-}
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
