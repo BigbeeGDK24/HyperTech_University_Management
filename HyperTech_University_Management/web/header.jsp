@@ -355,7 +355,8 @@
                 loginModal.classList.add("show");
             });
         }
-if (closeModal) {
+
+        if (closeModal) {
             closeModal.addEventListener("click", function () {
                 loginModal.classList.remove("show");
             });
