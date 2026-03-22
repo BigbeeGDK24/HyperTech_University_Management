@@ -16,11 +16,9 @@ public class MainController extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
 
         String action = request.getParameter("action");
-int id =safeParseInt((request.getParameter("id")));
 String url = "index.jsp";
-            
-        System.out.println("Main: " + action);
-        System.out.println("Main: " + id);
+            System.out.println(action);
+
         if (action == null) {
             url = "index.jsp";
 
@@ -36,6 +34,9 @@ String url = "index.jsp";
         } else if (action.contains("Product")) {
 
             url = "ProductController";
+            } else if (action.contains("Complain")) {
+
+            url = "ComplainController";
 
             // ================= CART =================
         } else if (action.equals("viewCart")
