@@ -297,7 +297,7 @@ public class UserDAO {
         return count;
     }
 
-    public boolean disableUser(String email) {
+    public boolean disableUser(String email) {          
 
         String sql = "UPDATE users SET status = 0 WHERE email = ?";
 
