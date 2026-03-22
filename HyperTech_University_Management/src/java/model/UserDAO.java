@@ -113,7 +113,7 @@ public class UserDAO {
 
         UserDTO user = searchByEmail(email);
         if (user != null) {
-            
+
             if (BCrypt.checkpw(passwordInput, user.getPassword())) {
                 if (user.isStatus()) {
                     return user;
@@ -201,6 +201,25 @@ public class UserDAO {
         }
 
         return check;
+    }
+
+    public boolean updateContact(String email, String phone, String address) {
+        try {
+            Connection con = DbUtil.getConnection();
+
+            String sql = "UPDATE users SET phone=?, address=? WHERE email=?";
+            PreparedStatement ps = con.prepareStatement(sql);
+
+            ps.setString(1, phone);
+            ps.setString(2, address);
+            ps.setString(3, email);
+
+            return ps.executeUpdate() > 0;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     // ================= COUNT USERS =================

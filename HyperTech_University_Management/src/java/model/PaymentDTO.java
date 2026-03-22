@@ -18,21 +18,20 @@ public class PaymentDTO {
 
     private int id;
     private int orderId;
-    private String userId;
+    private String email;
     private String paymentMethod;
     private float amount;
     private String status;
     private String transactionCode;
     private Date paid_at;
 
-
     public PaymentDTO() {
     }
 
-    public PaymentDTO(int id, int orderId, String userId, String paymentMethod, float amount, String status, String transactionCode, Date paid_at) {
+    public PaymentDTO(int id, int orderId, String email, String paymentMethod, float amount, String status, String transactionCode, Date paid_at) {
         this.id = id;
         this.orderId = orderId;
-        this.userId = userId;
+        this.email = email;
         this.paymentMethod = paymentMethod;
         this.amount = amount;
         this.status = status;
@@ -56,12 +55,12 @@ public class PaymentDTO {
         this.orderId = orderId;
     }
 
-    public String getUserId() {
-        return userId;
+    public String getEmail() {
+        return email;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getPaymentMethod() {
@@ -103,6 +102,9 @@ public class PaymentDTO {
     public void setPaid_at(Date paid_at) {
         this.paid_at = paid_at;
     }
+
+
+   
 
     
     
