@@ -212,7 +212,6 @@ VALUES
 (1,N'Laptop gaming HP VICTUS 15 fb3116AX','R7-7445HS','RTX 3050','16 GB','512 GB','15.6 FHD','144 Hz',25990000,20990000,10,N'HP Victus Ryzen7 RTX3050','l10.png'),
 (1,N'Laptop gaming MSI Katana A15 AI B8VE','R7-8845HS','RTX 4050','16 GB','512 GB','15.6 FHD','144 Hz',28990000,23990000,10,N'MSI Katana RTX4050','l11.png'),
 (1,N'Laptop gaming Lenovo LOQ 15ARP9','R5-7235HS','RTX 3050','16 GB','1 TB','15.6 FHD','144 Hz',24490000,22290000,10,N'Lenovo LOQ RTX3050','l12.png'),
-(1,N'Laptop gaming Acer Predator Helios PHN',N'Ultra 7 255HX', N'RTX 5060', N'32 GB', N'1 TB',N'16 inch 2K+', N'240 Hz',56990000, 56990000,10,'Acer Predator Helios PHN', 'l16.png'),
 (1,N'Laptop gaming Acer Nitro ProPanel ANV15',
 N'R7-7735HS', N'RTX 4050', N'16 GB', N'512 GB',
 N'15.6 inch FHD', N'180 Hz',
@@ -265,19 +264,7 @@ N'Laptop gaming HP OMEN 16-am0178TX BX8Y4PA','l24.png'),
 N'Intel Core Ultra 9 275HX', N'RTX 5080 16GB', N'32 GB', N'1 TB',
 N'18 inch', N'240 Hz',
 88390000,84990000,10,
-N'Laptop gaming ASUS ROG Strix SCAR 18 G835LW SA193W','l25.png'),
-
-(1,N'Laptop gaming Lenovo Legion 5 15AHP10 83M0002XVN',
-N'AMD Ryzen 7 260', N'RTX 5050', N'24 GB', N'512 GB',
-N'15 inch', N'180 Hz',
-39490000,36990000,10,
-N'Laptop gaming Lenovo Legion 5 15AHP10 83M0002XVN','l26.png'),
-
-(1,N'Laptop gaming ASUS ROG Zephyrus G14 GA403WM QS058WS',
-N'AMD Ryzen 9 8945HS', N'RTX 4070', N'32 GB', N'1 TB',
-N'14 inch', N'180 Hz',
-58990000,55990000,10,
-N'Laptop gaming ASUS ROG Zephyrus G14 GA403WM QS058WS','l27.png')
+N'Laptop gaming ASUS ROG Strix SCAR 18 G835LW SA193W','l25.png');
 
 INSERT INTO cart (email,product_id,quantity) VALUES
 ('a@gmail.com',1,1),
@@ -456,44 +443,29 @@ INSERT INTO products (category_id, name, old_price, new_price, image)
 VALUES
 (3, N'BÀN PHÍM CƠ ASUS ROG AZOTH X WIRELESS NX SNOW V2 SWITCH', 7999000, 6489000, 'b29.jpg');
 
-INSERT INTO products (category_id, name, old_price, new_price, image) VALUES
-(2, N'Màn hình ASUS TUF GAMING VG27AQ5A', 5990000, 4990000, 'mh1.jpg'),
-(2, N'Màn hình ViewSonic VX2882-4KP 28 inch', 15990000, 8390000, 'mh2.jpg'),
-(2, N'Màn hình ViewSonic VA2432A-H 24 inch', 3590000, 2050000, 'mh3.jpg'),
-(2, N'Màn hình ASUS TUF VG259Q5A 25 inch', 3990000, 2990000, 'mh4.jpg'),
-(2, N'Màn hình ViewSonic VA2432-H-2 24 inch', 2590000, 1990000, 'mh5.jpg'),
-(2, N'Màn hình ASUS VY249HGR 24 inch', 3090000, 2250000, 'mh6.jpg'),
-(2, N'Màn hình ASUS TUF VG249Q5A 24 inch', 3990000, 2590000, 'mh7.jpg'),
-(2, N'Màn hình ViewSonic VX2479A-HD-PRO 24 inch', 4490000, 2790000, 'mh8.jpg'),
-(2, N'Màn hình Acer KG240Y-X1 24 inch', 3790000, 2690000, 'mh9.jpg'),
-(2, N'Màn hình ViewSonic VA2708-2K-MHD 27 inch', 4190000, 3690000, 'mh10.jpg'),
-(2, N'Màn hình MSI MAG 274QF X24 27 inch', 6990000, 5490000, 'mh11.jpg');
+INSERT INTO products (category_id, name, screen, old_price, new_price, image) VALUES
+(5, N'Màn hình ASUS TUF GAMING VG27AQ5A', '27 inch', 5990000, 4990000, 'mh1.jpg'),
+(5, N'Màn hình ViewSonic VX2882-4KP 28 inch', '28 inch', 15990000, 8390000, 'mh2.jpg'),
+(5, N'Màn hình ViewSonic VA2432A-H 24 inch', '24 inch', 3590000, 2050000, 'mh3.jpg'),
+(5, N'Màn hình ASUS TUF VG259Q5A 25 inch', '25 inch', 4220000, 2950000, 'mh4.jpg'),
+(5, N'Màn hình ViewSonic VA2432-H-2 24 inch', '24 inch', 2590000, 1990000, 'mh5.jpg'),
+(5, N'Màn hình ASUS VY249HGR 24 inch', '24 inch', 3090000, 2250000, 'mh6.jpg'),
+(5, N'Màn hình ASUS TUF VG249Q5A 24 inch', '24 inch', 3990000, 2590000, 'mh7.jpg'),
+(5, N'Màn hình ViewSonic VX2479A-HD-PRO 24 inch', '24 inch', 4490000, 2790000, 'mh8.jpg'),
+(5, N'Màn hình Acer KG240Y-X1 24 inch', '24 inch', 3790000, 2690000, 'mh9.jpg'),
+(5, N'Màn hình ViewSonic VA2708-2K-MHD 27 inch', '27 inch', 4190000, 3690000, 'mh10.jpg'),
+(5, N'Màn hình MSI MAG 274QF X24 27 inch', '27 inch', 6990000, 5490000, 'mh11.jpg');
 
-INSERT INTO products 
-(category_id, name, old_price, new_price, image)
+INSERT INTO products (category_id, name, screen, old_price, new_price, image)
 VALUES 
-(2,
-    N'Màn hình MSI MAG 255F E20 25 inch Rapid IPS 200Hz',
-    3690000,
-    3690000 * 0.9,  
-    'mh25-1.jpg'
-);
+(5, N'Màn hình MSI MAG 255F E20 25 inch Rapid IPS 200Hz', '25 inch', 3690000, ROUND(3690000 * 0.9, 0), 'mh25-1.jpg'),
+(5, N'Màn hình GIGABYTE GS25F2A 25 inch IPS 240Hz', '25 inch', 3990000, ROUND(3990000 * 0.9, 0), 'mh25-2.jpg'),
+(5, N'Màn hình MSI MAG 244F 24 inch Rapid IPS 200Hz', '24 inch', 3990000, ROUND(3990000 * 0.9, 0), 'mh25-3.jpg'),
+(5, N'Màn hình AOC CS25G 25 inch Fast IPS 310Hz', '25 inch', 5090000, ROUND(5090000 * 0.9, 0), 'mh25-4.jpg'),
+(5, N'Màn hình MSI MAG 255PXF 25 inch Rapid IPS 300Hz', '25 inch', 5990000, ROUND(5990000 * 0.9, 0), 'mh25-5.jpg'),
+(5, N'Màn hình Samsung LS25BG400 25 inch IPS 240Hz', '25 inch', 9190000, ROUND(9190000 * 0.9, 0), 'mh25-6.jpg'),
+(5, N'Màn hình ASUS ROG Strix XG259QNS 25 inch IPS 380Hz', '25 inch', 11990000, ROUND(11990000 * 0.9, 0), 'mh25-7.jpg');
 
-INSERT INTO products 
-(category_id, name, old_price, new_price, image)
-VALUES 
-
-(2, N'Màn hình GIGABYTE GS25F2A 25 inch IPS 240Hz', 3990000, ROUND(3990000*0.9,0), 'mh25-2.jpg'),
-
-(2, N'Màn hình MSI MAG 244F 24 inch Rapid IPS 200Hz', 3990000, ROUND(3990000*0.9,0), 'mh25-3.jpg'),
-
-(2, N'Màn hình AOC CS25G 25 inch Fast IPS 310Hz', 5090000, ROUND(5090000*0.9,0), 'mh25-4.jpg'),
-
-(2, N'Màn hình MSI MAG 255PXF 25 inch Rapid IPS 300Hz', 5990000, ROUND(5990000*0.9,0), 'mh25-5.jpg'),
-
-(2, N'Màn hình Samsung LS25BG400 25 inch IPS 240Hz', 9190000, ROUND(9190000*0.9,0), 'mh25-6.jpg'),
-
-(2, N'Màn hình ASUS ROG Strix XG259QNS 25 inch IPS 380Hz', 11990000, ROUND(11990000*0.9,0), 'mh25-7.jpg');
 
 DELETE FROM products
 WHERE name IN (
@@ -510,26 +482,109 @@ WHERE name IN (
 N'Màn hình MSI MAG 274QF X24 27 inch'
 );
 
+INSERT INTO products 
+(category_id, name, screen, refresh_rate, old_price, new_price, image)
+VALUES 
 
--- ================= ADD DISCOUNT (FIX CHUẨN) =================
+-- 1
+(5, N'Màn hình Acer KA242Y P6 24 inch IPS 144Hz', '24 inch', '144Hz', 2590000, ROUND(2590000*0.9,0), 'mh25-8.jpg'),
 
--- 1. FIX GIÁ TRƯỚC
-UPDATE products
-SET new_price = old_price * 0.95
-WHERE new_price >= old_price;
+-- 2
+(5, N'Màn hình Acer XV242 F 25 inch 540Hz chuyên game', '25 inch', '540Hz', 16990000, ROUND(16990000*0.9,0), 'mh25-9.jpg'),
 
--- 2. XÓA DISCOUNT CŨ (đúng thứ tự FK)
-DELETE FROM product_discounts;
-DELETE FROM discounts;
+-- 3
+(5, N'Màn hình Acer KG251Q Z1 25 inch 280Hz chuyên game', '25 inch', '280Hz', 4990000, ROUND(4990000*0.9,0), 'mh25-10.jpg'),
 
--- 3. INSERT DISCOUNT
-INSERT INTO discounts (name, discount_percent, start_date, end_date)
-VALUES (N'Sale toàn shop 5%', 5, GETDATE()-1, GETDATE()+30);
+-- 4
+(5, N'Màn hình AOC 25B36X 25 inch IPS 144Hz chuyên game', '25 inch', '144Hz', 2790000, ROUND(2790000*0.9,0), 'mh25-11.jpg');
 
--- 4. LẤY ID AN TOÀN
-DECLARE @discountId INT;
-SELECT @discountId = MAX(id) FROM discounts;
+DELETE FROM products
+WHERE name IN (
+    N'Màn hình ViewSonic VA2708-2K-MHD 27 inch',
+    N'Màn hình ViewSonic VX2882-4KP 28 inch'
+);
+select *
+from products
 
--- 5. GÁN CHO TOÀN BỘ PRODUCT
-INSERT INTO product_discounts (product_id, discount_id)
-SELECT id, @discountId FROM products;
+
+DELETE FROM products
+WHERE category_id = 5;
+
+SELECT name, COUNT(*) 
+FROM products
+GROUP BY name
+HAVING COUNT(*) > 1
+
+WITH temp AS (
+    SELECT *,
+           ROW_NUMBER() OVER (PARTITION BY name ORDER BY id) AS rn
+    FROM products
+)
+DELETE FROM temp
+WHERE rn > 1;
+
+SELECT name, COUNT(*) 
+FROM products
+GROUP BY name
+HAVING COUNT(*) > 1
+
+INSERT INTO products 
+(category_id, name, screen, refresh_rate, old_price, new_price, image)
+VALUES  
+(5, N'Màn hình AOC Q27G11E 27 inch IPS 2K 180Hz', '27 inch', '180Hz', 5990000, 3990000, 'mh27.jpg'),
+
+(5, N'Màn hình Philips 27M2N3500PF 27 inch IPS 2K 260Hz', '27 inch', '260Hz', 5990000, 4690000, 'mh27-2.jpg'),
+
+(5, N'Màn hình GIGABYTE GS27FA 27 inch IPS 180Hz', '27 inch', '180Hz', 4990000, 2990000, 'mh27-3.jpg');
+
+INSERT INTO products (category_id, name, screen, old_price, new_price, image)
+VALUES  
+(5, N'Màn hình LG 27G610A-B 27 inch IPS 2K 200Hz Gsync', '27 inch', 5990000, 5190000, 'mh27-4.jpg'),
+
+(5, N'Màn hình Acer VG271U M3 27 inch IPS 2K 180Hz', '27 inch', 5490000, 4390000, 'mh27-5.jpg'),
+
+(5, N'Màn hình E-DRA EGM27Q180PVS 27 inch IPS 2K 180Hz', '27 inch', 3990000, 3590000, 'mh27-6.jpg');
+
+INSERT INTO products (category_id, name, screen, old_price, new_price, image)
+VALUES  
+
+(5, N'Màn hình E-DRA EGM27F144PVS 27 inch IPS 144Hz', '27 inch', 2990000, 2390000, 'mh27-7.jpg'),
+
+(5, N'Màn hình Asus ROG Strix XG27ACMES 27 inch Fast IPS 2K 255Hz USB-C', '27 inch', 7990000, 7190000, 'mh27-8.jpg'),
+
+(5, N'Màn hình Asus ROG Strix XG27ACMEG-G Hatsune Miku Edition 27 inch Fast IPS 2K 260Hz', '27 inch', 9990000, 8990000, 'mh27-9.jpg'),
+
+(5, N'Màn hình MSI PRO MP273L E14 27 inch IPS 144Hz', '27 inch', 3290000, 2590000, 'mh27-10.jpg'),
+
+(5, N'Màn hình E-DRA EGM27Q165R 27 inch IPS 2K 165Hz', '27 inch', 3990000, 3590000, 'mh27-11.jpg');
+
+INSERT INTO products (category_id, name, screen, old_price, new_price, image)
+VALUES
+(5, N'Màn hình Asus ROG Swift PG27AQWP-W 27" WOLED 2K 540Hz', '27 inch', 39990000, 31990000, 'oled1.jpg'),
+
+(5, N'Màn hình Asus ROG Strix XG27ACDMS 27" QD-OLED 2K 280Hz', '27 inch', 19990000, 15990000, 'oled2.jpg'),
+
+(5, N'Màn hình LG 27GX704A-B UltraGear 27" OLED 2K 240Hz', '27 inch', 18990000, 15990000, 'oled3.jpg'),
+
+(5, N'Màn hình MSI MAG 272QPW QD-OLED X28 27" 280Hz', '27 inch', 24990000, 16490000, 'oled4.jpg'),
+
+(5, N'Màn hình MSI MAG 273QP QD-OLED X24 27" 240Hz', '27 inch', 23990000, 14990000, 'oled5.jpg'),
+
+(5, N'Màn hình Gigabyte MO27Q28G 27" WOLED 2K 280Hz', '27 inch', 24990000, 16490000, 'oled6.jpg'),
+
+(5, N'Màn hình Asus ROG Strix XG27AQDMG 27" WOLED 2K 240Hz', '27 inch', 29990000, 15590000, 'oled7.jpg'),
+
+(5, N'Màn hình LG 39GX90SA-W 39" OLED 240Hz', '39 inch', 33990000, 30990000, 'oled8.jpg'),
+
+(5, N'Màn hình LG 45GX950A-B UltraGear 45" OLED 4K 165Hz', '45 inch', 54990000, 51990000, 'oled9.jpg'),
+
+(5, N'Màn hình Asus ROG Strix XG32UCWMG 32" OLED 4K 240Hz', '32 inch', 37990000, 29790000, 'oled10.jpg'),
+
+(5, N'Màn hình MSI MAG 272QP QD-OLED X50 27" 500Hz', '27 inch', 26990000, 23990000, 'oled11.jpg'),
+
+(5, N'Màn hình LG 32GX870A-B UltraGear 32" OLED 4K 240Hz', '32 inch', 32990000, 27990000, 'oled12.jpg');
+
+DELETE FROM products
+WHERE category_id = 5
+AND name LIKE N'%OLED%';
+
