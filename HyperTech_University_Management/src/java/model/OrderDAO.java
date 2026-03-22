@@ -87,7 +87,7 @@ public class OrderDAO {
     // =====================================================
     // 4. LẤY ORDER THEO EMAIL
     // =====================================================
-    public ArrayList<OrderDTO> getByEmail(String email) {
+    public ArrayList<OrderDTO> getOrdersByEmail(String email) {
 
         ArrayList<OrderDTO> list = new ArrayList<>();
 

@@ -1,9 +1,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@page import="model.UserDTO"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-<%
-    UserDTO user = (UserDTO) session.getAttribute("user"); // FIX: đúng session của bạn
-%>
+<c:set var="user" value="${sessionScope.user}" />
 
 <!DOCTYPE html>
 <html>
@@ -101,30 +99,32 @@
             <!-- FORM -->
             <form action="MainController" method="post" onsubmit="return validateForm()">
 
-                <input type="hidden" name="action" value="createOrder"/>
+                <input type="hidden" name="action" value="saveInfo"/>
 
                 <div class="mb-3">
                     <label>Họ tên</label>
                     <input type="text" name="fullname" class="form-control"
-                           value="<%= (user != null) ? user.getUsername() : ""%>" required>
+                           value="${user.username}" required>
                 </div>
 
                 <div class="mb-3">
                     <label>Email</label>
                     <input type="email" name="email" class="form-control"
-                           value="<%= (user != null) ? user.getEmail() : ""%>" required>
+                           value="${user.email}" required>
                 </div>
 
+                <!-- 🔥 FIX PHONE -->
                 <div class="mb-3">
                     <label>Số điện thoại</label>
                     <input type="text" name="phone" class="form-control"
-                           value="<%= (user != null) ? user.getPhone() : ""%>" required>
+                           value="${not empty sessionScope.PHONE ? sessionScope.PHONE : user.phone}" required>
                 </div>
 
+                <!-- 🔥 FIX ADDRESS -->
                 <div class="mb-3">
                     <label>Địa chỉ giao hàng</label>
                     <input type="text" name="address" class="form-control"
-                           value="<%= (user != null) ? user.getAddress() : ""%>" required>
+                           value="${not empty sessionScope.ADDRESS ? sessionScope.ADDRESS : user.address}" required>
                 </div>
 
                 <div class="text-end">

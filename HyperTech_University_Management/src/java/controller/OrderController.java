@@ -28,7 +28,7 @@ public class OrderController extends HttpServlet {
         return isAdmin(request) || isUser(request);
     }
 
-    // ================= MAIN PROCESS =================
+    // ================= MAIN =================
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
@@ -40,32 +40,25 @@ public class OrderController extends HttpServlet {
         }
 
         String action = request.getParameter("action");
-
         if (action == null) {
             action = "searchOrder";
         }
 
         try {
-
             switch (action) {
 
-                // ===== USER CHECKOUT =====
                 case "createOrder":
                     handleCreateOrder(request, response);
                     break;
 
-                // ===== VIEW ORDER =====
                 case "searchOrder":
                     handleSearch(request, response);
                     break;
 
-                // ===== ADMIN =====
-                case "deleteOrder":
-                    if (isAdmin(request)) {
-                        handleDelete(request, response);
-                    } else {
-                        deny(response);
-                    }
+                case "cancelOrder":
+
+                    handleDelete(request, response);
+
                     break;
 
                 case "updateOrder":
@@ -94,8 +87,6 @@ public class OrderController extends HttpServlet {
 
                 default:
                     handleSearch(request, response);
-                    break;
-
             }
 
         } catch (Exception e) {
@@ -103,10 +94,9 @@ public class OrderController extends HttpServlet {
             request.setAttribute("error", "System error!");
             request.getRequestDispatcher("error.jsp").forward(request, response);
         }
-
     }
 
-    // ================= CREATE ORDER FROM CART =================
+    // ================= CREATE ORDER =================
     private void handleCreateOrder(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
 
@@ -120,13 +110,12 @@ public class OrderController extends HttpServlet {
 
         UserDTO user = (UserDTO) session.getAttribute("user");
 
-        // ===== LẤY THÔNG TIN KHÁCH =====
+        // ===== GET INFO =====
         String fullname = request.getParameter("fullname");
         String email = request.getParameter("email");
         String phone = request.getParameter("phone");
         String address = request.getParameter("address");
 
-        // ===== ƯU TIÊN: FORM → SESSION → USER =====
         if (email == null || email.isEmpty()) {
             email = (String) session.getAttribute("EMAIL");
         }
@@ -135,13 +124,21 @@ public class OrderController extends HttpServlet {
             email = user.getEmail();
         }
 
-        // ===== LƯU LẠI SESSION =====
+        // ===== SAVE SESSION =====
         session.setAttribute("FULLNAME", fullname);
         session.setAttribute("EMAIL", email);
         session.setAttribute("PHONE", phone);
         session.setAttribute("ADDRESS", address);
+// 🔥 THÊM ĐOẠN NÀY (LƯU DB)
+        if (user != null) {
+            user.setPhone(phone);
+            user.setAddress(address);
 
-        // ===== TÍNH TOTAL =====
+            new model.UserDAO().updateContact(user.getEmail(), phone, address);
+
+            session.setAttribute("user", user);
+        }
+        // ===== CALCULATE TOTAL =====
         double total = 0;
         for (ProductDTO p : cart.getCart().values()) {
             total += p.getNew_price() * p.getQuantity();
@@ -149,14 +146,7 @@ public class OrderController extends HttpServlet {
 
         // ===== INSERT ORDER =====
         OrderDAO orderDAO = new OrderDAO();
-
-        OrderDTO order = new OrderDTO(
-                0,
-                email,
-                total,
-                "pending",
-                null
-        );
+        OrderDTO order = new OrderDTO(0, email, total, "pending", null);
 
         int orderId = orderDAO.insert(order);
 
@@ -165,7 +155,6 @@ public class OrderController extends HttpServlet {
             OrderItemDAO itemDAO = new OrderItemDAO();
 
             for (ProductDTO p : cart.getCart().values()) {
-
                 OrderItemDTO item = new OrderItemDTO(
                         0,
                         orderId,
@@ -173,16 +162,35 @@ public class OrderController extends HttpServlet {
                         p.getNew_price(),
                         p.getQuantity()
                 );
-
                 itemDAO.insert(item);
             }
 
-            // ❌ KHÔNG xóa cart ở đây
-// lưu orderId để hiển thị
+            // ================= 🔥 FIX QUAN TRỌNG NHẤT =================
+            CartDTO lastCart = new CartDTO();
+
+            for (ProductDTO p : cart.getCart().values()) {
+
+                ProductDTO clone = new ProductDTO();
+
+                clone.setId(p.getId());
+                clone.setName(p.getName());
+                clone.setNew_price(p.getNew_price());
+                clone.setQuantity(p.getQuantity());
+
+                lastCart.add(clone);
+            }
+
+            session.setAttribute("LAST_CART", lastCart);
+
+            // ===== RESET CART (TRÁNH DÍNH DỮ LIỆU CŨ) =====
+            session.removeAttribute("CART");
+            session.setAttribute("CART", new CartDTO());
+
+            // ===== SAVE ORDER ID =====
             session.setAttribute("ORDER_ID", orderId);
 
-// 👉 chuyển sang payment
-            response.sendRedirect("payment.jsp");
+            // 👉 chuyển sang success
+            response.sendRedirect("success.jsp");
 
         } else {
             response.sendRedirect("cart.jsp?error=orderFail");
@@ -193,14 +201,22 @@ public class OrderController extends HttpServlet {
     private void handleSearch(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        OrderDAO dao = new OrderDAO();
+        HttpSession session = request.getSession();
+        UserDTO user = (UserDTO) session.getAttribute("user");
 
-        ArrayList<OrderDTO> list = dao.getAll();
+        OrderDAO dao = new OrderDAO();
+        ArrayList<OrderDTO> list;
+
+        // 🔥 FIX: user chỉ thấy đơn của mình
+        if (user != null) {
+            list = dao.getOrdersByEmail(user.getEmail());
+        } else {
+            list = dao.getAll(); // admin
+        }
 
         request.setAttribute("list", list);
 
-        request.getRequestDispatcher("order-list.jsp").forward(request, response);
-
+        request.getRequestDispatcher("order-lookup.jsp").forward(request, response);
     }
 
     // ================= DELETE =================
@@ -208,7 +224,6 @@ public class OrderController extends HttpServlet {
             throws IOException {
 
         int id = parseInt(request.getParameter("id"));
-
         OrderDAO dao = new OrderDAO();
 
         if (dao.delete(id)) {
@@ -216,7 +231,6 @@ public class OrderController extends HttpServlet {
         } else {
             response.sendRedirect("MainController?action=searchOrder&error=deleteFail");
         }
-
     }
 
     // ================= LOAD UPDATE =================
@@ -224,24 +238,17 @@ public class OrderController extends HttpServlet {
             throws ServletException, IOException {
 
         int id = parseInt(request.getParameter("id"));
-
         OrderDAO dao = new OrderDAO();
 
         OrderDTO order = dao.getById(id);
 
         if (order != null) {
-
             request.setAttribute("order", order);
             request.setAttribute("mode", "update");
-
             request.getRequestDispatcher("order-form.jsp").forward(request, response);
-
         } else {
-
             response.sendRedirect("MainController?action=searchOrder");
-
         }
-
     }
 
     // ================= SAVE UPDATE =================
@@ -254,7 +261,6 @@ public class OrderController extends HttpServlet {
         String status = request.getParameter("status");
 
         OrderDTO order = new OrderDTO(id, email, totalPrice, status, null);
-
         OrderDAO dao = new OrderDAO();
 
         if (dao.update(order)) {
@@ -262,7 +268,6 @@ public class OrderController extends HttpServlet {
         } else {
             response.sendRedirect("MainController?action=searchOrder&error=updateFail");
         }
-
     }
 
     // ================= STATISTICS =================
@@ -272,19 +277,14 @@ public class OrderController extends HttpServlet {
         OrderDAO orderDAO = new OrderDAO();
         OrderItemDAO itemDAO = new OrderItemDAO();
 
-        double totalRevenue = orderDAO.getTotalRevenue();
-        int totalOrders = orderDAO.getTotalOrders();
-        int totalSold = itemDAO.getTotalSoldQuantity();
-
-        request.setAttribute("totalRevenue", totalRevenue);
-        request.setAttribute("totalOrders", totalOrders);
-        request.setAttribute("totalSold", totalSold);
+        request.setAttribute("totalRevenue", orderDAO.getTotalRevenue());
+        request.setAttribute("totalOrders", orderDAO.getTotalOrders());
+        request.setAttribute("totalSold", itemDAO.getTotalSoldQuantity());
 
         request.getRequestDispatcher("statistics-order.jsp").forward(request, response);
-
     }
 
-    // ================= SAFE PARSE =================
+    // ================= UTILS =================
     private int parseInt(String value) {
         try {
             return Integer.parseInt(value);
@@ -301,7 +301,6 @@ public class OrderController extends HttpServlet {
         }
     }
 
-    // ================= DENY ACCESS =================
     private void deny(HttpServletResponse response) throws IOException {
         response.sendError(HttpServletResponse.SC_FORBIDDEN, "Admin only!");
     }
@@ -317,5 +316,4 @@ public class OrderController extends HttpServlet {
             throws ServletException, IOException {
         processRequest(request, response);
     }
-
 }
