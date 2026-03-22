@@ -67,13 +67,25 @@
             <div id="userMenu" style="cursor:pointer;">
                 <%= ((model.UserDTO) user).getUsername()%>
             </div>
-            <div id="dropdownMenu" style="display:none; position:absolute; top:30px; right:0; background:#eee; padding:10px;">
+            <div id="dropdownMenu" class="account-dropdown">
+
+                <!-- Greeting -->
+                <div class="account-top">
+                    <span class="wave">👋</span>
+                    <span>Xin chào, <strong><%= ((model.UserDTO) user).getUsername()%></strong></span>
+                </div>
+
+                <div class="account-divider"></div>
+
+                <!-- Logout -->
                 <form action="MainController" method="post">
                     <input type="hidden" name="action" value="Userlogout">
-                    <button type="submit" style="border:none; background:none; cursor:pointer;">
+                    <button type="submit" class="logout-btn">
+                        <i class="fa-solid fa-right-from-bracket"></i>
                         Đăng xuất
                     </button>
                 </form>
+
             </div>
 
             <%
@@ -90,14 +102,11 @@
 
             <div class="account-divider"></div>
 
-            <div class="account-help">
-                <i class="fa-regular fa-circle-question"></i>
-                <span>Trợ giúp</span>
-            </div>
+
 
         </div>
     </div>
-</div>
+
 </header>
 
 <div class="sub-menu">
@@ -198,24 +207,24 @@
 <script>
     window.addEventListener("load", function () {
 
-    const banner = document.querySelector(".fixed-rtx");
-    const topBanner = document.querySelector(".top-banner");
-    const mainHeader = document.querySelector(".main-header");
-    const subMenu = document.querySelector(".sub-menu");
-    const spacing = 60;
-    // Tính vị trí ban đầu
-    const baseTop =
-            topBanner.offsetHeight +
-            mainHeader.offsetHeight +
-            subMenu.offsetHeight +
-            spacing;
-    // Set vị trí ban đầu
-    banner.style.top = baseTop + "px";
-    // Scroll effect
-    window.addEventListener("scroll", function () {
-    const offset = window.scrollY * 0.2; // tốc độ trôi
-    banner.style.top = (baseTop + offset) + "px";
-    });
+        const banner = document.querySelector(".fixed-rtx");
+        const topBanner = document.querySelector(".top-banner");
+        const mainHeader = document.querySelector(".main-header");
+        const subMenu = document.querySelector(".sub-menu");
+        const spacing = 60;
+        // Tính vị trí ban đầu
+        const baseTop =
+                topBanner.offsetHeight +
+                mainHeader.offsetHeight +
+                subMenu.offsetHeight +
+                spacing;
+        // Set vị trí ban đầu
+        banner.style.top = baseTop + "px";
+        // Scroll effect
+        window.addEventListener("scroll", function () {
+            const offset = window.scrollY * 0.2; // tốc độ trôi
+            banner.style.top = (baseTop + offset) + "px";
+        });
     });</script>
 
 <div class="login-modal" id="loginModal">
@@ -273,7 +282,6 @@
         </div>
     </div> <!-- login-box -->
 </div>
-
 <div class="login-modal" id="registerModal">
     <div class="login-box">
 
@@ -293,20 +301,14 @@
         <!-- FORM -->
         <form action="MainController" method="post">
             <input type="hidden" name="action" value="addUser">
-
             <div class="login-body">
-
                 <input type="text" name="username" placeholder="Họ và Tên" required>
-
                 <input type="email" name="email" placeholder="Email" required>
-
                 <input type="password" name="password" placeholder="Mật khẩu" required>
-
                 <input type="password" name="confirm_password" placeholder="Nhập lại mật khẩu" required>
-
                 <button type="submit" class="login-submit">ĐĂNG KÝ</button>
-
             </div>
+
         </form>
 
         <!-- DIVIDER -->
@@ -339,53 +341,53 @@
 </div>
 
 <script>
-document.addEventListener("DOMContentLoaded", function () {
+    document.addEventListener("DOMContentLoaded", function () {
 
-    // ===== LOGIN / REGISTER =====
-    const loginModal = document.getElementById("loginModal");
-    const registerModal = document.getElementById("registerModal");
+        // ===== LOGIN / REGISTER =====
+        const loginModal = document.getElementById("loginModal");
+        const registerModal = document.getElementById("registerModal");
 
-    const openLoginBtn = document.getElementById("openLoginBtn");
-    const closeModal = document.getElementById("closeModal");
+        const openLoginBtn = document.getElementById("openLoginBtn");
+        const closeModal = document.getElementById("closeModal");
 
-    const openRegister = document.getElementById("openRegister");
-    const switchToLogin = document.getElementById("switchToLogin");
-    const closeRegister = document.getElementById("closeRegister");
+        const openRegister = document.getElementById("openRegister");
+        const switchToLogin = document.getElementById("switchToLogin");
+        const closeRegister = document.getElementById("closeRegister");
 
-    if (openLoginBtn) {
-        openLoginBtn.addEventListener("click", function (e) {
-            e.preventDefault();
-            loginModal.classList.add("show");
-        });
-    }
+        if (openLoginBtn) {
+            openLoginBtn.addEventListener("click", function (e) {
+                e.preventDefault();
+                loginModal.classList.add("show");
+            });
+        }
 
-    if (closeModal) {
-        closeModal.addEventListener("click", function () {
-            loginModal.classList.remove("show");
-        });
-    }
+        if (closeModal) {
+            closeModal.addEventListener("click", function () {
+                loginModal.classList.remove("show");
+            });
+        }
 
-    if (openRegister) {
-        openRegister.addEventListener("click", function (e) {
-            e.preventDefault();
-            loginModal.classList.remove("show");
-            registerModal.classList.add("show");
-        });
-    }
+        if (openRegister) {
+            openRegister.addEventListener("click", function (e) {
+                e.preventDefault();
+                loginModal.classList.remove("show");
+                registerModal.classList.add("show");
+            });
+        }
 
-    if (switchToLogin) {
-        switchToLogin.addEventListener("click", function (e) {
-            e.preventDefault();
-            registerModal.classList.remove("show");
-            loginModal.classList.add("show");
-        });
-    }
+        if (switchToLogin) {
+            switchToLogin.addEventListener("click", function (e) {
+                e.preventDefault();
+                registerModal.classList.remove("show");
+                loginModal.classList.add("show");
+            });
+        }
 
-    if (closeRegister) {
-        closeRegister.addEventListener("click", function () {
-            registerModal.classList.remove("show");
-        });
-    }
+        if (closeRegister) {
+            closeRegister.addEventListener("click", function () {
+                registerModal.classList.remove("show");
+            });
+        }
 
     });
 </script>
@@ -440,6 +442,7 @@ document.addEventListener("DOMContentLoaded", function () {
     startAutoSlide();
 
 </script>
+<script>
     // ===== USER DROPDOWN =====
     const userMenu = document.getElementById("userMenu");
     const dropdown = document.getElementById("dropdownMenu");
@@ -448,7 +451,7 @@ document.addEventListener("DOMContentLoaded", function () {
         userMenu.addEventListener("click", function (e) {
             e.stopPropagation();
             dropdown.style.display =
-                dropdown.style.display === "block" ? "none" : "block";
+                    dropdown.style.display === "block" ? "none" : "block";
         });
 
         document.addEventListener("click", function (e) {
@@ -456,9 +459,10 @@ document.addEventListener("DOMContentLoaded", function () {
                 dropdown.style.display = "none";
             }
         });
-    }
+        }
 
-});
+    }
+    );
 </script>
 
 <c:if test="${sessionScope.showLoginModal}">
@@ -466,9 +470,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
         document.addEventListener("DOMContentLoaded", function () {
 
-        let toastEl = document.getElementById("loginToast");
-        let toast = new bootstrap.Toast(toastEl);
-        toast.show();
+            let toastEl = document.getElementById("loginToast");
+            let toast = new bootstrap.Toast(toastEl);
+            toast.show();
         });
 
     </script>
