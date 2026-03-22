@@ -296,14 +296,17 @@ public class UserDAO {
 
         return count;
     }
+    // ================= UPDATE PASSWORD =================
 
-    public boolean disableUser(String email) {          
+    public boolean updatePassword(String email, String password) {
+        try {
+            Connection con = DbUtil.getConnection();
 
-        String sql = "UPDATE users SET status = 0 WHERE email = ?";
+            String sql = "UPDATE users SET password=? WHERE email=?";
+            PreparedStatement ps = con.prepareStatement(sql);
 
-        try ( Connection conn = DbUtil.getConnection();  PreparedStatement ps = conn.prepareStatement(sql)) {
-
-            ps.setString(1, email);
+            ps.setString(1, password);
+            ps.setString(2, email);
 
             return ps.executeUpdate() > 0;
 
