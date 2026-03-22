@@ -68,6 +68,132 @@ public class PaymentController extends HttpServlet {
         }
     }
 
+    // ================= ADD PAYMENT =================
+    private void doAdd(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
+
+        HttpSession session = request.getSession();
+        CartDTO cart = (CartDTO) session.getAttribute("CART");
+        UserDTO user = (UserDTO) session.getAttribute("user");
+
+        // ❌ chưa login
+        if (user == null) {
+            response.sendRedirect("login.jsp");
+            return;
+        }
+
+        // ❌ cart rỗng
+        if (cart == null || cart.getCart() == null || cart.getCart().isEmpty()) {
+            response.sendRedirect("cart.jsp?error=empty");
+            return;
+        }
+
+        // ===== TÍNH TỔNG =====
+        float total = 0;
+        for (ProductDTO p : cart.getCart().values()) {
+            total += p.getFinalPrice() * p.getQuantity();
+        }
+
+        // ===== METHOD =====
+        String method = request.getParameter("payment_method");
+        if (method == null) {
+            method = "COD";
+        }
+
+        // ===== ORDER =====
+        OrderDAO orderDAO = new OrderDAO();
+        OrderDTO order = new OrderDTO();
+
+        order.setEmail(user.getEmail());
+        order.setTotalPrice(total);
+        order.setStatus("pending");
+
+        int orderId = orderDAO.insert(order);
+
+        if (orderId <= 0) {
+            response.sendRedirect("payment.jsp?error=orderFail");
+            return;
+        }
+
+        // ===== ORDER ITEMS =====
+        OrderItemDAO itemDAO = new OrderItemDAO();
+
+        for (ProductDTO p : cart.getCart().values()) {
+            OrderItemDTO item = new OrderItemDTO();
+            item.setOrderID(orderId);
+            item.setProductID(p.getId());
+            item.setPrice(p.getFinalPrice());
+            item.setQuantity(p.getQuantity());
+            itemDAO.insert(item);
+        }
+
+        // ===== PAYMENT =====
+        PaymentDTO payment = new PaymentDTO();
+
+        payment.setOrderId(orderId);
+        payment.setEmail(user.getEmail());
+        payment.setPaymentMethod(method);
+        payment.setAmount(total);
+
+        payment.setTransactionCode("TXN" + System.currentTimeMillis());
+        payment.setPaid_at(new java.sql.Date(System.currentTimeMillis()));
+
+        if ("COD".equals(method)) {
+            payment.setStatus("pending");
+        } else {
+            payment.setStatus("paid");
+        }
+
+        boolean success = new PaymentDAO().insert(payment);
+
+        // ================= SUCCESS =================
+        if (success) {
+
+            // 👉 lưu thông tin cần thiết
+            session.setAttribute("ORDER_ID", orderId);
+            session.setAttribute("PAYMENT_METHOD", method);
+            // 🔥 THÊM ĐOẠN NÀY
+            StringBuilder productList = new StringBuilder();
+
+            for (ProductDTO p : cart.getCart().values()) {
+                productList.append("<li>")
+                        .append(p.getName())
+                        .append(" - SL: ").append(p.getQuantity())
+                        .append("</li>");
+            }
+            // ===== SEND MAIL =====
+            String content = "<h2>Order confirmation</h2>"
+                    + "<p>Mã đơn: <b>#" + orderId + "</b></p>"
+                    + "<ul>" + productList.toString() + "</ul>"
+                    + "<p>Tổng tiền: <b>" + String.format("%,.0f", total) + " VND</b></p>"
+                    + "<p>Phương thức: <b>" + method + "</b></p>"
+                    + "<hr>"
+                    + "<p>Cảm ơn bạn đã mua hàng tại TKT 💖</p>";
+            System.out.println("👉 EMAIL USER: " + user.getEmail());
+            if (user.getEmail() != null && !user.getEmail().isEmpty()) {
+                util.MailUtil.sendEmail(user.getEmail(), "Xác nhận đơn hàng", content);
+            } else {
+                System.out.println("❌ Email user null → không gửi mail");
+            }
+
+            // 🔥 FIX QUAN TRỌNG NHẤT (THÊM ĐOẠN NÀY)
+            CartDAO cartDAO = new CartDAO();
+            cartDAO.clearCart(user.getEmail()); // ❗ XÓA DB
+
+            // 👉 giữ để hiển thị success
+            session.setAttribute("LAST_CART", cart);
+
+            // 👉 xóa session
+            session.removeAttribute("CART");
+
+            // 👉 chuyển trang
+            response.sendRedirect("success.jsp");
+
+        } else {
+            response.sendRedirect("payment.jsp?error=fail");
+        }
+    }
+
     // ================= SEARCH =================
     private void doSearch(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -81,13 +207,8 @@ public class PaymentController extends HttpServlet {
     private void doView(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        int id = parseInt(request.getParameter("id"));
+        int id = Integer.parseInt(request.getParameter("id"));
         PaymentDTO payment = new PaymentDAO().getById(id);
-
-        if (payment == null) {
-            response.sendRedirect("PaymentController?action=searchPayment");
-            return;
-        }
 
         request.setAttribute("payment", payment);
         request.getRequestDispatcher("payment-detail.jsp").forward(request, response);
@@ -103,110 +224,6 @@ public class PaymentController extends HttpServlet {
 
         request.setAttribute("list", list);
         request.getRequestDispatcher("payment-user.jsp").forward(request, response);
-    }
-
-    // ================= ADD PAYMENT =================
-    private void doAdd(HttpServletRequest request, HttpServletResponse response)
-            throws IOException {
-
-        HttpSession session = request.getSession();
-        CartDTO cart = (CartDTO) session.getAttribute("CART");
-        UserDTO user = (UserDTO) session.getAttribute("user");
-
-        if (user == null) {
-            response.sendRedirect("login.jsp");
-            return;
-        }
-
-        if (cart == null || cart.getCart() == null || cart.getCart().isEmpty()) {
-            response.sendRedirect("cart.jsp?error=empty");
-            return;
-        }
-
-        float total = 0;
-        for (ProductDTO p : cart.getCart().values()) {
-            total += p.getFinalPrice() * p.getQuantity();
-        }
-
-        String method = request.getParameter("payment_method");
-        if (method == null) {
-            method = "COD";
-        }
-
-        OrderDAO orderDAO = new OrderDAO();
-        OrderDTO order = new OrderDTO();
-
-        order.setEmail(user.getEmail());
-        order.setTotalPrice(total);
-        order.setStatus("pending");
-
-        int orderId = orderDAO.insert(order);
-
-        if (orderId <= 0) {
-            response.sendRedirect("payment.jsp?error=orderFail");
-            return;
-        }
-
-        OrderItemDAO itemDAO = new OrderItemDAO();
-
-        for (ProductDTO p : cart.getCart().values()) {
-            OrderItemDTO item = new OrderItemDTO();
-            item.setOrderID(orderId);
-            item.setProductID(p.getId());
-            item.setPrice(p.getFinalPrice());
-            item.setQuantity(p.getQuantity());
-            itemDAO.insert(item);
-        }
-
-        PaymentDTO payment = new PaymentDTO();
-
-        payment.setOrderId(orderId);
-        payment.setUserId(user.getEmail());
-        payment.setPaymentMethod(method);
-        payment.setAmount(total);
-
-        if ("COD".equals(method)) {
-            payment.setStatus("pending");
-            payment.setPaid_at(null);
-        } else {
-            payment.setStatus("paid");
-            payment.setPaid_at(new java.sql.Date(System.currentTimeMillis()));
-        }
-
-        payment.setTransactionCode("TXN" + System.currentTimeMillis());
-
-        boolean success = new PaymentDAO().insert(payment);
-
-        if (success) {
-
-            session.setAttribute("ORDER_ID", orderId);
-            session.setAttribute("PAYMENT_METHOD", method);
-            session.setAttribute("LAST_CART", cart);
-
-            // 🔥 GỬI MAIL Ở ĐÂY
-            String content = "Đơn hàng #" + orderId
-                    + "\nTổng tiền: " + total + " VND"
-                    + "\nPhương thức: " + method
-                    + "\nCảm ơn bạn đã mua hàng!";
-
-            util.MailUtil.sendEmail(user.getEmail(), "Xác nhận đơn hàng", content);
-
-            session.removeAttribute("CART");
-
-            response.sendRedirect("success.jsp");
-
-        } else {
-            response.sendRedirect("payment.jsp?error=fail");
-        }
-    }
-
-    // ================= HELPER =================
-    private int parseInt(String val) {
-        try {
-            return Integer.parseInt(val);
-        } catch (Exception e) {
-            return 0;
-        }
     }
 
     private void deny(HttpServletResponse response) throws IOException {

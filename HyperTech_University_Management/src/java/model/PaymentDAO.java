@@ -8,16 +8,12 @@ import util.DbUtil;
 
 public class PaymentDAO {
 
-    // =====================================================
-    // 1. LẤY TẤT CẢ PAYMENT (Admin)
-    // =====================================================
+    // ================= GET ALL =================
     public ArrayList<PaymentDTO> getAll() {
         ArrayList<PaymentDTO> list = new ArrayList<>();
         String sql = "SELECT * FROM payments ORDER BY paid_at DESC";
 
-        try (Connection conn = DbUtil.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
+        try ( Connection conn = DbUtil.getConnection();  PreparedStatement ps = conn.prepareStatement(sql);  ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {
                 list.add(extractPayment(rs));
@@ -30,14 +26,11 @@ public class PaymentDAO {
         return list;
     }
 
-    // =====================================================
-    // 2. LẤY THEO ID
-    // =====================================================
+    // ================= GET BY ID =================
     public PaymentDTO getById(int id) {
         String sql = "SELECT * FROM payments WHERE id=?";
 
-        try (Connection conn = DbUtil.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+        try ( Connection conn = DbUtil.getConnection();  PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
@@ -53,14 +46,11 @@ public class PaymentDAO {
         return null;
     }
 
-    // =====================================================
-    // 3. LẤY PAYMENT THEO ORDER (RẤT QUAN TRỌNG)
-    // =====================================================
+    // ================= GET BY ORDER =================
     public PaymentDTO getByOrderId(int orderId) {
         String sql = "SELECT * FROM payments WHERE order_id=?";
 
-        try (Connection conn = DbUtil.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+        try ( Connection conn = DbUtil.getConnection();  PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setInt(1, orderId);
             ResultSet rs = ps.executeQuery();
@@ -76,17 +66,16 @@ public class PaymentDAO {
         return null;
     }
 
-    // =====================================================
-    // 4. LẤY PAYMENT THEO USER
-    // =====================================================
-    public ArrayList<PaymentDTO> getByUserId(String userId) {
+    // ================= GET BY USER =================
+    public ArrayList<PaymentDTO> getByUserId(String email) {
+
         ArrayList<PaymentDTO> list = new ArrayList<>();
-        String sql = "SELECT * FROM payments WHERE user_id=? ORDER BY paid_at DESC";
 
-        try (Connection conn = DbUtil.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+        String sql = "SELECT * FROM payments WHERE email=? ORDER BY paid_at DESC";
 
-            ps.setString(1, userId);
+        try ( Connection conn = DbUtil.getConnection();  PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, email);
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {
@@ -100,19 +89,17 @@ public class PaymentDAO {
         return list;
     }
 
-    // =====================================================
-    // 5. INSERT (User thanh toán)
-    // =====================================================
+    // ================= INSERT =================
     public boolean insert(PaymentDTO p) {
-        String sql = "INSERT INTO payments "
-                   + "(order_id, user_id, payment_method, amount, status, transaction_code, paid_at) "
-                   + "VALUES (?, ?, ?, ?, ?, ?, ?)";
 
-        try (Connection conn = DbUtil.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+        String sql = "INSERT INTO payments "
+                + "(order_id, email, payment_method, amount, status, transaction_code, paid_at) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?)";
+
+        try ( Connection conn = DbUtil.getConnection();  PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setInt(1, p.getOrderId());
-            ps.setString(2, p.getUserId());
+            ps.setString(2, p.getEmail()); // 🔥 FIX
             ps.setString(3, p.getPaymentMethod());
             ps.setFloat(4, p.getAmount());
             ps.setString(5, p.getStatus());
@@ -128,18 +115,16 @@ public class PaymentDAO {
         return false;
     }
 
-    // =====================================================
-    // 6. UPDATE TOÀN BỘ
-    // =====================================================
+    // ================= UPDATE =================
     public boolean update(PaymentDTO p) {
-        String sql = "UPDATE payments SET order_id=?, user_id=?, payment_method=?, "
-                   + "amount=?, status=?, transaction_code=?, paid_at=? WHERE id=?";
 
-        try (Connection conn = DbUtil.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+        String sql = "UPDATE payments SET order_id=?, email=?, payment_method=?, "
+                + "amount=?, status=?, transaction_code=?, paid_at=? WHERE id=?";
+
+        try ( Connection conn = DbUtil.getConnection();  PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setInt(1, p.getOrderId());
-            ps.setString(2, p.getUserId());
+            ps.setString(2, p.getEmail()); // 🔥 FIX
             ps.setString(3, p.getPaymentMethod());
             ps.setFloat(4, p.getAmount());
             ps.setString(5, p.getStatus());
@@ -156,14 +141,12 @@ public class PaymentDAO {
         return false;
     }
 
-    // =====================================================
-    // 7. UPDATE STATUS (Admin xác nhận)
-    // =====================================================
+    // ================= UPDATE STATUS =================
     public boolean updateStatus(int id, String status) {
+
         String sql = "UPDATE payments SET status=? WHERE id=?";
 
-        try (Connection conn = DbUtil.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+        try ( Connection conn = DbUtil.getConnection();  PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setString(1, status);
             ps.setInt(2, id);
@@ -177,14 +160,12 @@ public class PaymentDAO {
         return false;
     }
 
-    // =====================================================
-    // 8. DELETE (Admin)
-    // =====================================================
+    // ================= DELETE =================
     public boolean delete(int id) {
+
         String sql = "DELETE FROM payments WHERE id=?";
 
-        try (Connection conn = DbUtil.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+        try ( Connection conn = DbUtil.getConnection();  PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setInt(1, id);
             return ps.executeUpdate() > 0;
@@ -196,37 +177,34 @@ public class PaymentDAO {
         return false;
     }
 
-    // =====================================================
-    // 9. ĐẾM SỐ PAYMENT (Dashboard)
-    // =====================================================
+    // ================= COUNT =================
     public int countPayments() {
+
+        int count = 0;
+
         String sql = "SELECT COUNT(*) FROM payments";
 
-        try (Connection conn = DbUtil.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
+        try ( Connection conn = DbUtil.getConnection();  PreparedStatement ps = conn.prepareStatement(sql);  ResultSet rs = ps.executeQuery()) {
 
             if (rs.next()) {
-                return rs.getInt(1);
+                count = rs.getInt(1);
             }
 
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        return 0;
+        return count;
     }
 
-    // =====================================================
-    // 10. TỔNG TIỀN ĐÃ THANH TOÁN (Chỉ tính paid)
-    // =====================================================
+    // ================= TOTAL =================
     public float getTotalPaidAmount() {
+
         float total = 0;
+
         String sql = "SELECT SUM(amount) FROM payments WHERE status='paid'";
 
-        try (Connection conn = DbUtil.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
+        try ( Connection conn = DbUtil.getConnection();  PreparedStatement ps = conn.prepareStatement(sql);  ResultSet rs = ps.executeQuery()) {
 
             if (rs.next()) {
                 total = rs.getFloat(1);
@@ -239,14 +217,13 @@ public class PaymentDAO {
         return total;
     }
 
-    // =====================================================
-    // HÀM HỖ TRỢ
-    // =====================================================
+    // ================= EXTRACT =================
     private PaymentDTO extractPayment(ResultSet rs) throws Exception {
+
         return new PaymentDTO(
                 rs.getInt("id"),
                 rs.getInt("order_id"),
-                rs.getString("user_id"),
+                rs.getString("email"), // 🔥 FIX QUAN TRỌNG
                 rs.getString("payment_method"),
                 rs.getFloat("amount"),
                 rs.getString("status"),

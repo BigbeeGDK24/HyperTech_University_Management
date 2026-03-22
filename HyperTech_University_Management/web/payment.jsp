@@ -1,13 +1,11 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 
 <%
-    // ✅ FIX: check login
     if (session.getAttribute("user") == null) {
         response.sendRedirect("login.jsp");
         return;
     }
 
-    // ✅ FIX: kiểm tra CART
     if (session.getAttribute("CART") == null) {
         response.sendRedirect("cart.jsp");
         return;
@@ -20,7 +18,6 @@
 <!DOCTYPE html>
 <html>
     <head>
-
         <meta charset="UTF-8">
         <title>Thanh toán</title>
 
@@ -40,23 +37,6 @@
                 padding:30px;
                 border-radius:16px;
                 box-shadow:0 10px 30px rgba(0,0,0,0.1);
-                animation:fadeIn 0.5s ease;
-                position:relative;
-            }
-
-            .cat-left, .cat-right{
-                position:absolute;
-                width:80px;
-            }
-
-            .cat-left{
-                top:-30px;
-                left:-40px;
-            }
-
-            .cat-right{
-                bottom:-30px;
-                right:-40px;
             }
 
             .steps{
@@ -79,11 +59,6 @@
                 font-weight:bold;
             }
 
-            .table thead{
-                background:#212529;
-                color:white;
-            }
-
             .payment-box{
                 background:#fafafa;
                 padding:20px;
@@ -92,11 +67,14 @@
                 margin-bottom:20px;
             }
 
-            .info-box{
-                background:#f8f9fa;
-                padding:15px;
+            .form-check{
+                padding:12px;
                 border-radius:10px;
-                margin-bottom:20px;
+                transition:0.2s;
+            }
+
+            .form-check:hover{
+                background:#f1f3ff;
             }
 
             .total-box{
@@ -106,38 +84,58 @@
                 color:#e53935;
             }
 
-            .btn-success{
-                padding:10px 20px;
+            button.btn-success{
+                padding:10px 25px;
                 border-radius:10px;
+                font-weight:600;
+                transition:0.3s;
+            }
+
+            button.btn-success:hover{
+                transform:scale(1.05);
+                box-shadow:0 5px 15px rgba(0,0,0,0.2);
+            }
+
+            /* LOADING */
+            #loadingOverlay{
+                position:fixed;
+                top:0;
+                left:0;
+                width:100%;
+                height:100%;
+                background:rgba(255,255,255,0.9);
+                display:none;
+                justify-content:center;
+                align-items:center;
+                z-index:9999;
+            }
+
+            .loading-box{
+                text-align:center;
+            }
+
+            .loading-box img{
+                width:120px;
+            }
+
+            .loading-box p{
+                margin-top:10px;
+                font-size:18px;
+                color:#555;
+                font-weight:500;
             }
         </style>
-
     </head>
 
     <body>
 
+        <%
+            CartDTO cart = (CartDTO) session.getAttribute("CART");
+            double total = 0;
+        %>
+
         <div class="wrapper">
 
-            <img class="cat-left" src="https://cdn-icons-png.flaticon.com/512/616/616408.png">
-            <img class="cat-right" src="https://cdn-icons-png.flaticon.com/512/616/616430.png">
-
-            <%
-                CartDTO cart = (CartDTO) session.getAttribute("CART");
-                double total = 0;
-
-                // ✅ FIX: check cart rỗng
-                if (cart == null || cart.getCart() == null || cart.getCart().isEmpty()) {
-            %>
-            <script>
-                alert("Giỏ hàng trống!");
-                window.location = "cart.jsp";
-            </script>
-            <%
-                    return;
-                }
-            %>
-
-            <!-- STEP -->
             <div class="steps">
                 <div class="step">🛒<br>Giỏ hàng</div>
                 <div class="step">📄<br>Thông tin</div>
@@ -145,47 +143,30 @@
                 <div class="step">✔<br>Hoàn tất</div>
             </div>
 
-            <!-- INFO USER -->
-            <div class="info-box">
-                <h5>👤 Thông tin giao hàng</h5>
-
-                <p><b>Mã đơn:</b> 
-                    <%= session.getAttribute("ORDER_ID") != null ? session.getAttribute("ORDER_ID") : "Chưa tạo"%>
-                </p>
-
-                <p><b>Tên:</b> 
-                    <%= session.getAttribute("FULLNAME") != null ? session.getAttribute("FULLNAME") : ""%>
-                </p>
-
-                <p><b>Điện thoại:</b> 
-                    <%= session.getAttribute("PHONE") != null ? session.getAttribute("PHONE") : ""%>
-                </p>
-
-                <p><b>Địa chỉ:</b> 
-                    <%= session.getAttribute("ADDRESS") != null ? session.getAttribute("ADDRESS") : ""%>
-                </p>
-            </div>
-
             <h4>💳 Phương thức thanh toán</h4>
 
-            <form action="MainController" method="post" onsubmit="return loading()">
+            <form action="MainController" method="post" id="checkoutForm">
                 <input type="hidden" name="action" value="addPayment">
 
                 <div class="payment-box">
 
+                    <!-- COD -->
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="payment_method" value="COD" checked required>
-                        <label class="form-check-label">Thanh toán khi nhận hàng (COD)</label>
+                        <input class="form-check-input" type="radio" name="payment_method" value="COD" checked>
+                        <label>Thanh toán khi nhận hàng</label>
                     </div>
 
+                    <!-- PAYPAL -->
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="payment_method" value="Banking">
-                        <label class="form-check-label">Chuyển khoản ngân hàng</label>
-                    </div>
+                        <input class="form-check-input" type="radio" name="payment_method" value="PayPal">
 
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="payment_method" value="Momo">
-                        <label class="form-check-label">Ví MoMo</label>
+                        <label class="d-flex align-items-center gap-2">
+                            <img src="images/Paypal.png" style="height:30px;">
+                            Thanh toán bằng PayPal
+                        </label>
+
+                        <!-- 👇 HIỂN THỊ NGAY DƯỚI -->
+                        <div id="paypal-button-container" style="margin-top:10px; display:none;"></div>
                     </div>
 
                 </div>
@@ -193,7 +174,6 @@
                 <h4>📦 Sản phẩm</h4>
 
                 <table class="table table-bordered">
-
                     <tr>
                         <th>Tên</th>
                         <th>Giá</th>
@@ -203,7 +183,6 @@
 
                     <%
                         for (ProductDTO p : cart.getCart().values()) {
-
                             double itemTotal = p.getFinalPrice() * p.getQuantity();
                             total += itemTotal;
                     %>
@@ -215,47 +194,94 @@
                         <td><%= String.format("%,.0f", itemTotal)%> ₫</td>
                     </tr>
 
-                    <%
-                        }
-                    %>
-
+                    <% }%>
                 </table>
 
                 <div class="total-box">
                     Tổng: <%= String.format("%,.0f", total)%> ₫
                 </div>
 
+                <!-- SUBMIT -->
                 <div style="text-align:right;margin-top:20px">
-
-                    <a href="cart.jsp" class="btn btn-secondary">
-                        ← Quay lại
-                    </a>
-
                     <button type="submit" class="btn btn-success" id="submitBtn">
                         Xác nhận thanh toán
                     </button>
-
                 </div>
 
             </form>
-
         </div>
 
+        <!-- LOADING -->
+        <div id="loadingOverlay">
+            <div class="loading-box">
+                <img src="https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif">
+                <p>Hãy đợi tí đang check thanh toán ạ...</p>
+            </div>
+        </div>
+
+        <!-- PAYPAL SDK -->
+        <script src="https://www.paypal.com/sdk/js?client-id=AbVBL_Mtch3neBrKJ40sbC9OaZAVcdB2fGs__oJeAxHU5O09DE139Qx72yPOP2ITSE9WnVLOLidx9nBh&currency=USD"></script>
+
         <script>
-            let submitted = false;
-
-            function loading() {
-                if (submitted)
-                    return false;
-                submitted = true;
-
-                let btn = document.getElementById("submitBtn");
-                if (btn) {
-                    btn.innerText = "Đang xử lý...";
-                    btn.disabled = true;
+            var totalVND = <%= total%>;
+            var totalUSD = (totalVND / 25000).toFixed(2);
+            const form = document.getElementById("checkoutForm");
+            const loading = document.getElementById("loadingOverlay");
+            // SUBMIT
+            form.addEventListener("submit", function (e) {
+                let method = document.querySelector('input[name="payment_method"]:checked').value;
+                if (method === "PayPal") {
+                    e.preventDefault();
+                    alert("Vui lòng thanh toán bằng PayPal bên dưới!");
+                } else {
+                    loading.style.display = "flex";
                 }
-                return true;
-            }
+            });
+            // TOGGLE
+            document.querySelectorAll('input[name="payment_method"]').forEach(radio => {
+                radio.addEventListener('change', function () {
+                    if (this.value === 'PayPal') {
+                        document.getElementById('submitBtn').style.display = 'none';
+                        document.getElementById('paypal-button-container').style.display = 'block';
+                    } else {
+                        document.getElementById('submitBtn').style.display = 'inline-block';
+                        document.getElementById('paypal-button-container').style.display = 'none';
+                    }
+                });
+            });
+            // PAYPAL
+            let paid = false; // ✅ PHẢI ĐỂ NGOÀI
+            paypal.Buttons({
+
+                createOrder: function (data, actions) {
+                    return actions.order.create({
+                        purchase_units: [{
+                                amount: {
+                                    value: totalUSD
+                                }
+                            }]
+                    });
+                },
+                onApprove: function (data, actions) {
+
+                    if (paid)
+                        return; // 👈 chặn submit lần 2
+                    paid = true;
+                    loading.style.display = "flex";
+                    return actions.order.capture().then(function (details) {
+                        setTimeout(() => {
+                            form.submit();
+                        }, 1000);
+                    });
+                },
+
+                onError: function (err) {
+                    alert("Lỗi PayPal!");
+                    console.log(err);
+                }
+
+            }).render('#paypal-button-container');
+
         </script>
 
     </body>

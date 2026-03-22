@@ -313,135 +313,135 @@ N'Laptop gaming ASUS ROG Zephyrus G14 GA403WM QS058WS','l27.png');
 
 INSERT INTO products (category_id, name, old_price, new_price, image)
 VALUES 
-(7, N'Chuột Logitech G502 Hero Gaming', 1090000, 890000, 'm1.png');
+(4, N'Chuột Logitech G502 Hero Gaming', 1090000, 890000, 'm1.png');
 
 DELETE FROM products
 WHERE name = N'Chuột Logitech G502 Hero Gaming';
 
 INSERT INTO products (category_id, name, old_price, new_price, image)
 VALUES 
-(7, N'Chuột gaming có dây Rapoo V260 Pro', 499000, 329000, 'm13.jpg');
+(4, N'Chuột gaming có dây Rapoo V260 Pro', 499000, 329000, 'm13.jpg');
 
 INSERT INTO products (category_id, name, old_price, new_price, image)
 VALUES 
-(7, N'Chuột DareU Không dây EM911T RGB Đen', 690000, 400000, 'm14.jpg'),
-(7, N'Chuột ATK A9 SE Tri-mode Nearlink Wireless Black', 590000, 490000, 'm15.jpg');
+(4, N'Chuột DareU Không dây EM911T RGB Đen', 690000, 400000, 'm14.jpg'),
+(4, N'Chuột ATK A9 SE Tri-mode Nearlink Wireless Black', 590000, 490000, 'm15.jpg');
 
 INSERT INTO products (category_id, name, old_price, new_price, image)
 VALUES 
-(7, N'Chuột ASUS ROG Strix Impact III', 1090000, 990000, 'm16.jpg'),
-(7, N'Chuột DareU Không dây EM911T RGB Trắng', 690000, 400000, 'm17.jpg'),
-(7, N'Chuột Razer DeathAdder Essential White', 790000, 410000, 'm18.png'),
-(7, N'Chuột Razer Cobra', 1049000, 990000, 'm19.jpg');
+(4, N'Chuột ASUS ROG Strix Impact III', 1090000, 990000, 'm16.jpg'),
+(4, N'Chuột DareU Không dây EM911T RGB Trắng', 690000, 400000, 'm17.jpg'),
+(4, N'Chuột Razer DeathAdder Essential White', 790000, 410000, 'm18.png'),
+(4, N'Chuột Razer Cobra', 1049000, 990000, 'm19.jpg');
 
 INSERT INTO products (category_id, name, old_price, new_price, image)
 VALUES 
-(7, N'Chuột Razer Basilisk V3 Pro 35K Black', 4490000, 4190000, 'm20.png'),
-(7, N'Chuột Razer Basilisk V3 Pro White', 4090000, 3390000, 'm21.gif'),
-(7, N'Chuột Logitech G502 X Plus LightSpeed Black', 3590000, 3100000, 'm22.png'),
-(7, N'Chuột không dây Corsair Nightsabre RGB', 3990000, 3590000, 'm23.png'),
-(7, N'Chuột không dây Corsair Darkstar RGB', 3990000, 3590000, 'm24.png');
+(4, N'Chuột Razer Basilisk V3 Pro 35K Black', 4490000, 4190000, 'm20.png'),
+(4, N'Chuột Razer Basilisk V3 Pro White', 4090000, 3390000, 'm21.gif'),
+(4, N'Chuột Logitech G502 X Plus LightSpeed Black', 3590000, 3100000, 'm22.png'),
+(4, N'Chuột không dây Corsair Nightsabre RGB', 3990000, 3590000, 'm23.png'),
+(4, N'Chuột không dây Corsair Darkstar RGB', 3990000, 3590000, 'm24.png');
 
 INSERT INTO products (category_id, name, old_price, new_price, image)
 VALUES
-(7, N'Chuột văn phòng Logitech M331 Silent Black', 349000, 340000, 'm25.png'),
-(7, N'Chuột văn phòng Logitech M331 Silent Blue', 400000, 340000, 'm26.png'),
-(7, N'Chuột văn phòng Logitech M331 Silent Red', 490000, 340000, 'm27.jpg'),
-(7, N'Chuột văn phòng Logitech Pebble Mouse 2 M350S Rose', 699000, 450000, 'm28.jpg'),
-(7, N'Chuột văn phòng Logitech Pebble Mouse 2 M350S White', 699000, 450000, 'm29.png'),
-(7, N'Chuột văn phòng Logitech MX Anywhere 3S Rose', 1750000, 1550000, 'm30.png'),
-(7, N'Chuột văn phòng Logitech MX Anywhere 3S Pale Grey', 1750000, 1550000, 'm31.png'),
-(7, N'Chuột văn phòng Rapoo M20 Wireless', 150000, 90000, 'm32.png'),
-(7, N'Chuột văn phòng Logitech M650 Signature Graphite', 849000, 645000, 'm33.png'),
-(7, N'Chuột văn phòng Logitech M650 Off White', 800000, 645000, 'm34.png');
+(4, N'Chuột văn phòng Logitech M331 Silent Black', 349000, 340000, 'm25.png'),
+(4, N'Chuột văn phòng Logitech M331 Silent Blue', 400000, 340000, 'm26.png'),
+(4, N'Chuột văn phòng Logitech M331 Silent Red', 490000, 340000, 'm27.jpg'),
+(4, N'Chuột văn phòng Logitech Pebble Mouse 2 M350S Rose', 699000, 450000, 'm28.jpg'),
+(4, N'Chuột văn phòng Logitech Pebble Mouse 2 M350S White', 699000, 450000, 'm29.png'),
+(4, N'Chuột văn phòng Logitech MX Anywhere 3S Rose', 1750000, 1550000, 'm30.png'),
+(4, N'Chuột văn phòng Logitech MX Anywhere 3S Pale Grey', 1750000, 1550000, 'm31.png'),
+(4, N'Chuột văn phòng Rapoo M20 Wireless', 150000, 90000, 'm32.png'),
+(4, N'Chuột văn phòng Logitech M650 Signature Graphite', 849000, 645000, 'm33.png'),
+(4, N'Chuột văn phòng Logitech M650 Off White', 800000, 645000, 'm34.png');
 
 INSERT INTO products (category_id, name, old_price, new_price, image)
 VALUES 
-(7, N'Chuột văn phòng Rapoo M20 Wireless', 150000, 90000, 'm32.jpg');
+(4, N'Chuột văn phòng Rapoo M20 Wireless', 150000, 90000, 'm32.jpg');
 
 INSERT INTO products (category_id, name, old_price, new_price, image)
 VALUES
-(7, N'Chuột văn phòng MonsGeek D1 Pink', 299000, 120000, 'm35.png');
+(4, N'Chuột văn phòng MonsGeek D1 Pink', 299000, 120000, 'm35.png');
 
 INSERT INTO products (category_id, name, old_price, new_price, image)
 VALUES
-(7, N'Chuột văn phòng MonsGeek D1 Black', 299000, 150000, 'm36.png');
+(4, N'Chuột văn phòng MonsGeek D1 Black', 299000, 150000, 'm36.png');
 
 INSERT INTO products (category_id, name, old_price, new_price, image)
 VALUES
-(6, N'Bàn phím cơ ASUS ROG Falchion Ace HFX Rapid', 5499000, 5224050, 'b1.jpg');
+(3, N'Bàn phím cơ ASUS ROG Falchion Ace HFX Rapid', 5499000, 5224050, 'b1.jpg');
 
 INSERT INTO products (category_id, name, old_price, new_price, image)
 VALUES
-(6, N'BÀN PHÍM CƠ E-DRA EK375 V2 ALPHA LINEAR SWITCH', 699000, 664050, 'b2.jpg'),
+(3, N'BÀN PHÍM CƠ E-DRA EK375 V2 ALPHA LINEAR SWITCH', 699000, 664050, 'b2.jpg'),
 
-(6, N'BÀN PHÍM CƠ ASUS TUF K3 GEN II BLACK OPTICAL RED SWITCH', 1999000, 1899050, 'b3.jpg'),
+(3, N'BÀN PHÍM CƠ ASUS TUF K3 GEN II BLACK OPTICAL RED SWITCH', 1999000, 1899050, 'b3.jpg'),
 
-(6, N'BÀN PHÍM CƠ E-DRA EK368HE', 999000, 949050, 'b4.jpg'),
+(3, N'BÀN PHÍM CƠ E-DRA EK368HE', 999000, 949050, 'b4.jpg'),
 
-(6, N'BÀN PHÍM CƠ E-DRA EK398S WIRELESS RED SWITCH', 799000, 759050, 'b5.jpg'),
+(3, N'BÀN PHÍM CƠ E-DRA EK398S WIRELESS RED SWITCH', 799000, 759050, 'b5.jpg'),
 
-(6, N'BÀN PHÍM CƠ E-DRA EK375S WIRELESS RED SWITCH', 699000, 664050, 'b6.jpg'),
+(3, N'BÀN PHÍM CƠ E-DRA EK375S WIRELESS RED SWITCH', 699000, 664050, 'b6.jpg'),
 
-(6, N'BÀN PHÍM CƠ E-DRA EK368S WIRELESS RED SWITCH', 649000, 616550, 'b7.jpg'),
+(3, N'BÀN PHÍM CƠ E-DRA EK368S WIRELESS RED SWITCH', 649000, 616550, 'b7.jpg'),
 
-(6, N'BÀN PHÍM CƠ MCHOSE G75 PRO GLACIER GRADIENT CABBAGE', 1399000, 1329050, 'b8.png'),
+(3, N'BÀN PHÍM CƠ MCHOSE G75 PRO GLACIER GRADIENT CABBAGE', 1399000, 1329050, 'b8.png'),
 
-(6, N'BÀN PHÍM CƠ MCHOSE G75 PRO ARCTIS SNOW MATCHA LATTE', 1399000, 1329050, 'b9.png');
-
-INSERT INTO products (category_id, name, old_price, new_price, image)
-VALUES
-(6, N'BÀN PHÍM CƠ MACHENIKE KG98 WHITE BLUE PURPLE GOLD', 1699000, 1349000, 'b10.png'),
-
-(6, N'BÀN PHÍM CƠ MACHENIKE KG98 BLACK GREEN PURPLE GOLD', 1699000, 1349000, 'b11.png'),
-
-(6, N'BÀN PHÍM CƠ MADLIONS MAD68 HE FLAGSHIP V2 WHITE', 1099000, 889000, 'b12.jpg'),
-
-(6, N'BÀN PHÍM CƠ MADLIONS MAD68 HE FLAGSHIP V2 BLACK', 1099000, 889000, 'b13.jpg'),
-
-(6, N'BÀN PHÍM CƠ AULA F75 WHITE BLUE GRADIENT OUTEMU SILENT', 1999000, 1549000, 'b14.webp');
+(3, N'BÀN PHÍM CƠ MCHOSE G75 PRO ARCTIS SNOW MATCHA LATTE', 1399000, 1329050, 'b9.png');
 
 INSERT INTO products (category_id, name, old_price, new_price, image)
 VALUES
-(6, N'BÀN PHÍM CƠ AULA F75 3 MODE GLACIER BLUE OUTEMU SILENT', 1999000, 1349000, 'b15.png'),
+(3, N'BÀN PHÍM CƠ MACHENIKE KG98 WHITE BLUE PURPLE GOLD', 1699000, 1349000, 'b10.png'),
 
-(6, N'BÀN PHÍM CƠ AULA F75 3 MODE SNOW BLUE OUTEMU SILENT', 1999000, 1349000, 'b16.jpg'),
+(3, N'BÀN PHÍM CƠ MACHENIKE KG98 BLACK GREEN PURPLE GOLD', 1699000, 1349000, 'b11.png'),
 
-(6, N'BÀN PHÍM CƠ RAZER HUNTSMAN V3 PRO TKL CS2 COUNTER-STRIKE', 6490000, 5489000, 'b17.jpg'),
+(3, N'BÀN PHÍM CƠ MADLIONS MAD68 HE FLAGSHIP V2 WHITE', 1099000, 889000, 'b12.jpg'),
 
-(6, N'BÀN PHÍM CƠ MCHOSE G75 PRO BLUE CABBAGE TOFU V2 SWITCH', 1199000, 1049000, 'b18.png'),
+(3, N'BÀN PHÍM CƠ MADLIONS MAD68 HE FLAGSHIP V2 BLACK', 1099000, 889000, 'b13.jpg'),
 
-(6, N'BÀN PHÍM CƠ MCHOSE G75 PRO GREEN MATCHA LATTE SWITCH', 1399000, 1249000, 'b19.png');
-
-INSERT INTO products (category_id, name, old_price, new_price, image)
-VALUES
-(6, N'BÀN PHÍM CƠ MCHOSE GX87 LITE BLUE NANO SPRAYING MATCHA', 2399000, 2199000, 'b20.png'),
-
-(6, N'BÀN PHÍM CƠ MCHOSE GX87 LITE WHITE NANO SPRAYING MATCHA', 2399000, 2199000, 'b21.png'),
-
-(6, N'BÀN PHÍM CƠ MCHOSE X UNBOX THERAPY UT98 CLASSIC', 2899000, 2099000, 'b22.png'),
-
-(6, N'BÀN PHÍM CƠ RAZER HUNTSMAN V3 PRO TKL 8KHZ ANALOG', 5990000, 4989000, 'b23.jpg'),
-
-(6, N'BÀN PHÍM CƠ RAZER HUNTSMAN V3 PRO 8KHZ ANALOG OPTICAL', 6890000, 5889000, 'b24.jpg'),
-
-(6, N'BÀN PHÍM CƠ ATK RS7 ULTRA STELLAR PINK BLAZEBLADE', 4499000, 3889000, 'b25.jpg'),
-
-(6, N'BÀN PHÍM CƠ ATK RS7 ULTRA SILVER EDGE SNOWBLADE SWITCH', 4499000, 3889000, 'b26.jpg'),
-
-(6, N'BÀN PHÍM CƠ ATK 68 RX HE PINK WOLF SWITCH', 1999000, 1589000, 'b27.jpg'),
-
-(6, N'BÀN PHÍM CƠ ATK 68 RX HE WHITE WOLF SWITCH', 1999000, 1589000, 'b28.jpg'),
-
-(6, N'BÀN PHÍM CƠ ATK 68 RX HE BLACK WOLF SWITCH', 1999000, 1589000, 'b29.jpg');
+(3, N'BÀN PHÍM CƠ AULA F75 WHITE BLUE GRADIENT OUTEMU SILENT', 1999000, 1549000, 'b14.webp');
 
 INSERT INTO products (category_id, name, old_price, new_price, image)
 VALUES
-(6, N'BÀN PHÍM CƠ ATK 68 RX HE BLACK WOLF SWITCH', 1999000, 1589000, 'b30.jpg');
+(3, N'BÀN PHÍM CƠ AULA F75 3 MODE GLACIER BLUE OUTEMU SILENT', 1999000, 1349000, 'b15.png'),
+
+(3, N'BÀN PHÍM CƠ AULA F75 3 MODE SNOW BLUE OUTEMU SILENT', 1999000, 1349000, 'b16.jpg'),
+
+(3, N'BÀN PHÍM CƠ RAZER HUNTSMAN V3 PRO TKL CS2 COUNTER-STRIKE', 6490000, 5489000, 'b17.jpg'),
+
+(3, N'BÀN PHÍM CƠ MCHOSE G75 PRO BLUE CABBAGE TOFU V2 SWITCH', 1199000, 1049000, 'b18.png'),
+
+(3, N'BÀN PHÍM CƠ MCHOSE G75 PRO GREEN MATCHA LATTE SWITCH', 1399000, 1249000, 'b19.png');
 
 INSERT INTO products (category_id, name, old_price, new_price, image)
 VALUES
-(6, N'BÀN PHÍM CƠ ASUS ROG AZOTH X WIRELESS NX SNOW V2 SWITCH', 7999000, 6489000, 'b29.jpg');
+(3, N'BÀN PHÍM CƠ MCHOSE GX87 LITE BLUE NANO SPRAYING MATCHA', 2399000, 2199000, 'b20.png'),
+
+(3, N'BÀN PHÍM CƠ MCHOSE GX87 LITE WHITE NANO SPRAYING MATCHA', 2399000, 2199000, 'b21.png'),
+
+(3, N'BÀN PHÍM CƠ MCHOSE X UNBOX THERAPY UT98 CLASSIC', 2899000, 2099000, 'b22.png'),
+
+(3, N'BÀN PHÍM CƠ RAZER HUNTSMAN V3 PRO TKL 8KHZ ANALOG', 5990000, 4989000, 'b23.jpg'),
+
+(3, N'BÀN PHÍM CƠ RAZER HUNTSMAN V3 PRO 8KHZ ANALOG OPTICAL', 6890000, 5889000, 'b24.jpg'),
+
+(3, N'BÀN PHÍM CƠ ATK RS7 ULTRA STELLAR PINK BLAZEBLADE', 4499000, 3889000, 'b25.jpg'),
+
+(3, N'BÀN PHÍM CƠ ATK RS7 ULTRA SILVER EDGE SNOWBLADE SWITCH', 4499000, 3889000, 'b26.jpg'),
+
+(3, N'BÀN PHÍM CƠ ATK 68 RX HE PINK WOLF SWITCH', 1999000, 1589000, 'b27.jpg'),
+
+(3, N'BÀN PHÍM CƠ ATK 68 RX HE WHITE WOLF SWITCH', 1999000, 1589000, 'b28.jpg'),
+
+(3, N'BÀN PHÍM CƠ ATK 68 RX HE BLACK WOLF SWITCH', 1999000, 1589000, 'b29.jpg');
+
+INSERT INTO products (category_id, name, old_price, new_price, image)
+VALUES
+(3, N'BÀN PHÍM CƠ ATK 68 RX HE BLACK WOLF SWITCH', 1999000, 1589000, 'b30.jpg');
+
+INSERT INTO products (category_id, name, old_price, new_price, image)
+VALUES
+(3, N'BÀN PHÍM CƠ ASUS ROG AZOTH X WIRELESS NX SNOW V2 SWITCH', 7999000, 6489000, 'b29.jpg');
 
 INSERT INTO products (category_id, name, screen, old_price, new_price, image) VALUES
 (5, N'Màn hình ASUS TUF GAMING VG27AQ5A', '27 inch', 5990000, 4990000, 'mh1.jpg'),

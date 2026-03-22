@@ -86,7 +86,7 @@ public ProductDTO getById(int id) {
     public ArrayList<ProductDTO> searchByNamepro(String name, int category_id) {
     ArrayList<ProductDTO> list = new ArrayList<>();
 
-    String sql = "SELECT * FROM products WHERE name LIKE ? AND 4?";
+    String sql = "SELECT * FROM products WHERE name LIKE ? AND category_id=?";
 
     try (Connection con = DbUtil.getConnection();
          PreparedStatement ps = con.prepareStatement(sql)) {
@@ -605,7 +605,7 @@ public ProductDTO getById(int id) {
             Connection conn = DbUtil.getConnection();
 
             String sql = "SELECT TOP 12 * FROM products "
-                    + "WHERE category_id =  "
+                    + "WHERE category_id = 4 "
                     + "AND new_price < 1000000 "
                     + "AND name NOT LIKE N'%Chuột văn phòng%' "
                     + "ORDER BY new_price ASC";
@@ -748,7 +748,7 @@ public ProductDTO getById(int id) {
             Connection conn = DbUtil.getConnection();
 
             String sql = "SELECT * FROM products "
-                    + "WHERE category_id = 6 "
+                    + "WHERE category_id = 3 "
                     + "AND name LIKE N'%Bàn phím%' "
                     + "ORDER BY new_price ASC";
 
@@ -795,7 +795,7 @@ public ProductDTO getById(int id) {
             Connection conn = DbUtil.getConnection();
 
             String sql = "SELECT * FROM products "
-                    + "WHERE category_id = 5 "
+                    + "WHERE category_id = 2 "
                     + "AND id IN ( "
                     + "   SELECT TOP 11 id FROM products "
                     + "   WHERE category_id = 5 "
@@ -844,11 +844,11 @@ public ProductDTO getById(int id) {
         try {
             Connection conn = DbUtil.getConnection();
             String sql = "SELECT TOP 7 * FROM products "
-                    + "WHERE category_id = 5 "
+                    + "WHERE category_id = 2 "
                     + "AND screen IN ('24 inch', '25 inch') "
                     + "AND id NOT IN ( "
                     + "   SELECT TOP 12 id FROM products "
-                    + "   WHERE category_id = 5 "
+                    + "   WHERE category_id = 2 "
                     + "   ORDER BY id ASC "
                     + ") "
                     + "ORDER BY new_price ASC";
@@ -894,7 +894,7 @@ public ProductDTO getById(int id) {
         try {
             Connection conn = DbUtil.getConnection();
 
-            String sql = "SELECT TOP 11 * FROM products "
+             String sql = "SELECT TOP 11 * FROM products "
                     + "WHERE category_id = 5 "
                     + "AND screen = '27 inch' "
                     + "AND id NOT IN ( "
@@ -947,11 +947,11 @@ public ProductDTO getById(int id) {
         Connection conn = DbUtil.getConnection();
 
         String sql = "SELECT TOP 12 * FROM products "
-                + "WHERE category_id = 5 "
+                + "WHERE category_id = 2 "
                 + "AND name LIKE N'%OLED%' "
                 + "AND id NOT IN ( "
                 + "    SELECT TOP 12 id FROM products "
-                + "    WHERE category_id = 5 "
+                + "    WHERE category_id = 2 "
                 + "    ORDER BY id ASC "
                 + ") "
                 + "ORDER BY new_price ASC";

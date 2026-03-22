@@ -1,9 +1,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@page import="model.UserDTO"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-<%
-    UserDTO user = (UserDTO) session.getAttribute("user"); // FIX: đúng session của bạn
-%>
+<c:set var="user" value="${sessionScope.user}" />
 
 <!DOCTYPE html>
 <html>
@@ -86,7 +84,9 @@
     </head>
 
     <body>
-
+        <c:if test="${empty user}">
+            <c:redirect url="index.jsp"/>
+        </c:if>
         <div class="info-wrapper">
 
             <h3 class="title">📄 Thông tin khách hàng</h3>
@@ -101,34 +101,36 @@
             <!-- FORM -->
             <form action="MainController" method="post" onsubmit="return validateForm()">
 
-                <input type="hidden" name="action" value="createOrder"/>
+                <input type="hidden" name="action" value="saveInfo"/>
 
                 <div class="mb-3">
                     <label>Họ tên</label>
                     <input type="text" name="fullname" class="form-control"
-                           value="<%= (user != null) ? user.getUsername() : ""%>" required>
+                           value="${user.username}" required>
                 </div>
 
                 <div class="mb-3">
                     <label>Email</label>
                     <input type="email" name="email" class="form-control"
-                           value="<%= (user != null) ? user.getEmail() : ""%>" required>
+                           value="${not empty sessionScope.EMAIL ? sessionScope.EMAIL : user.email}" required>
                 </div>
 
+                <!-- 🔥 FIX PHONE -->
                 <div class="mb-3">
                     <label>Số điện thoại</label>
                     <input type="text" name="phone" class="form-control"
-                           value="<%= (user != null) ? user.getPhone() : ""%>" required>
+                           value="${not empty sessionScope.PHONE ? sessionScope.PHONE : user.phone}" required>
                 </div>
 
+                <!-- 🔥 FIX ADDRESS -->
                 <div class="mb-3">
                     <label>Địa chỉ giao hàng</label>
                     <input type="text" name="address" class="form-control"
-                           value="<%= (user != null) ? user.getAddress() : ""%>" required>
+                           value="${not empty sessionScope.ADDRESS ? sessionScope.ADDRESS : (not empty user.address ? user.address : '')}"required>
                 </div>
 
                 <div class="text-end">
-                    <button type="submit" class="btn btn-next">
+                    <button type="submit" class="btn btn-next" onclick="this.disabled = true; this.form.submit();">
                         Tiếp tục thanh toán →
                     </button>
                 </div>
@@ -140,11 +142,17 @@
         <script>
             function validateForm() {
                 let phone = document.querySelector("input[name='phone']").value;
+                let address = document.querySelector("input[name='address']").value;
 
                 let regex = /^[0-9]{9,11}$/;
 
                 if (!regex.test(phone)) {
                     alert("Số điện thoại không hợp lệ!");
+                    return false;
+                }
+
+                if (address.trim().length < 5) {
+                    alert("Địa chỉ quá ngắn!");
                     return false;
                 }
 

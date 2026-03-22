@@ -91,8 +91,7 @@
             <%
             } else {
             %>
-
-            <div id="openLoginBtn" style="cursor:pointer;">
+<div id="openLoginBtn" style="cursor:pointer;">
                 Đăng nhập
             </div>
 
@@ -125,13 +124,10 @@
     <!-- SIDEBAR -->
     <div class="sidebar">
         <ul class="category-list">
-            <li><a href="ProductController?action=list"><span>Laptop</span><span class="arrow">›</span></a></li>
-            <li><a href="#"><span>VGA</span><span class="arrow">›</span></a></li>
-            <li><a href="#"><span>Case</span><span class="arrow">›</span></a></li>
-            <li><a href="#"><span>RAM</span><span class="arrow">›</span></a></li>
-            <li><a href="#"><span>Màn hình</span><span class="arrow">›</span></a></li>
-            <li><a href="#"><span>Bàn phím</span><span class="arrow">›</span></a></li>
-            <li><a href="#"><span>Chuột</span><span class="arrow">›</span></a></li>
+            <li><a href="MainController?action=searchProductLaptop"><span>Laptop</span><span class="arrow">›</span></a></li>
+            <li><a href="MainController?action=searchProductMonitor"></span>Màn hình<span class="arrow">›</span></a></li>
+            <li><a href="MainController?action=searchProductKeyboard"></span>Bàn phím<span class="arrow">›</span></a></li>
+            <li><a href="MainController?action=searchProductMouse"></span>Chuột<span class="arrow">›</span></a></li>
         </ul>
     </div>
 
@@ -180,7 +176,7 @@
             <div class="rtx-side">
                 <a href="LaptopRTX.jsp">
                     <img src="images/laptoprtx.jpg" alt="Laptop RTX">
-                </a>
+</a>
             </div>
 
         </div>
@@ -274,8 +270,7 @@
                 <span>Facebook</span>
             </button>
         </div>
-
-        <!-- FOOTER -->
+<!-- FOOTER -->
         <div class="login-footer">
             Bạn chưa có tài khoản?
             <a href="#" id="openRegister">Đăng ký ngay!</a>
@@ -310,7 +305,7 @@
             </div>
 
         </form>
-       
+
         <!-- DIVIDER -->
         <div class="divider">
             <span>hoặc đăng ký bằng</span>

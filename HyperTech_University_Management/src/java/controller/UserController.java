@@ -2,12 +2,10 @@ package controller;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.*;
 import model.UserDAO;
 import model.UserDTO;
-import org.mindrot.jbcrypt.BCrypt;
 
 public class UserController extends HttpServlet {
 
@@ -176,17 +174,37 @@ public class UserController extends HttpServlet {
     // ================= ADD USER =================
     protected void doAdd(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+
         UserDTO u = extractUserFromRequest(request);
         String error = validateUser(u, false);
         String msg = "";
-        
+
+        // 🔥 THÊM VALIDATE EMAIL Ở ĐÂY
+        String email = request.getParameter("email");
+        if (email == null || !email.matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
+            error += "Email không hợp lệ <br>";
+        }
+
         if (checkpass(request)) {
+
             if (error.isEmpty()) {
 
                 UserDAO dao = new UserDAO();
 
                 if (dao.add(u)) {
                     msg = "Thêm user thành công!";
+
+                    // 🔥 GỬI MAIL CHÀO MỪNG (THÊM NGAY ĐÂY)
+                    String subject = "🎉 Chào mừng bạn đến với TKT Shop";
+
+                    String content = "<h2>Xin chào " + u.getUsername() + " 👋</h2>"
+                            + "<p>Cảm ơn bạn đã đăng ký tài khoản tại <b>TKT Shop</b> 💖</p>"
+                            + "<p>Chúng tôi rất vui khi được phục vụ bạn!</p>"
+                            + "<hr>"
+                            + "<p>Chúc bạn mua sắm vui vẻ 🛒</p>";
+
+                    util.MailUtil.sendEmail(u.getEmail(), subject, content);
+
                 } else {
                     error = "Không thể thêm user!";
                 }
