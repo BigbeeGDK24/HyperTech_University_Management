@@ -31,7 +31,6 @@ public class MainController extends HttpServlet {
         } else if (action.equals("addUser")) {
             url = "UserController";
         } else if (action.equals("forgotPassword")) {
-            } else if (action.equals("deleteUser")) {
             url = "UserController";
             //======== PRODUCT  ===================
         } else if (action.contains("Product")) {
