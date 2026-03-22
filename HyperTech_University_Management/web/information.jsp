@@ -84,7 +84,9 @@
     </head>
 
     <body>
-
+        <c:if test="${empty user}">
+            <c:redirect url="index.jsp"/>
+        </c:if>
         <div class="info-wrapper">
 
             <h3 class="title">📄 Thông tin khách hàng</h3>
@@ -110,7 +112,7 @@
                 <div class="mb-3">
                     <label>Email</label>
                     <input type="email" name="email" class="form-control"
-                           value="${user.email}" required>
+                           value="${not empty sessionScope.EMAIL ? sessionScope.EMAIL : user.email}" required>
                 </div>
 
                 <!-- 🔥 FIX PHONE -->
@@ -124,11 +126,11 @@
                 <div class="mb-3">
                     <label>Địa chỉ giao hàng</label>
                     <input type="text" name="address" class="form-control"
-                           value="${not empty sessionScope.ADDRESS ? sessionScope.ADDRESS : user.address}" required>
+                           value="${not empty sessionScope.ADDRESS ? sessionScope.ADDRESS : (not empty user.address ? user.address : '')}"required>
                 </div>
 
                 <div class="text-end">
-                    <button type="submit" class="btn btn-next">
+                    <button type="submit" class="btn btn-next" onclick="this.disabled = true; this.form.submit();">
                         Tiếp tục thanh toán →
                     </button>
                 </div>
@@ -140,11 +142,17 @@
         <script>
             function validateForm() {
                 let phone = document.querySelector("input[name='phone']").value;
+                let address = document.querySelector("input[name='address']").value;
 
                 let regex = /^[0-9]{9,11}$/;
 
                 if (!regex.test(phone)) {
                     alert("Số điện thoại không hợp lệ!");
+                    return false;
+                }
+
+                if (address.trim().length < 5) {
+                    alert("Địa chỉ quá ngắn!");
                     return false;
                 }
 

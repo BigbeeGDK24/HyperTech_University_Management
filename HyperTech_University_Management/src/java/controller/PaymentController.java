@@ -152,14 +152,29 @@ public class PaymentController extends HttpServlet {
             // 👉 lưu thông tin cần thiết
             session.setAttribute("ORDER_ID", orderId);
             session.setAttribute("PAYMENT_METHOD", method);
+            // 🔥 THÊM ĐOẠN NÀY
+            StringBuilder productList = new StringBuilder();
 
+            for (ProductDTO p : cart.getCart().values()) {
+                productList.append("<li>")
+                        .append(p.getName())
+                        .append(" - SL: ").append(p.getQuantity())
+                        .append("</li>");
+            }
             // ===== SEND MAIL =====
-            String content = "Đơn hàng #" + orderId
-                    + "\nTổng tiền: " + total + " VND"
-                    + "\nPhương thức: " + method
-                    + "\nCảm ơn bạn đã mua hàng!";
-
-            util.MailUtil.sendEmail(user.getEmail(), "Xác nhận đơn hàng", content);
+            String content = "<h2>Order confirmation</h2>"
+                    + "<p>Mã đơn: <b>#" + orderId + "</b></p>"
+                    + "<ul>" + productList.toString() + "</ul>"
+                    + "<p>Tổng tiền: <b>" + String.format("%,.0f", total) + " VND</b></p>"
+                    + "<p>Phương thức: <b>" + method + "</b></p>"
+                    + "<hr>"
+                    + "<p>Cảm ơn bạn đã mua hàng tại TKT 💖</p>";
+            System.out.println("👉 EMAIL USER: " + user.getEmail());
+            if (user.getEmail() != null && !user.getEmail().isEmpty()) {
+                util.MailUtil.sendEmail(user.getEmail(), "Xác nhận đơn hàng", content);
+            } else {
+                System.out.println("❌ Email user null → không gửi mail");
+            }
 
             // 🔥 FIX QUAN TRỌNG NHẤT (THÊM ĐOẠN NÀY)
             CartDAO cartDAO = new CartDAO();
