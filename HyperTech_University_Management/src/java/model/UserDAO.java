@@ -316,4 +316,21 @@ public class UserDAO {
 
         return false;
     }
+
+    public boolean disableUser(String email) {
+
+        String sql = "UPDATE users SET status = 0 WHERE email = ?";
+
+        try ( Connection conn = DbUtil.getConnection();  PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, email);
+
+            return ps.executeUpdate() > 0;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
 }
