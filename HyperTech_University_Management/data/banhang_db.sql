@@ -1,4 +1,4 @@
-﻿-- ================= RESET DATABASE =================
+﻿﻿-- ================= RESET DATABASE =================
 IF DB_ID('banhang_db') IS NOT NULL
 DROP DATABASE banhang_db;
 GO
@@ -263,7 +263,25 @@ N'Intel Core Ultra 9 275HX', N'RTX 5080 16GB', N'32 GB', N'1 TB',
 N'18 inch', N'240 Hz',
 88390000,84990000,10,
 N'Laptop gaming ASUS ROG Strix SCAR 18 G835LW SA193W','l25.png');
+<<<<<<< HEAD
+INSERT INTO products
+(category_id,name,cpu,gpu,ram,ssd,screen,refresh_rate,old_price,new_price,stock,description,image)
+VALUES
+(1,N'Laptop gaming Acer Predator Helios PHN',N'Ultra 7 255HX', N'RTX 5060', N'32 GB', N'1 TB',N'16 inch 2K+', N'240 Hz',56990000, 56990000,10,'Acer Predator Helios PHN', 'l16.png'),
+(1,N'Laptop gaming Lenovo Legion 5 15AHP10 83M0002XVN',
+N'AMD Ryzen 7 260', N'RTX 5050', N'24 GB', N'512 GB',
+N'15 inch', N'180 Hz',
+39490000,36990000,10,
+N'Laptop gaming Lenovo Legion 5 15AHP10 83M0002XVN','l26.png'),
 
+(1,N'Laptop gaming ASUS ROG Zephyrus G14 GA403WM QS058WS',
+N'AMD Ryzen 9 8945HS', N'RTX 4070', N'32 GB', N'1 TB',
+N'14 inch', N'180 Hz',
+58990000,55990000,10,
+N'Laptop gaming ASUS ROG Zephyrus G14 GA403WM QS058WS','l27.png');
+=======
+
+>>>>>>> 08a896c6e42796eb830424d19d7f6f525ca5c8be
 INSERT INTO cart (email,product_id,quantity) VALUES
 ('a@gmail.com',1,1),
 ('a@gmail.com',2,1),
@@ -289,21 +307,7 @@ INSERT INTO order_items (order_id,product_id,price,quantity) VALUES
 
 
 
-INSERT INTO products
-(category_id,name,cpu,gpu,ram,ssd,screen,refresh_rate,old_price,new_price,stock,description,image)
-VALUES
-(1,N'Laptop gaming Acer Predator Helios PHN',N'Ultra 7 255HX', N'RTX 5060', N'32 GB', N'1 TB',N'16 inch 2K+', N'240 Hz',56990000, 56990000,10,'Acer Predator Helios PHN', 'l16.png'),
-(1,N'Laptop gaming Lenovo Legion 5 15AHP10 83M0002XVN',
-N'AMD Ryzen 7 260', N'RTX 5050', N'24 GB', N'512 GB',
-N'15 inch', N'180 Hz',
-39490000,36990000,10,
-N'Laptop gaming Lenovo Legion 5 15AHP10 83M0002XVN','l26.png'),
 
-(1,N'Laptop gaming ASUS ROG Zephyrus G14 GA403WM QS058WS',
-N'AMD Ryzen 9 8945HS', N'RTX 4070', N'32 GB', N'1 TB',
-N'14 inch', N'180 Hz',
-58990000,55990000,10,
-N'Laptop gaming ASUS ROG Zephyrus G14 GA403WM QS058WS','l27.png');
 
 
 
@@ -501,6 +505,8 @@ WHERE name IN (
     N'Màn hình ViewSonic VA2708-2K-MHD 27 inch',
     N'Màn hình ViewSonic VX2882-4KP 28 inch'
 );
+<<<<<<< HEAD
+=======
 select *
 from products
 
@@ -525,6 +531,7 @@ SELECT name, COUNT(*)
 FROM products
 GROUP BY name
 HAVING COUNT(*) > 1
+>>>>>>> 08a896c6e42796eb830424d19d7f6f525ca5c8be
 
 INSERT INTO products 
 (category_id, name, screen, refresh_rate, old_price, new_price, image)
