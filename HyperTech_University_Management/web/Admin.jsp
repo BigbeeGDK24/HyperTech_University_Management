@@ -14,7 +14,12 @@
         <div class="sidebar">
             <ul>
                 <li><a href="Admin.jsp">Trang Chủ</a></li>
-                <li><a href="product.jsp">Sản Phẩm</a></li>
+                <li><a href="Product.jsp">Sản Phẩm</a></li>
+                <li><a href="Cart.jsp">Giỏ Hàng</a></li>
+                <li><a href="complant.jsp">Phản Hồi</a></li>
+                <li><a href="discount.jsp">Khuyến Mãi</a></li>
+                <li><a href="order.jsp">Đơn Hàng</a></li>
+                <li><a href="user.jsp">Người Dùng</a></li>
                 <li><a href="login.jsp">Thoát</a></li>
             </ul>
         </div>

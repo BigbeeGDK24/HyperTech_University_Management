@@ -64,8 +64,16 @@
 
                         </div>
 
-                        <button class="buy-btn">Mua ngay</button>
 
+                        <form action="MainController" method="post">
+
+                            <input type="hidden" name="action" value="AddCart">
+                            <input type="hidden" name="productID" value="${p.id}">
+                            <input type="hidden" name="quantity" value="1">
+
+                            <button class="buy-btn">Mua ngay</button>
+
+                        </form>
                     </div>   <!-- THÊM CÁI NÀY -->
 
                 </c:forEach>
@@ -107,7 +115,16 @@
                             </div>
 
                         </div>
-                        <button class="buy-btn">Mua ngay</button>
+
+                        <form action="MainController" method="post">
+
+                            <input type="hidden" name="action" value="AddCart">
+                            <input type="hidden" name="productID" value="${p.id}">
+                            <input type="hidden" name="quantity" value="1">
+
+                            <button class="buy-btn">Mua ngay</button>
+
+                        </form>           
                     </div>
                 </c:forEach>
             </div>
@@ -149,8 +166,16 @@
 
                         </div>
 
-                        <button class="buy-btn">Mua ngay</button>
 
+                        <form action="MainController" method="post">
+
+                            <input type="hidden" name="action" value="AddCart">
+                            <input type="hidden" name="productID" value="${p.id}">
+                            <input type="hidden" name="quantity" value="1">
+
+                            <button class="buy-btn">Mua ngay</button>
+
+                        </form>
                     </div>
                 </c:forEach>
             </div>

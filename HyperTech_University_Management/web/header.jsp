@@ -133,9 +133,23 @@
         <div class="home-wrapper">
 
             <div class="home-left">
-                <a href="li-xi-tet-2026.jsp">
-                    <img class="banner-main" src="images/madaothanhcong.png">
-                </a>
+                <div class="banner-slider">
+
+                    <a href="li-xi-tet-2026.jsp">
+                        <img class="banner-main slide active" src="images/madaothanhcong.png">
+                    </a>
+
+                    <a href="ProductController?action=monitor">
+                        <img class="banner-main slide" src="images/bannermh1.jpg">
+                    </a>
+
+                    <!-- thanh ngang -->
+                    <div class="slider-nav">
+                        <span class="nav-dot active" data-index="0"></span>
+                        <span class="nav-dot" data-index="1"></span>
+                    </div>
+
+                </div>
 
                 <div class="banner-row">
                     <a href="ProductController?action=list">
@@ -148,7 +162,7 @@
             </div>
 
             <div class="home-middle">
-                <a href="BestSeller3.jsp">
+                <a href="ProductController?action=keyboard">
                     <img class="banner-keyboard" src="images/keyboard_new.jpg">
                 </a>
             </div>
@@ -279,22 +293,16 @@
         <!-- FORM -->
         <form action="MainController" method="post">
             <input type="hidden" name="action" value="addUser">
-
-            <div class="login-body">
-
+                        <div class="login-body">
                 <input type="text" name="username" placeholder="Họ và Tên" required>
-
                 <input type="email" name="email" placeholder="Email" required>
-
                 <input type="password" name="password" placeholder="Mật khẩu" required>
-
-                <input type="password" name="confirm_password" placeholder="Nhập lại mật khẩu" required>
-
+               <input type="password" name="confirm_password" placeholder="Nhập lại mật khẩu" required>
                 <button type="submit" class="login-submit">ĐĂNG KÝ</button>
+                    </div>
 
-            </div>
         </form>
-
+       
         <!-- DIVIDER -->
         <div class="divider">
             <span>hoặc đăng ký bằng</span>
